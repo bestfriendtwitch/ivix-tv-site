@@ -1,0 +1,12 @@
+{
+  "name": "IVIX_TV",
+  "short_name": "IVIX_TV",
+  "description": "Стримы, клипы, расписание и комьюнити IVIX_TV.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05040a",
+  "theme_color": "#7c35ff",
+  "icons": [
+    { "src": "/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
