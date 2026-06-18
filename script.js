@@ -45,6 +45,7 @@ if (player && wrap) {
       muted: 'true'
     });
     player.src = `https://player.twitch.tv/?${params.toString()}`;
+    player.addEventListener('load', () => wrap.classList.add('player-ready'), { once: true });
   } else {
     player.remove();
   }

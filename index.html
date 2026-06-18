@@ -23,6 +23,7 @@
   <meta name="twitter:description" content="Живое общение, фильмы, хорроры и твой любимый чат." />
   <meta name="twitter:image" content="https://ivix-tv-site.pages.dev/assets/og-preview.png" />
   <meta name="theme-color" content="#7c35ff" />
+  <meta name="application-name" content="IVIX_TV" />
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="site.webmanifest" />
@@ -81,12 +82,16 @@
       <div class="stream-zone reveal delay-1">
         <article class="stream-card glass">
           <div class="card-top"><strong><span class="live-dot"></span> Сейчас в эфире</strong></div>
-          <div class="player-wrap" data-channel="ivix_tv">
+          <div class="player-wrap player-frame" data-channel="ivix_tv">
             <iframe id="twitch-player" title="Twitch stream ivix_tv" allowfullscreen loading="lazy"></iframe>
             <div class="offline-placeholder">
               <div class="room-art"><span class="chair">IVIX</span></div>
               <a class="btn btn-primary" href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer">Открыть стрим</a>
             </div>
+          </div>
+          <div class="stream-actions">
+            <span>Прямой эфир IVIX_TV на Twitch</span>
+            <a href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer">Открыть на Twitch →</a>
           </div>
         </article>
 
@@ -107,6 +112,12 @@
       </div>
     </section>
 
+    <section class="quick-strip section-pad reveal delay-2" aria-label="Быстрые действия">
+      <a class="quick-item" href="https://t.me/ivixitsme" target="_blank" rel="noreferrer"><b>Анонсы</b><span>Telegram с расписанием и переносами</span></a>
+      <a class="quick-item" href="https://dalink.to/ivix_tv" target="_blank" rel="noreferrer"><b>Все ссылки</b><span>Соцсети, донат и актуальные переходы</span></a>
+      <a class="quick-item" href="https://www.twitch.tv/ivix_tv/clips?range=all" target="_blank" rel="noreferrer"><b>Клипы</b><span>Лучшие моменты на Twitch</span></a>
+    </section>
+
     <section class="dashboard section-pad">
       <article class="panel schedule glass reveal" id="schedule">
         <div class="panel-title"><span class="purple-icon">▣</span><h2>Анонсы стримов</h2></div>
@@ -114,6 +125,9 @@
           <div class="announce-badge"><span class="live-dot"></span> Плавающий график</div>
           <h3>Стримы проходят по вечерам</h3>
           <p>Точные даты, переносы и темы эфиров появляются в Telegram. Там быстрее всего узнать, будет ли сегодня фильм, хоррор, общение или внезапный стрим.</p>
+          <div class="announce-tags" aria-label="Форматы стримов">
+            <span>Just Chatting</span><span>Фильмы</span><span>Хорроры</span><span>Игры</span>
+          </div>
           <div class="announce-actions">
             <a class="btn btn-primary" href="https://t.me/ivixitsme" target="_blank" rel="noreferrer">Анонсы в Telegram</a>
             <a class="btn btn-ghost" href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer">Открыть Twitch</a>
@@ -126,19 +140,25 @@
         <div class="panel-title between"><div><span class="purple-icon">★</span><h2>Лучшие моменты</h2></div><a href="https://www.twitch.tv/ivix_tv/clips?range=all" target="_blank" rel="noreferrer">Все клипы →</a></div>
         <div class="clip-grid">
           <a class="clip-card" href="https://www.twitch.tv/ivix_tv/clips?range=all" target="_blank" rel="noreferrer">
-            <div class="clip-thumb face-one"><span>Clip</span></div>
+            <div class="clip-thumb face-one"><span>Clip</span><i>▶</i></div>
+            <div class="clip-meta"><small>Подборка</small><em>Все время</em></div>
             <h3>Новые клипы на Twitch</h3>
             <p>Открыть подборку моментов</p>
+            <b class="clip-action">Смотреть →</b>
           </a>
           <a class="clip-card" href="https://www.twitch.tv/ivix_tv/videos?filter=clips&range=30d" target="_blank" rel="noreferrer">
-            <div class="clip-thumb camp"><span>30d</span></div>
+            <div class="clip-thumb camp"><span>30d</span><i>▶</i></div>
+            <div class="clip-meta"><small>Свежие</small><em>30 дней</em></div>
             <h3>Клипы за месяц</h3>
             <p>Свежие реакции и мемы</p>
+            <b class="clip-action">Открыть →</b>
           </a>
           <a class="clip-card" href="https://www.twitch.tv/ivix_tv/videos" target="_blank" rel="noreferrer">
-            <div class="clip-thumb face-two"><span>VOD</span></div>
+            <div class="clip-thumb face-two"><span>VOD</span><i>▶</i></div>
+            <div class="clip-meta"><small>Архив</small><em>VOD</em></div>
             <h3>Записи трансляций</h3>
             <p>Полные эфиры и записи</p>
+            <b class="clip-action">Перейти →</b>
           </a>
         </div>
         <div class="panel-hint">Автоподгрузку клипов подключим позже через Twitch API, когда будет доступ к Developer App.</div>
@@ -180,12 +200,12 @@
       <article class="panel social-panel glass reveal delay-1" id="links">
         <div class="panel-title"><span class="purple-icon">↗</span><h2>Все ссылки</h2></div>
         <p class="panel-copy">Соцсети, донат, клипы и все актуальные переходы в одном месте.</p>
-        <div class="social-icons">
-          <a href="https://t.me/ivixitsme" target="_blank" rel="noreferrer" aria-label="Telegram">✈</a>
-          <a href="https://vk.com/ivixitsme" target="_blank" rel="noreferrer" aria-label="VK">vk</a>
-          <a href="https://www.youtube.com/@ivixitsme" target="_blank" rel="noreferrer" aria-label="YouTube">▶</a>
-          <a href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer" aria-label="Twitch">▣</a>
-          <a href="https://www.tiktok.com/@ivixitsme" target="_blank" rel="noreferrer" aria-label="TikTok">♪</a>
+        <div class="social-icons social-icons-rich">
+          <a class="social-link tg" href="https://t.me/ivixitsme" target="_blank" rel="noreferrer"><span>✈</span><b>Telegram</b><small>анонсы</small></a>
+          <a class="social-link vk" href="https://vk.com/ivixitsme" target="_blank" rel="noreferrer"><span>vk</span><b>VK</b><small>сообщество</small></a>
+          <a class="social-link yt" href="https://www.youtube.com/@ivixitsme" target="_blank" rel="noreferrer"><span>▶</span><b>YouTube</b><small>видео</small></a>
+          <a class="social-link tw" href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer"><span>▣</span><b>Twitch</b><small>стрим</small></a>
+          <a class="social-link tt" href="https://www.tiktok.com/@ivixitsme" target="_blank" rel="noreferrer"><span>♪</span><b>TikTok</b><small>шорты</small></a>
         </div>
         <a class="btn btn-ghost full" href="https://dalink.to/ivix_tv" target="_blank" rel="noreferrer">Открыть DaLink</a>
       </article>
@@ -197,6 +217,15 @@
           <a class="btn btn-primary" href="https://www.donationalerts.com/r/ivix_tv" target="_blank" rel="noreferrer">Поддержать</a>
         </div>
         <div class="jar" aria-hidden="true"><span>Спасибо<br>за поддержку!</span></div>
+      </article>
+
+      <article class="panel install-panel glass reveal delay-2">
+        <div class="panel-title"><span class="purple-icon">▥</span><h2>На телефон</h2></div>
+        <p class="panel-copy">Сохрани сайт на главный экран, чтобы быстро открывать стрим, ссылки и анонсы.</p>
+        <div class="install-steps">
+          <span>iPhone: Поделиться → На экран «Домой»</span>
+          <span>Android: ⋮ → Добавить на главный экран</span>
+        </div>
       </article>
     </section>
 
@@ -217,7 +246,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала.</p>
+    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала. <span class="site-version">v1.3</span></p>
     <a href="#home">Наверх ↑</a>
   </footer>
 
