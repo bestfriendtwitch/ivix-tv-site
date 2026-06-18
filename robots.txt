@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ivix-tv.pages.dev/sitemap.xml
+Sitemap: https://ivix-tv-site.pages.dev/sitemap.xml

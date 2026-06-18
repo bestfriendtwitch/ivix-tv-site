@@ -1,6 +1,6 @@
 # IVIX_TV site
 
-Статический сайт для Twitch-стримера IVIX_TV.
+Статический сайт для Twitch-канала IVIX_TV.
 
 ## Локальный запуск
 
@@ -14,71 +14,33 @@ python3 -m http.server 8000
 http://localhost:8000
 ```
 
-На Windows можно использовать:
+## Деплой
 
-```bash
-python -m http.server 8000
-```
+Проект настроен для Cloudflare Pages.
 
-или:
-
-```bash
-py -m http.server 8000
-```
-
-## Структура
-
-```text
-index.html              Главная страница
-styles.css              Стили сайта
-script.js               Меню, активная навигация, Twitch embed
-404.html                Страница ошибки
-robots.txt              Индексация поисковиками
-sitemap.xml             Карта сайта
-site.webmanifest        Настройки для мобильного ярлыка/PWA
-_headers                Security/cache headers для Cloudflare Pages
-_redirects              404-правило для Cloudflare Pages
-assets/favicon.svg      Иконка сайта
-assets/og-preview.png   Превью для Telegram/VK/Discord
-assets/mockup-reference.png  Визуальный референс
-```
-
-## Деплой на Cloudflare Pages
-
-1. Создать GitHub-репозиторий, например `ivix-tv-site`.
-2. Загрузить все файлы из этой папки в репозиторий.
-3. В Cloudflare открыть `Workers & Pages`.
-4. Нажать `Create application` → `Pages` → `Connect to Git`.
-5. Выбрать репозиторий.
-6. Настройки билда:
+Настройки:
 
 ```text
 Framework preset: None
-Build command: оставить пустым
+Build command: пусто
 Build output directory: /
 ```
 
-7. Нажать `Save and Deploy`.
-8. Получить ссылку вида:
+## Версия 1.1
 
-```text
-https://ivix-tv-site.pages.dev
-```
+- Реальные ссылки IVIX_TV
+- Новый блок анонсов вместо фейкового расписания
+- Все команды чата
+- Исправлен Twitch-плеер: убрана декоративная панель, которая дублировала управление
+- Улучшены мобильная версия и карточки
+- Добавлен блок DaLink / все ссылки
 
-## Что заменить перед публикацией
+## Ссылки
 
-В `index.html` заменить заглушки:
-
-- ссылки Telegram/VK/YouTube/TikTok;
-- ссылку на донат;
-- расписание стримов;
-- команды чата;
-- описание канала;
-- email для сотрудничества, если нужен другой;
-- реальные клипы или VOD.
-
-## Важно про Twitch embed
-
-Twitch требует параметр `parent` для встраивания плеера. В `script.js` он подставляется автоматически из текущего домена, поэтому на `localhost` и на Cloudflare Pages плеер должен работать корректно.
-
-После подключения собственного домена ничего дополнительно менять не нужно, если сайт открывается с этого домена.
+- Twitch: https://www.twitch.tv/ivix_tv
+- Telegram: https://t.me/ivixitsme
+- VK: https://vk.com/ivixitsme
+- YouTube: https://www.youtube.com/@ivixitsme
+- TikTok: https://www.tiktok.com/@ivixitsme
+- Donate: https://www.donationalerts.com/r/ivix_tv
+- DaLink: https://dalink.to/ivix_tv

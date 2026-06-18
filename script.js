@@ -39,7 +39,12 @@ if (player && wrap) {
   const channel = wrap.dataset.channel || 'ivix_tv';
   const host = window.location.hostname;
   if (host && host !== '') {
-    player.src = `https://player.twitch.tv/?channel=${channel}&parent=${host}&muted=true`;
+    const params = new URLSearchParams({
+      channel,
+      parent: host,
+      muted: 'true'
+    });
+    player.src = `https://player.twitch.tv/?${params.toString()}`;
   } else {
     player.remove();
   }
