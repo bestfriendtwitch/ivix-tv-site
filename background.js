@@ -1,11 +1,10 @@
 /* =============================================================
-   IVIX_TV — page-canvas galaxy with hard-reload scrollbar fix (v20 / site v1.8.43)
+   IVIX_TV — fixed-wrapper page canvas starfield (v21 / site v1.8.44)
    • mobile: canvas не создается;
    • desktop: 30 FPS;
-   • old smooth-scroll principle restored:
-     canvas is absolute and page-sized, so browser scrolls it naturally;
-   • no scrollY projection during animation, so no scroll lag/jitter;
-   • watchdog prevents accidental duplicate scrollbars without forcing fixed mode;
+   • no second scrollbar: wrapper is fixed + overflow:hidden;
+   • old smooth principle restored: large page-canvas moves with scroll by transform;
+   • no redraw/rebuild loops during Ctrl+F5;
    • faster clockwise rotation and frequent random shooting stars preserved.
 ============================================================= */
 (function () {
@@ -20,8 +19,8 @@
 
   const CONFIG = {
     targetFps: 30,
-    dprCap: 1.12,
-    maxCanvasHeight: 8200,
+    dprCap: 1.10,
+    maxCanvasHeight: 9000,
 
     colorsTop: [
       "205, 218, 255",
@@ -59,6 +58,10 @@
     ],
   };
 
+  const wrap = document.createElement("div");
+  wrap.id = "ivix-bg-wrap";
+  wrap.setAttribute("aria-hidden", "true");
+
   const canvas = document.createElement("canvas");
   canvas.id = "ivix-bg-canvas";
   canvas.setAttribute("aria-hidden", "true");
@@ -86,16 +89,17 @@
   let mounted = false;
   let shoots = [];
   let nextShoot = 0;
+  let scrollRaf = 0;
 
   const rand = (a, b) => a + Math.random() * (b - a);
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
 
   function injectCss() {
-    if (document.getElementById("ivix-bg-page-canvas-watchdog-style")) return;
+    if (document.getElementById("ivix-bg-fixed-wrapper-style")) return;
 
     const style = document.createElement("style");
-    style.id = "ivix-bg-page-canvas-watchdog-style";
+    style.id = "ivix-bg-fixed-wrapper-style";
     style.textContent = `
       html {
         overflow-x: hidden !important;
@@ -111,30 +115,38 @@
       body {
         position: relative !important;
         overflow-x: hidden !important;
-        overflow-y: visible !important;
         max-width: 100vw !important;
       }
 
-      #ivix-bg-canvas {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        right: auto !important;
-        bottom: auto !important;
-        width: 100% !important;
-        height: var(--ivix-page-bg-height, 100vh) !important;
-        max-width: 100% !important;
-        max-height: none !important;
-        min-width: 0 !important;
-        min-height: 0 !important;
-        z-index: 0 !important;
-        pointer-events: none !important;
-        display: block !important;
+      #ivix-bg-wrap {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
         overflow: hidden !important;
+        pointer-events: none !important;
+        z-index: 0 !important;
         contain: layout paint size style !important;
       }
 
-      body > :not(#ivix-bg-canvas):not(style):not(script) {
+      #ivix-bg-wrap > #ivix-bg-canvas {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100vw !important;
+        height: var(--ivix-page-bg-height, 100vh) !important;
+        max-width: 100vw !important;
+        max-height: none !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        display: block !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+        will-change: transform !important;
+        transform: translate3d(0, 0, 0);
+      }
+
+      body > :not(#ivix-bg-wrap):not(style):not(script) {
         position: relative;
         z-index: 2;
       }
@@ -276,54 +288,12 @@
   }
 
   function getNaturalPageHeight() {
-    // Ctrl+F5 race fix:
-    // if the absolute page-sized canvas is already in DOM, some browsers may
-    // count it into body/html scrollHeight while we are measuring page height.
-    // Temporarily remove only the canvas from scroll-height calculation.
-    const html = document.documentElement;
-    const body = document.body;
-    const prev = {
-      position: canvas.style.position,
-      left: canvas.style.left,
-      top: canvas.style.top,
-      width: canvas.style.width,
-      height: canvas.style.height,
-      maxHeight: canvas.style.maxHeight,
-      visibility: canvas.style.visibility,
-      pointerEvents: canvas.style.pointerEvents,
-    };
-
-    canvas.style.position = "fixed";
-    canvas.style.left = "0";
-    canvas.style.top = "0";
-    canvas.style.width = "0px";
-    canvas.style.height = "0px";
-    canvas.style.maxHeight = "0px";
-    canvas.style.visibility = "hidden";
-    canvas.style.pointerEvents = "none";
-
-    // Force style application before reading scrollHeight.
-    // eslint-disable-next-line no-unused-expressions
-    canvas.offsetHeight;
-
-    const measured = Math.max(
+    // The wrapper is fixed and out of document flow, so it should not affect scrollHeight.
+    return Math.max(
       window.innerHeight || 1,
-      html ? html.scrollHeight || 0 : 0,
-      body ? body.scrollHeight || 0 : 0,
-      html ? html.offsetHeight || 0 : 0,
-      body ? body.offsetHeight || 0 : 0
+      document.documentElement.scrollHeight || 0,
+      document.body ? document.body.scrollHeight || 0 : 0
     );
-
-    canvas.style.position = prev.position;
-    canvas.style.left = prev.left;
-    canvas.style.top = prev.top;
-    canvas.style.width = prev.width;
-    canvas.style.height = prev.height;
-    canvas.style.maxHeight = prev.maxHeight;
-    canvas.style.visibility = prev.visibility;
-    canvas.style.pointerEvents = prev.pointerEvents;
-
-    return measured;
   }
 
   function resize() {
@@ -333,25 +303,40 @@
     }
 
     W = Math.max(1, Math.round(document.documentElement.clientWidth || window.innerWidth || 1));
-    const naturalPageH = getNaturalPageHeight();
-    pageH = Math.min(naturalPageH, CONFIG.maxCanvasHeight);
+    pageH = Math.min(getNaturalPageHeight(), CONFIG.maxCanvasHeight);
 
     const nextDpr = Math.min(window.devicePixelRatio || 1, CONFIG.dprCap);
     const resizeKey = W + "x" + pageH + "@" + nextDpr.toFixed(2);
 
-    if (resizeKey === lastResizeKey && layers.length) return;
-    lastResizeKey = resizeKey;
+    if (resizeKey === lastResizeKey && layers.length) {
+      updateCanvasTransform();
+      return;
+    }
 
+    lastResizeKey = resizeKey;
     dpr = nextDpr;
 
+    canvas.style.setProperty("--ivix-page-bg-height", pageH + "px");
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(pageH * dpr);
-    canvas.style.setProperty("--ivix-page-bg-height", pageH + "px");
-    canvas.style.visibility = "visible";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     margin = Math.max(W, window.innerHeight || 900) * 0.24 + CONFIG.mouseAmount;
     rebuild();
+    updateCanvasTransform();
+  }
+
+  function updateCanvasTransform() {
+    const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    canvas.style.transform = "translate3d(0," + (-Math.round(y)) + "px,0)";
+  }
+
+  function scheduleCanvasTransform() {
+    if (scrollRaf) return;
+    scrollRaf = requestAnimationFrame(() => {
+      scrollRaf = 0;
+      updateCanvasTransform();
+    });
   }
 
   function onMouse(e) {
@@ -646,7 +631,7 @@
   function stopAndRemove() {
     if (rafId) cancelAnimationFrame(rafId);
     rafId = null;
-    if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+    if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
     mounted = false;
   }
 
@@ -684,23 +669,29 @@
 
     body.style.position = "relative";
     body.style.overflowX = "hidden";
-    body.style.overflowY = "visible";
     body.style.maxWidth = "100vw";
+
+    wrap.style.position = "fixed";
+    wrap.style.inset = "0";
+    wrap.style.width = "100vw";
+    wrap.style.height = "100vh";
+    wrap.style.overflow = "hidden";
+    wrap.style.pointerEvents = "none";
+    wrap.style.contain = "layout paint size style";
 
     canvas.style.position = "absolute";
     canvas.style.left = "0";
     canvas.style.top = "0";
-    canvas.style.right = "auto";
-    canvas.style.bottom = "auto";
-    canvas.style.width = "100%";
+    canvas.style.width = "100vw";
     canvas.style.height = pageH + "px";
-    canvas.style.setProperty("--ivix-page-bg-height", pageH + "px");
-    canvas.style.visibility = "visible";
-    canvas.style.maxWidth = "100%";
+    canvas.style.maxWidth = "100vw";
     canvas.style.maxHeight = "none";
     canvas.style.overflow = "hidden";
     canvas.style.pointerEvents = "none";
-    canvas.style.contain = "layout paint size style";
+    canvas.style.willChange = "transform";
+    canvas.style.setProperty("--ivix-page-bg-height", pageH + "px");
+
+    updateCanvasTransform();
 
     const oldBgLayers = document.querySelectorAll(".bg-scene, .bg-layer, .bg-energy-layer, .noise");
     oldBgLayers.forEach((el) => {
@@ -709,22 +700,6 @@
       el.style.maxWidth = "100vw";
       el.style.maxHeight = "100vh";
     });
-  }
-
-  function forceLayoutRecalibration() {
-    lastResizeKey = "";
-    resize();
-    applyScrollbarGuard();
-    firstFrame = true;
-  }
-
-  function scheduleColdLoadRecalibration() {
-    // A few delayed passes catch hard reloads where fonts/images/iframes
-    // settle after DOMContentLoaded and otherwise change page height.
-    requestAnimationFrame(() => requestAnimationFrame(forceLayoutRecalibration));
-    setTimeout(forceLayoutRecalibration, 180);
-    setTimeout(forceLayoutRecalibration, 650);
-    setTimeout(forceLayoutRecalibration, 1400);
   }
 
   function start() {
@@ -737,12 +712,12 @@
 
     if (!mounted) {
       mounted = true;
-      (document.body || document.documentElement).appendChild(canvas);
+      wrap.appendChild(canvas);
+      (document.body || document.documentElement).appendChild(wrap);
     }
 
     resize();
     applyScrollbarGuard();
-    scheduleColdLoadRecalibration();
     nextShoot = performance.now() / 1000 + rand(2.2, 5.2);
 
     const debouncedResize = debounce(() => {
@@ -762,13 +737,8 @@
     window.addEventListener("resize", debouncedResize, { passive: true });
     window.addEventListener("orientationchange", debouncedResize, { passive: true });
     window.addEventListener("mousemove", onMouse, { passive: true });
+    window.addEventListener("scroll", scheduleCanvasTransform, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
-    window.addEventListener("load", scheduleColdLoadRecalibration, { once: true, passive: true });
-
-    // Guard only, not animation projection. This does not redraw on scroll.
-    window.addEventListener("scroll", () => {
-      requestAnimationFrame(applyScrollbarGuard);
-    }, { passive: true });
 
     if (window.ResizeObserver) {
       const ro = new ResizeObserver(debouncedPageResize);
@@ -790,7 +760,7 @@
       media.addEventListener("change", debouncedResize);
     }
 
-    setInterval(applyScrollbarGuard, 1400);
+    setInterval(applyScrollbarGuard, 1600);
 
     lastDraw = performance.now();
     firstFrame = true;
