@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 2400" preserveAspectRatio="none">
+  <rect width="1920" height="2400" fill="transparent"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke="#6f34c9" stroke-opacity=".22" stroke-width="1.4">
+      <path d="M-80 230 L120 155 L280 300 L505 190 L720 350"/>
+      <path d="M50 620 L235 505 L440 690 L690 545 L920 735"/>
+      <path d="M-60 1050 L180 900 L420 1125 L720 955 L980 1195"/>
+      <path d="M25 1535 L280 1340 L540 1585 L835 1390"/>
+      <path d="M-40 2050 L240 1840 L545 2110 L850 1930"/>
+      <path d="M1090 180 L1320 72 L1565 285 L2020 55"/>
+      <path d="M1035 590 L1295 410 L1565 675 L1990 455"/>
+      <path d="M1080 1080 L1360 875 L1650 1185 L2010 1010"/>
+      <path d="M990 1590 L1320 1340 L1640 1685 L2045 1460"/>
+      <path d="M1040 2110 L1375 1880 L1690 2190 L2030 2020"/>
+      <path d="M450 390 L750 270 L1030 505 L1300 342"/>
+      <path d="M405 890 L750 700 L1080 990 L1375 790"/>
+      <path d="M520 1390 L840 1180 L1160 1490 L1480 1265"/>
+      <path d="M470 1920 L850 1670 L1220 2020 L1550 1780"/>
+    </g>
+    <g stroke="#d8bcff" stroke-opacity=".07" stroke-width="2.4">
+      <path d="M280 300 L235 505 L420 1125 L280 1340"/>
+      <path d="M1320 72 L1295 410 L1360 875 L1320 1340"/>
+      <path d="M750 270 L750 700 L840 1180 L850 1670"/>
+      <path d="M1030 505 L1080 990 L1160 1490 L1220 2020"/>
+    </g>
+  </g>
+  <g fill="#d8bcff" fill-opacity=".24">
+    <circle cx="120" cy="155" r="1.8"/><circle cx="280" cy="300" r="1.5"/><circle cx="505" cy="190" r="2.1"/>
+    <circle cx="235" cy="505" r="1.6"/><circle cx="440" cy="690" r="1.8"/><circle cx="690" cy="545" r="1.5"/>
+    <circle cx="420" cy="1125" r="1.7"/><circle cx="720" cy="955" r="1.9"/><circle cx="540" cy="1585" r="1.8"/>
+    <circle cx="1320" cy="72" r="2.0"/><circle cx="1565" cy="285" r="1.6"/><circle cx="1295" cy="410" r="1.8"/>
+    <circle cx="1565" cy="675" r="1.9"/><circle cx="1360" cy="875" r="1.6"/><circle cx="1650" cy="1185" r="1.8"/>
+    <circle cx="840" cy="1180" r="1.7"/><circle cx="1160" cy="1490" r="1.8"/>
+  </g>
+</svg>
