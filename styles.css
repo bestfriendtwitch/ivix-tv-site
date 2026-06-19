@@ -2580,3 +2580,130 @@ body {
     animation: none !important;
   }
 }
+
+
+/* v1.8.23 — volumetric constellation + real JS scroll parallax
+   Removes circular node halos, adds 3 depth layers, fixes visible parallax. */
+
+:root {
+  --geo-scroll: 0px;
+}
+
+body {
+  background-image:
+    url("/assets/constellation-near.svg?v=1823"),
+    url("/assets/constellation-mid.svg?v=1823"),
+    url("/assets/constellation-far.svg?v=1823"),
+    radial-gradient(circle at 12% 18%, rgba(138,61,255,.28), transparent 26%),
+    radial-gradient(circle at 86% 18%, rgba(153,76,255,.22), transparent 25%),
+    radial-gradient(circle at 78% 84%, rgba(121,49,236,.13), transparent 28%),
+    linear-gradient(180deg, #08050f 0%, #05040a 48%, #030209 100%) !important;
+
+  background-repeat: repeat-y, repeat-y, repeat-y, no-repeat, no-repeat, no-repeat, no-repeat;
+
+  background-size:
+    116% 2200px,
+    112% 2200px,
+    108% 2200px,
+    auto,
+    auto,
+    auto,
+    auto;
+
+  background-position:
+    center calc((var(--geo-scroll) * .34) - 180px),
+    center calc((var(--geo-scroll) * .18) - 90px),
+    center calc((var(--geo-scroll) * .07) - 40px),
+    center center,
+    center center,
+    center center,
+    center center;
+
+  background-attachment:
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed;
+
+  animation: ivixConstellationCinematicBreath 9s ease-in-out infinite !important;
+}
+
+/* Kill the old circular glow feeling and leave only ambient wash. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(179,92,255,.05), transparent 22%),
+    radial-gradient(circle at 84% 18%, rgba(179,92,255,.04), transparent 22%),
+    radial-gradient(circle at 50% 90%, rgba(126,45,255,.03), transparent 28%);
+  opacity: .45;
+  transform: none;
+  animation: none !important;
+}
+
+body::after {
+  opacity: .14 !important;
+}
+
+.noise {
+  opacity: .085 !important;
+  mix-blend-mode: overlay !important;
+}
+
+@keyframes ivixConstellationCinematicBreath {
+  0%, 100% {
+    filter: saturate(1.04) brightness(1);
+  }
+  50% {
+    filter: saturate(1.11) brightness(1.035);
+  }
+}
+
+.site-header,
+main,
+.site-footer {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 760px) {
+  body {
+    background-size:
+      190% 1900px,
+      178% 1900px,
+      168% 1900px,
+      auto,
+      auto,
+      auto,
+      auto;
+
+    background-position:
+      center calc((var(--geo-scroll) * .28) - 120px),
+      center calc((var(--geo-scroll) * .14) - 70px),
+      center calc((var(--geo-scroll) * .05) - 30px),
+      center center,
+      center center,
+      center center,
+      center center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none !important;
+    background-position:
+      center -120px,
+      center -70px,
+      center -30px,
+      center center,
+      center center,
+      center center,
+      center center;
+  }
+}
