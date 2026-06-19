@@ -2454,287 +2454,119 @@ body::after {
 }
 
 
-/* v1.8.12 — larger but softer geometric background grid
-   Scope: styles.css only. Scroll animation where supported. */
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: -12vh -10vw;
-  pointer-events: none;
-  z-index: -2;
-  opacity: .72;
-  background:
-    radial-gradient(circle at 82% 4%, rgba(179,92,255,.085), transparent 24%),
-    radial-gradient(circle at 7% 22%, rgba(126,45,255,.075), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(93,41,203,.072), transparent 34%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1200'%3E%0A  %3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%0A    %3Cpath d='M-80 290 L160 430 L430 130 L700 310 L940 100 L1220 270 L1680 60' stroke='#a855ff' stroke-opacity='.22' stroke-width='2'/%3E%0A    %3Cpath d='M-60 760 L180 660 L420 850 L650 620 L910 745 L1180 520 L1600 700' stroke='#b35cff' stroke-opacity='.18' stroke-width='2'/%3E%0A    %3Cpath d='M20 1020 L260 860 L540 1010 L790 880 L1060 1060 L1350 850 L1650 980' stroke='#7c35ff' stroke-opacity='.16' stroke-width='1.5'/%3E%0A    %3Cpath d='M80 110 L250 330 L120 620 L360 720 L500 480 L760 560 L900 350 L1160 455 L1360 250 L1530 400' stroke='#caa6ff' stroke-opacity='.15' stroke-width='1.5'/%3E%0A    %3Cpath d='M1430 80 L1300 330 L1510 560 L1310 760 L1480 1020' stroke='#a855ff' stroke-opacity='.17' stroke-width='1.5'/%3E%0A    %3Cpath d='M260 430 L420 850 M700 310 L650 620 M940 100 L910 745 M1220 270 L1180 520 M1360 250 L1310 760' stroke='#a855ff' stroke-opacity='.11' stroke-width='1'/%3E%0A    %3Cpath d='M160 430 L180 660 M430 130 L500 480 M760 560 L790 880 M1060 1060 L1180 520' stroke='#ffffff' stroke-opacity='.06' stroke-width='1'/%3E%0A    %3Cpath d='M-120 560 L120 620 L180 660 L360 720 L650 620 L760 560 L910 745 L1310 760 L1680 620' stroke='#b35cff' stroke-opacity='.10' stroke-width='1'/%3E%0A    %3Cpath d='M-90 390 L160 430 L250 330 L430 130' stroke='#ffffff' stroke-opacity='.16' stroke-width='2.2'/%3E%0A    %3Cpath d='M1180 520 L1310 760 L1480 1020' stroke='#ffffff' stroke-opacity='.12' stroke-width='2'/%3E%0A  %3C/g%3E%0A  %3Cg fill='#caa6ff' fill-opacity='.42'%3E%0A    %3Ccircle cx='160' cy='430' r='3.2'/%3E%0A    %3Ccircle cx='430' cy='130' r='3.4'/%3E%0A    %3Ccircle cx='700' cy='310' r='2.6'/%3E%0A    %3Ccircle cx='940' cy='100' r='3.1'/%3E%0A    %3Ccircle cx='1220' cy='270' r='2.8'/%3E%0A    %3Ccircle cx='180' cy='660' r='2.6'/%3E%0A    %3Ccircle cx='420' cy='850' r='3.2'/%3E%0A    %3Ccircle cx='650' cy='620' r='2.5'/%3E%0A    %3Ccircle cx='910' cy='745' r='3.1'/%3E%0A    %3Ccircle cx='1180' cy='520' r='3.3'/%3E%0A    %3Ccircle cx='1310' cy='760' r='2.7'/%3E%0A    %3Ccircle cx='1480' cy='1020' r='3'/%3E%0A  %3C/g%3E%0A  %3Cg fill='#a855ff' fill-opacity='.26'%3E%0A    %3Ccircle cx='80' cy='110' r='2'/%3E%0A    %3Ccircle cx='250' cy='330' r='2'/%3E%0A    %3Ccircle cx='500' cy='480' r='2'/%3E%0A    %3Ccircle cx='760' cy='560' r='2'/%3E%0A    %3Ccircle cx='1360' cy='250' r='2'/%3E%0A    %3Ccircle cx='1530' cy='400' r='2'/%3E%0A    %3Ccircle cx='260' cy='860' r='2'/%3E%0A    %3Ccircle cx='790' cy='880' r='2'/%3E%0A    %3Ccircle cx='1060' cy='1060' r='2'/%3E%0A  %3C/g%3E%0A%3C/svg%3E") center top / 1750px 1320px repeat-y,
-    linear-gradient(180deg, rgba(5,4,10,.02), rgba(5,4,10,.34));
-  filter: drop-shadow(0 0 10px rgba(179,92,255,.12));
-  transform: translate3d(0, 0, 0) scale(1.02);
-  will-change: transform, background-position;
-}
-
-body::after {
-  opacity: .54;
-}
-
-/* Keep the thin base grid quieter so the geometry is the main background detail */
-.noise {
-  opacity: .22;
-}
-
-@keyframes ivixGeoScroll {
-  from {
-    transform: translate3d(0, -3vh, 0) scale(1.02);
-    background-position:
-      center center,
-      center center,
-      center center,
-      center -80px,
-      center center;
-  }
-  to {
-    transform: translate3d(0, 7vh, 0) scale(1.055);
-    background-position:
-      center center,
-      center center,
-      center center,
-      center 220px,
-      center center;
-  }
-}
-
-@supports (animation-timeline: scroll()) {
-  body::before {
-    animation: ivixGeoScroll linear both;
-    animation-timeline: scroll(root);
-    animation-range: 0 100%;
-  }
-}
-
-@media (max-width: 760px) {
-  body::before {
-    inset: -8vh -34vw;
-    opacity: .58;
-    background-size:
-      auto,
-      auto,
-      auto,
-      1250px 980px,
-      auto;
-  }
-
-  .noise {
-    opacity: .18;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body::before {
-    animation: none !important;
-    transform: none;
-  }
-}
-
-
-/* v1.8.13 — fix visible geometric background layer
-   Previous v1.8.12 grid was hidden under body background because of negative z-index. */
+/* v1.8.16 — CSS-only geometric background, fixed correctly
+   Removes the asset/SVG approach. Geometry stays under content, not over it. */
 
 body {
   isolation: isolate;
 }
 
+/* Keep the old grain grid very quiet */
+.noise {
+  opacity: .18 !important;
+  mix-blend-mode: overlay !important;
+  z-index: 1 !important;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px) !important;
+  background-size: 34px 34px !important;
+}
+
+/* This layer is the actual geometric network.
+   It is above the page background, below all real content. */
 body::before {
   content: "";
   position: fixed;
-  inset: -12vh -10vw;
-  pointer-events: none;
+  inset: -18vh -14vw;
   z-index: 0;
-  opacity: .54;
-  background:
-    radial-gradient(circle at 82% 4%, rgba(179,92,255,.055), transparent 24%),
-    radial-gradient(circle at 7% 22%, rgba(126,45,255,.052), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(93,41,203,.050), transparent 34%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1700 1300'%3E%0A  %3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%0A    %3Cpath d='M-120 350 L180 510 L455 170 L735 355 L1010 120 L1290 330 L1820 90' stroke='#a855ff' stroke-opacity='.18' stroke-width='2'/%3E%0A    %3Cpath d='M-80 820 L210 700 L470 910 L720 650 L985 790 L1260 560 L1760 770' stroke='#b35cff' stroke-opacity='.14' stroke-width='2'/%3E%0A    %3Cpath d='M35 1140 L290 925 L590 1090 L850 950 L1140 1150 L1460 910 L1800 1060' stroke='#7c35ff' stroke-opacity='.13' stroke-width='1.5'/%3E%0A    %3Cpath d='M90 120 L270 360 L135 650 L390 760 L535 510 L810 590 L960 380 L1235 490 L1440 275 L1630 430' stroke='#d8bcff' stroke-opacity='.11' stroke-width='1.5'/%3E%0A    %3Cpath d='M260 510 L470 910 M735 355 L720 650 M1010 120 L985 790 M1290 330 L1260 560 M1440 275 L1460 910' stroke='#a855ff' stroke-opacity='.08' stroke-width='1'/%3E%0A    %3Cpath d='M-90 450 L180 510 L270 360 L455 170' stroke='#ffffff' stroke-opacity='.12' stroke-width='2.1'/%3E%0A    %3Cpath d='M1260 560 L1460 910 L1800 1060' stroke='#ffffff' stroke-opacity='.09' stroke-width='2'/%3E%0A  %3C/g%3E%0A  %3Cg fill='#caa6ff' fill-opacity='.34'%3E%0A    %3Ccircle cx='180' cy='510' r='3'/%3E%0A    %3Ccircle cx='455' cy='170' r='3.1'/%3E%0A    %3Ccircle cx='735' cy='355' r='2.5'/%3E%0A    %3Ccircle cx='1010' cy='120' r='3'/%3E%0A    %3Ccircle cx='1290' cy='330' r='2.7'/%3E%0A    %3Ccircle cx='210' cy='700' r='2.5'/%3E%0A    %3Ccircle cx='470' cy='910' r='3'/%3E%0A    %3Ccircle cx='720' cy='650' r='2.4'/%3E%0A    %3Ccircle cx='985' cy='790' r='3'/%3E%0A    %3Ccircle cx='1260' cy='560' r='3.1'/%3E%0A    %3Ccircle cx='1460' cy='910' r='2.7'/%3E%0A  %3C/g%3E%0A%3C/svg%3E") center top / 1780px 1360px repeat-y;
-  filter: drop-shadow(0 0 8px rgba(179,92,255,.09));
-  transform: translate3d(0, 0, 0) scale(1.02);
-  will-change: transform, background-position;
-}
-
-.noise {
-  z-index: 1;
-  opacity: .16;
-}
-
-.site-header,
-main,
-.site-footer {
-  position: relative;
-  z-index: 2;
-}
-
-@keyframes ivixGeoScrollVisible {
-  from {
-    transform: translate3d(0, -4vh, 0) scale(1.02);
-    background-position:
-      center center,
-      center center,
-      center center,
-      center -120px;
-  }
-  to {
-    transform: translate3d(0, 8vh, 0) scale(1.055);
-    background-position:
-      center center,
-      center center,
-      center center,
-      center 260px;
-  }
-}
-
-@supports (animation-timeline: scroll()) {
-  body::before {
-    animation: ivixGeoScrollVisible linear both;
-    animation-timeline: scroll(root);
-    animation-range: 0 100%;
-  }
-}
-
-@media (max-width: 760px) {
-  body::before {
-    inset: -8vh -34vw;
-    opacity: .42;
-    background-size:
-      auto,
-      auto,
-      auto,
-      1260px 980px;
-  }
-
-  .noise {
-    opacity: .13;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body::before {
-    animation: none !important;
-    transform: none;
-  }
-}
-
-
-/* v1.8.14 — force-visible geometric overlay via .noise layer
-   Scope: styles.css only. This does not affect layout or clicks. */
-
-.noise {
-  opacity: 1;
-  mix-blend-mode: normal;
-  z-index: 49;
-  background-image:
-    linear-gradient(rgba(255,255,255,.012) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.012) 1px, transparent 1px);
-  background-size: 34px 34px;
-}
-
-.noise::before {
-  content: "";
-  position: fixed;
-  inset: -10vh -12vw;
   pointer-events: none;
+  opacity: .46;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1800 1200'%3E%0A  %3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%0A    %3Cpath d='M-80 280 L190 430 L430 130 L720 310 L980 120 L1260 300 L1880 80' stroke='#b35cff' stroke-opacity='.28' stroke-width='2'/%3E%0A    %3Cpath d='M-100 760 L180 650 L460 850 L710 620 L970 760 L1250 530 L1860 710' stroke='#b35cff' stroke-opacity='.20' stroke-width='2'/%3E%0A    %3Cpath d='M40 1080 L270 870 L560 1030 L820 890 L1110 1080 L1450 870 L1840 1040' stroke='#7c35ff' stroke-opacity='.18' stroke-width='1.6'/%3E%0A    %3Cpath d='M70 90 L260 330 L120 610 L380 720 L520 470 L805 550 L950 340 L1220 455 L1420 260 L1640 430' stroke='#d8bcff' stroke-opacity='.16' stroke-width='1.5'/%3E%0A    %3Cpath d='M190 430 L180 650 M430 130 L520 470 M720 310 L710 620 M980 120 L970 760 M1260 300 L1250 530 M1420 260 L1450 870' stroke='#b35cff' stroke-opacity='.13' stroke-width='1'/%3E%0A    %3Cpath d='M-60 400 L190 430 L260 330 L430 130' stroke='#ffffff' stroke-opacity='.18' stroke-width='2.2'/%3E%0A    %3Cpath d='M1250 530 L1450 870 L1840 1040' stroke='#ffffff' stroke-opacity='.14' stroke-width='2'/%3E%0A  %3C/g%3E%0A  %3Cg fill='#d8bcff' fill-opacity='.45'%3E%0A    %3Ccircle cx='190' cy='430' r='3'/%3E%0A    %3Ccircle cx='430' cy='130' r='3'/%3E%0A    %3Ccircle cx='720' cy='310' r='2.5'/%3E%0A    %3Ccircle cx='980' cy='120' r='3'/%3E%0A    %3Ccircle cx='1260' cy='300' r='2.8'/%3E%0A    %3Ccircle cx='180' cy='650' r='2.6'/%3E%0A    %3Ccircle cx='460' cy='850' r='3'/%3E%0A    %3Ccircle cx='710' cy='620' r='2.5'/%3E%0A    %3Ccircle cx='970' cy='760' r='3'/%3E%0A    %3Ccircle cx='1250' cy='530' r='3'/%3E%0A    %3Ccircle cx='1450' cy='870' r='2.8'/%3E%0A  %3C/g%3E%0A%3C/svg%3E") center top / 1800px 1200px repeat-y;
-  opacity: .34;
-  mix-blend-mode: screen;
+    /* soft light blobs */
+    radial-gradient(circle at 12% 28%, rgba(179,92,255,.11), transparent 19%),
+    radial-gradient(circle at 86% 20%, rgba(179,92,255,.09), transparent 22%),
+    radial-gradient(circle at 82% 78%, rgba(126,45,255,.075), transparent 25%),
+
+    /* long random network lines */
+    linear-gradient(28deg, transparent 0 18%, rgba(190,126,255,.20) 18.08%, rgba(190,126,255,.20) 18.24%, transparent 18.32% 100%),
+    linear-gradient(147deg, transparent 0 24%, rgba(179,92,255,.16) 24.08%, rgba(179,92,255,.16) 24.22%, transparent 24.30% 100%),
+    linear-gradient(64deg, transparent 0 34%, rgba(216,188,255,.12) 34.06%, rgba(216,188,255,.12) 34.18%, transparent 34.26% 100%),
+    linear-gradient(118deg, transparent 0 42%, rgba(179,92,255,.14) 42.06%, rgba(179,92,255,.14) 42.20%, transparent 42.28% 100%),
+    linear-gradient(22deg, transparent 0 57%, rgba(190,126,255,.13) 57.06%, rgba(190,126,255,.13) 57.18%, transparent 57.26% 100%),
+    linear-gradient(154deg, transparent 0 66%, rgba(179,92,255,.14) 66.08%, rgba(179,92,255,.14) 66.22%, transparent 66.30% 100%),
+    linear-gradient(76deg, transparent 0 74%, rgba(216,188,255,.10) 74.06%, rgba(216,188,255,.10) 74.18%, transparent 74.26% 100%),
+
+    /* a few shorter brighter segments */
+    linear-gradient(33deg, transparent 0 47%, rgba(255,255,255,.13) 47.04%, rgba(255,255,255,.13) 47.16%, transparent 47.24% 100%),
+    linear-gradient(132deg, transparent 0 53%, rgba(255,255,255,.10) 53.04%, rgba(255,255,255,.10) 53.15%, transparent 53.23% 100%);
+
+  background-size:
+    auto,
+    auto,
+    auto,
+    780px 520px,
+    860px 560px,
+    920px 620px,
+    840px 600px,
+    760px 540px,
+    980px 640px,
+    880px 580px,
+    640px 460px,
+    700px 500px;
+
+  background-position:
+    center center,
+    center center,
+    center center,
+    -120px 80px,
+    280px -60px,
+    40px 320px,
+    520px 180px,
+    -260px 520px,
+    620px 620px,
+    -180px 780px,
+    100px 180px,
+    720px 420px;
+
   filter:
-    drop-shadow(0 0 6px rgba(179,92,255,.34))
-    drop-shadow(0 0 16px rgba(126,45,255,.13));
+    drop-shadow(0 0 5px rgba(179,92,255,.18))
+    drop-shadow(0 0 14px rgba(126,45,255,.08));
+
   transform: translate3d(0, 0, 0) scale(1.02);
   will-change: transform, background-position;
 }
 
-.noise::after {
+/* Small glowing nodes made with box-shadow on one pseudo layer.
+   These are under content too. */
+body::after {
   content: "";
   position: fixed;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(circle at 18% 26%, rgba(179,92,255,.09), transparent 18%),
-    radial-gradient(circle at 86% 26%, rgba(179,92,255,.075), transparent 20%),
-    radial-gradient(circle at 88% 76%, rgba(126,45,255,.055), transparent 24%);
-  opacity: .75;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  left: 12vw;
+  top: 22vh;
+  opacity: .50;
+  background: rgba(216,188,255,.62);
+  box-shadow:
+    18vw 10vh 0 rgba(216,188,255,.35),
+    38vw -6vh 0 rgba(179,92,255,.38),
+    62vw 8vh 0 rgba(216,188,255,.32),
+    82vw 20vh 0 rgba(179,92,255,.34),
+    10vw 44vh 0 rgba(179,92,255,.33),
+    34vw 34vh 0 rgba(216,188,255,.28),
+    56vw 48vh 0 rgba(179,92,255,.30),
+    78vw 58vh 0 rgba(216,188,255,.28),
+    20vw 78vh 0 rgba(179,92,255,.30),
+    52vw 84vh 0 rgba(216,188,255,.27),
+    88vw 82vh 0 rgba(179,92,255,.27);
+  filter: drop-shadow(0 0 8px rgba(179,92,255,.45));
 }
 
-@keyframes ivixNoiseGeoScroll {
-  from {
-    transform: translate3d(0, -3vh, 0) scale(1.02);
-    background-position: center -90px;
-  }
-  to {
-    transform: translate3d(0, 8vh, 0) scale(1.055);
-    background-position: center 260px;
-  }
-}
-
-@supports (animation-timeline: scroll()) {
-  .noise::before {
-    animation: ivixNoiseGeoScroll linear both;
-    animation-timeline: scroll(root);
-    animation-range: 0 100%;
-  }
-}
-
-@media (max-width: 760px) {
-  .noise::before {
-    inset: -8vh -42vw;
-    opacity: .22;
-    background-size: 1260px 900px;
-  }
-
-  .noise::after {
-    opacity: .45;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .noise::before {
-    animation: none !important;
-    transform: none;
-  }
-}
-
-
-/* v1.8.15 — real SVG asset geometric background
-   This uses /assets/geo-bg.svg instead of CSS data-url, so the browser loads it reliably. */
-
-body {
-  background:
-    radial-gradient(circle at 12% 18%, rgba(132, 48, 255, .30), transparent 25%),
-    radial-gradient(circle at 84% 8%, rgba(70, 23, 145, .23), transparent 24%),
-    radial-gradient(circle at 76% 84%, rgba(115, 30, 255, .18), transparent 26%),
-    linear-gradient(180deg, #080511 0%, #05040a 48%, #080511 100%);
-}
-
-.noise {
-  opacity: 1 !important;
-  mix-blend-mode: screen !important;
-  z-index: 49 !important;
-  background:
-    url("/assets/geo-bg.svg?v=1815") center top / 1780px 1280px repeat-y,
-    radial-gradient(circle at 18% 26%, rgba(179,92,255,.08), transparent 18%),
-    radial-gradient(circle at 86% 28%, rgba(179,92,255,.07), transparent 20%),
-    linear-gradient(rgba(255,255,255,.010) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.010) 1px, transparent 1px) !important;
-  background-size:
-    1780px 1280px,
-    auto,
-    auto,
-    34px 34px,
-    34px 34px !important;
-  filter: drop-shadow(0 0 8px rgba(179,92,255,.20));
-}
-
+/* Put real content above the background geometry */
 .site-header,
 main,
 .site-footer {
@@ -2742,47 +2574,97 @@ main,
   z-index: 2;
 }
 
-@keyframes ivixGeoAssetScroll {
+@keyframes ivixCssGeoScroll {
   from {
+    transform: translate3d(0, -5vh, 0) scale(1.015);
     background-position:
-      center -130px,
       center center,
       center center,
-      0 0,
-      0 0;
+      center center,
+      -120px 40px,
+      280px -90px,
+      40px 260px,
+      520px 140px,
+      -260px 470px,
+      620px 560px,
+      -180px 720px,
+      100px 140px,
+      720px 360px;
+  }
+
+  to {
+    transform: translate3d(0, 9vh, 0) scale(1.05);
+    background-position:
+      center center,
+      center center,
+      center center,
+      -120px 260px,
+      280px 160px,
+      40px 540px,
+      520px 420px,
+      -260px 760px,
+      620px 900px,
+      -180px 1020px,
+      100px 360px,
+      720px 680px;
+  }
+}
+
+@keyframes ivixCssNodeScroll {
+  from {
+    transform: translate3d(0, -4vh, 0);
   }
   to {
-    background-position:
-      center 260px,
-      center center,
-      center center,
-      0 34px,
-      34px 0;
+    transform: translate3d(0, 7vh, 0);
   }
 }
 
 @supports (animation-timeline: scroll()) {
-  .noise {
-    animation: ivixGeoAssetScroll linear both;
+  body::before {
+    animation: ivixCssGeoScroll linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 100%;
+  }
+
+  body::after {
+    animation: ivixCssNodeScroll linear both;
     animation-timeline: scroll(root);
     animation-range: 0 100%;
   }
 }
 
 @media (max-width: 760px) {
-  .noise {
-    opacity: .62 !important;
+  body::before {
+    inset: -10vh -42vw;
+    opacity: .30;
     background-size:
-      1240px 900px,
       auto,
       auto,
-      34px 34px,
-      34px 34px !important;
+      auto,
+      640px 460px,
+      720px 500px,
+      760px 540px,
+      700px 520px,
+      620px 460px,
+      760px 560px,
+      720px 520px,
+      540px 420px,
+      600px 440px;
+  }
+
+  body::after {
+    opacity: .30;
+  }
+
+  .noise {
+    opacity: .12 !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .noise {
+  body::before,
+  body::after {
     animation: none !important;
+    transform: none;
   }
 }
