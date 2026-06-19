@@ -1,12 +1,12 @@
 /* =============================================================
-   IVIX_TV — boosted scrolling page-canvas galaxy starfield (v12 / site v1.8.35)
+   IVIX_TV — fixed viewport galaxy starfield without duplicate scrollbar (v13 / site v1.8.36)
    • mobile: canvas не создается;
    • desktop: 30 FPS;
-   • canvas is absolute full-page layer, so it scrolls with content naturally;
-   • more stars, more bright stars;
-   • faster clockwise rotation around page center;
-   • more shooting stars in random directions;
-   • short trail / lower motion blur.
+   • canvas is fixed again, so it cannot create a second scrollbar;
+   • stars are generated in page coordinates and sampled through scrollY;
+   • clockwise faster rotation around page center;
+   • more stars, brighter stars, more random shooting stars;
+   • short trail / lower blur.
 ============================================================= */
 (function () {
   "use strict";
@@ -20,8 +20,7 @@
 
   const CONFIG = {
     targetFps: 30,
-    dprCap: 1.18,
-    maxCanvasHeight: 7600,
+    dprCap: 1.25,
 
     colorsTop: [
       "205, 218, 255",
@@ -43,7 +42,7 @@
     mouseEase: 0.055,
 
     galaxyRotation: 0.0105,
-    trailAlpha: 0.76,
+    trailAlpha: 0.78,
 
     shootingStars: true,
     shootingEvery: [4.2, 10.5],
@@ -66,7 +65,9 @@
   const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
 
   let W = 0;
+  let H = 0;
   let pageH = 0;
+  let scrollY = 0;
   let dpr = 1;
   let quality = 1;
   let frameInterval = 1000 / CONFIG.targetFps;
@@ -92,25 +93,22 @@
   const lerp = (a, b, t) => a + (b - a) * t;
 
   function injectCss() {
-    if (document.getElementById("ivix-bg-boosted-page-canvas-style")) return;
+    if (document.getElementById("ivix-bg-fixed-no-scrollbar-style")) return;
 
     const style = document.createElement("style");
-    style.id = "ivix-bg-boosted-page-canvas-style";
+    style.id = "ivix-bg-fixed-no-scrollbar-style";
     style.textContent = `
       html, body {
         background-color: #05030b;
-      }
-
-      body {
-        position: relative;
+        overflow-x: hidden !important;
       }
 
       #ivix-bg-canvas {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        height: var(--ivix-page-bg-height, 100vh) !important;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: 100vw !important;
         z-index: 0 !important;
         pointer-events: none !important;
         display: block !important;
@@ -182,7 +180,7 @@
   }
 
   function calcQuality() {
-    const area = window.innerWidth * window.innerHeight;
+    const area = W * H;
     const cores = navigator.hardwareConcurrency || 4;
 
     let q = 1;
@@ -233,13 +231,12 @@
   function buildNebulae() {
     if (!CONFIG.nebulae) return [];
 
-    const viewportH = window.innerHeight || 900;
-    const scale = clamp(Math.min(W, viewportH) / 900, 0.72, 1.15);
+    const scale = clamp(Math.min(W, H) / 900, 0.72, 1.15);
 
     return [
-      { x: W * 0.12, y: pageH * 0.18, w: W * 0.72 * scale, h: viewportH * 0.58 * scale, rot: -0.12, colorA: "132, 70, 255", colorB: "80, 38, 160", alpha: 0.035, speed: 0.018, phase: rand(0, Math.PI * 2) },
-      { x: W * 0.86, y: pageH * 0.34, w: W * 0.74 * scale, h: viewportH * 0.54 * scale, rot: 0.18, colorA: "180, 104, 255", colorB: "68, 26, 140", alpha: 0.028, speed: 0.016, phase: rand(0, Math.PI * 2) },
-      { x: W * 0.48, y: pageH * 0.66, w: W * 0.82 * scale, h: viewportH * 0.50 * scale, rot: -0.06, colorA: "116, 74, 255", colorB: "44, 22, 92", alpha: 0.024, speed: 0.014, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.12, y: pageH * 0.18, w: W * 0.72 * scale, h: H * 0.58 * scale, rot: -0.12, colorA: "132, 70, 255", colorB: "80, 38, 160", alpha: 0.035, speed: 0.018, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.86, y: pageH * 0.34, w: W * 0.74 * scale, h: H * 0.54 * scale, rot: 0.18, colorA: "180, 104, 255", colorB: "68, 26, 140", alpha: 0.028, speed: 0.016, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.48, y: pageH * 0.66, w: W * 0.82 * scale, h: H * 0.50 * scale, rot: -0.06, colorA: "116, 74, 255", colorB: "44, 22, 92", alpha: 0.024, speed: 0.014, phase: rand(0, Math.PI * 2) },
     ];
   }
 
@@ -264,34 +261,38 @@
     }
 
     W = Math.max(1, Math.round(document.documentElement.clientWidth || window.innerWidth || 1));
-    const naturalPageH = Math.max(
-      window.innerHeight || 1,
+    H = Math.max(1, Math.round(window.innerHeight || document.documentElement.clientHeight || 1));
+    pageH = Math.max(
+      H,
       document.documentElement.scrollHeight || 0,
       document.body.scrollHeight || 0
     );
-    pageH = Math.min(Math.max(window.innerHeight || 1, naturalPageH), CONFIG.maxCanvasHeight);
 
     const nextDpr = Math.min(window.devicePixelRatio || 1, CONFIG.dprCap);
-    const resizeKey = W + "x" + pageH + "@" + nextDpr.toFixed(2);
+    const resizeKey = W + "x" + H + "x" + pageH + "@" + nextDpr.toFixed(2);
 
     if (resizeKey === lastResizeKey && layers.length) return;
     lastResizeKey = resizeKey;
 
     dpr = nextDpr;
 
-    canvas.style.setProperty("--ivix-page-bg-height", pageH + "px");
     canvas.width = Math.round(W * dpr);
-    canvas.height = Math.round(pageH * dpr);
+    canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    margin = Math.max(W, window.innerHeight || 900) * 0.24 + CONFIG.mouseAmount;
+    margin = Math.max(W, H) * 0.24 + CONFIG.mouseAmount;
     rebuild();
   }
 
+  function onScroll() {
+    scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    firstFrame = true;
+  }
+
   function onMouse(e) {
-    if (!W || !pageH) return;
+    if (!W || !H) return;
     tmx = (e.clientX / W) * 2 - 1;
-    tmy = (e.clientY / Math.max(1, window.innerHeight || 1)) * 2 - 1;
+    tmy = (e.clientY / H) * 2 - 1;
   }
 
   function drawSpaceBase(isFirst) {
@@ -299,43 +300,46 @@
 
     if (!isFirst) {
       ctx.fillStyle = "rgba(5, 3, 11, " + CONFIG.trailAlpha + ")";
-      ctx.fillRect(0, 0, W, pageH);
+      ctx.fillRect(0, 0, W, H);
       return;
     }
 
-    const grad = ctx.createLinearGradient(0, 0, 0, pageH);
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
     grad.addColorStop(0, "#05030b");
     grad.addColorStop(0.44, "#100520");
     grad.addColorStop(1, "#05030b");
 
     ctx.globalAlpha = 1;
     ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, pageH);
+    ctx.fillRect(0, 0, W, H);
   }
 
   function drawAmbientGlow() {
-    const sideA = ctx.createRadialGradient(W * 0.10, pageH * 0.22, 0, W * 0.10, pageH * 0.22, W * 0.55);
+    const sideA = ctx.createRadialGradient(W * 0.10, H * 0.22, 0, W * 0.10, H * 0.22, W * 0.55);
     sideA.addColorStop(0, "rgba(116, 50, 255, 0.034)");
     sideA.addColorStop(0.48, "rgba(82, 32, 180, 0.013)");
     sideA.addColorStop(1, "rgba(82, 32, 180, 0)");
     ctx.fillStyle = sideA;
-    ctx.fillRect(0, 0, W, pageH);
+    ctx.fillRect(0, 0, W, H);
 
-    const sideB = ctx.createRadialGradient(W * 0.92, pageH * 0.42, 0, W * 0.92, pageH * 0.42, W * 0.55);
+    const sideB = ctx.createRadialGradient(W * 0.92, H * 0.42, 0, W * 0.92, H * 0.42, W * 0.55);
     sideB.addColorStop(0, "rgba(155, 70, 255, 0.032)");
     sideB.addColorStop(0.44, "rgba(94, 36, 190, 0.012)");
     sideB.addColorStop(1, "rgba(94, 36, 190, 0)");
     ctx.fillStyle = sideB;
-    ctx.fillRect(0, 0, W, pageH);
+    ctx.fillRect(0, 0, W, H);
   }
 
   function drawOrganicNebula(n, tnow) {
+    const screenY = n.y - scrollY;
+    if (screenY < -H || screenY > H * 2) return;
+
     const pulse = Math.sin(tnow * n.speed + n.phase) * 0.5 + 0.5;
     const shapeA = Math.sin(tnow * n.speed * 0.7 + n.phase * 1.3);
     const shapeB = Math.cos(tnow * n.speed * 0.9 + n.phase * 0.8);
 
     ctx.save();
-    ctx.translate(n.x + shapeA * W * 0.008, n.y + shapeB * (window.innerHeight || 900) * 0.006);
+    ctx.translate(n.x + shapeA * W * 0.008, screenY + shapeB * H * 0.006);
     ctx.rotate(n.rot + shapeA * 0.018);
     ctx.scale(n.w / 2, n.h / 2);
 
@@ -402,27 +406,24 @@
   function spawnShoot() {
     if (!CONFIG.shootingStars || shoots.length >= CONFIG.maxShootingStars) return;
 
-    const viewportY = window.scrollY || window.pageYOffset || 0;
-    const viewportH = window.innerHeight || 900;
     const edge = Math.floor(Math.random() * 4);
-
     let x, y, angle;
 
-    if (edge === 0) { // left
+    if (edge === 0) {
       x = -60;
-      y = viewportY + rand(-0.12, 1.12) * viewportH;
+      y = rand(-0.12, 1.12) * H;
       angle = rand(-0.75, 0.75);
-    } else if (edge === 1) { // right
+    } else if (edge === 1) {
       x = W + 60;
-      y = viewportY + rand(-0.12, 1.12) * viewportH;
+      y = rand(-0.12, 1.12) * H;
       angle = Math.PI + rand(-0.75, 0.75);
-    } else if (edge === 2) { // top
+    } else if (edge === 2) {
       x = rand(-0.10, 1.10) * W;
-      y = viewportY - 80;
+      y = -80;
       angle = Math.PI / 2 + rand(-0.85, 0.85);
-    } else { // bottom
+    } else {
       x = rand(-0.10, 1.10) * W;
-      y = viewportY + viewportH + 80;
+      y = H + 80;
       angle = -Math.PI / 2 + rand(-0.85, 0.85);
     }
 
@@ -493,7 +494,7 @@
   function drawStars(tnow) {
     ctx.globalCompositeOperation = "lighter";
 
-    const colorShift = 0.34;
+    const colorShift = clamp(scrollY / Math.max(1, pageH - H), 0, 1) * 0.55;
     const cx = W / 2;
     const cy = pageH / 2;
 
@@ -514,10 +515,13 @@
         const dx = s.x - cx;
         const dy = s.y - cy;
 
-        const px = cx + dx * cos - dy * sin + mouseX + Math.sin(tnow * s.driftSpeedX + s.driftPhaseX) * s.driftAmpX;
-        const py = cy + dx * sin + dy * cos + mouseY + Math.cos(tnow * s.driftSpeedY + s.driftPhaseY) * s.driftAmpY;
+        const worldX = cx + dx * cos - dy * sin;
+        const worldY = cy + dx * sin + dy * cos;
 
-        if (px < -90 || px > W + 90 || py < -90 || py > pageH + 90) continue;
+        const px = worldX + mouseX + Math.sin(tnow * s.driftSpeedX + s.driftPhaseX) * s.driftAmpX;
+        const py = worldY - scrollY + mouseY + Math.cos(tnow * s.driftSpeedY + s.driftPhaseY) * s.driftAmpY;
+
+        if (px < -90 || px > W + 90 || py < -90 || py > H + 90) continue;
 
         const color = mixRgb(s.colorTop, s.colorBottom, colorShift);
 
@@ -621,15 +625,16 @@
     }
 
     resize();
+    onScroll();
     nextShoot = performance.now() / 1000 + rand(3, 7);
 
     const debouncedResize = debounce(resize, 250);
     const debouncedPageResize = debounce(() => {
-      const newPageH = Math.min(Math.max(
-        window.innerHeight || 1,
+      const newPageH = Math.max(
+        H,
         document.documentElement.scrollHeight || 0,
         document.body.scrollHeight || 0
-      ), CONFIG.maxCanvasHeight);
+      );
 
       if (Math.abs(newPageH - pageH) > 180) {
         lastResizeKey = "";
@@ -640,6 +645,7 @@
     window.addEventListener("resize", debouncedResize, { passive: true });
     window.addEventListener("orientationchange", debouncedResize, { passive: true });
     window.addEventListener("mousemove", onMouse, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
 
     if (window.ResizeObserver) {
