@@ -102,18 +102,15 @@
         </article>
 
         <aside class="chat-card glass">
-          <div class="chat-head"><strong>Чат трансляции</strong><span>•••</span></div>
-          <div class="chat-list" aria-label="Пример чата">
-            <p><b>dimon4ik:</b> Привет чат! 👋</p>
-            <p><b>darkside013:</b> Как настроение?</p>
-            <p><b>3am_777:</b> Фильм сегодня будет?</p>
-            <p><b>kek1che2:</b> !тг</p>
-            <p><b>ivix_tv:</b> Telegram: t.me/ivixitsme</p>
-            <p><b>NE_ghost:</b> ахахаха</p>
-            <p><b>terry_zan:</b> !донат</p>
-            <p><b>mistery_a:</b> Топ стрим как всегда! 🔥</p>
+          <div class="chat-head"><strong>Чат трансляции</strong><span class="chat-live">Twitch</span></div>
+          <div class="chat-embed-wrap" data-channel="ivix_tv">
+            <iframe id="twitch-chat" title="Twitch chat ivix_tv" loading="lazy"></iframe>
+            <div class="chat-placeholder">
+              <strong>Чат Twitch загружается</strong>
+              <span>Если чат не появился, открой его на Twitch.</span>
+            </div>
           </div>
-          <div class="chat-input"><span>Открыть чат на Twitch</span><a href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer">Чат</a></div>
+          <div class="chat-input chat-open-row"><span>Настоящий чат Twitch</span><a href="https://www.twitch.tv/ivix_tv/chat" target="_blank" rel="noreferrer">Открыть</a></div>
         </aside>
       </div>
     </section>
@@ -252,7 +249,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала · ivixtv.ru. <span class="site-version">v1.6.2</span></p>
+    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала · ivixtv.ru. <span class="site-version">v1.7</span></p>
     <a href="#home">Наверх ↑</a>
   </footer>
 

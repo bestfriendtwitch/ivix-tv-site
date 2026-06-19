@@ -1,4 +1,27 @@
-User-agent: *
-Allow: /
+# IVIX_TV site v1.7
 
-Sitemap: https://ivixtv.ru/sitemap.xml
+Статический сайт Twitch-канала IVIX_TV.
+
+## Что в версии v1.7
+
+- основной домен: `https://ivixtv.ru/`;
+- настоящий Twitch chat iframe на десктопе;
+- Twitch player/chat используют текущий hostname как `parent`, поэтому работают на `ivixtv.ru`, `www.ivixtv.ru` и `ivix-tv-site.pages.dev`;
+- Cloudflare Web Analytics snippet сохранен;
+- без `_headers` и `_redirects`, чтобы не ломать главную страницу.
+
+## Загрузка
+
+Загрузить содержимое папки `ivix_site_v17` в корень GitHub-репозитория.
+
+Commit message:
+
+```text
+Release version 1.7
+```
+
+После деплоя проверить:
+
+- https://ivixtv.ru/
+- https://www.ivixtv.ru/
+- https://ivix-tv-site.pages.dev/
