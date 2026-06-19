@@ -2183,7 +2183,7 @@ html {
 }
 
 
-/* v1.8.45 — clean starfield integration
+/* v1.8.46 — clean starfield integration
    Background is owned by background.js only.
    Removed old pseudo backgrounds, old noise overlay and old constellation layers. */
 html,
@@ -2279,7 +2279,7 @@ main {
 
 
 /* =============================================================
-   v1.8.45 — clean template support panel + smooth fixed starfield
+   v1.8.46 — clean template support panel + smooth fixed starfield
 ============================================================= */
 
 html,
@@ -2551,7 +2551,7 @@ body {
 
 
 /* =============================================================
-   v1.8.45 — fix support card alignment
+   v1.8.46 — fix support card alignment
 ============================================================= */
 
 /* Old base CSS had .support { display:flex }, which pushed the title sideways.
@@ -2628,7 +2628,7 @@ body {
 
 
 /* =============================================================
-   v1.8.45 — stronger useful-links hover accent
+   v1.8.46 — stronger useful-links hover accent
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -2749,7 +2749,7 @@ body {
 
 
 /* =============================================================
-   v1.8.45 — scroll-world background safety
+   v1.8.46 — scroll-world background safety
 ============================================================= */
 
 html,
@@ -2770,7 +2770,7 @@ body {
 
 
 /* =============================================================
-   v1.8.45 — scrollbar watchdog safety layer
+   v1.8.46 — scrollbar watchdog safety layer
    Keep only the browser page scrollbar. Prevent bg canvas/body
    from creating accidental duplicate scrollbars.
 ============================================================= */
@@ -2803,7 +2803,7 @@ body {
 
 
 /* =============================================================
-   v1.8.45 — page-canvas background, no scroll lag
+   v1.8.46 — page-canvas background, no scroll lag
    Old principle restored: the background canvas is an absolute
    page-sized layer and scrolls naturally with the document.
 ============================================================= */
@@ -2842,7 +2842,7 @@ body {
 
 
 /* =============================================================
-   v1.8.45 — hard reload scrollbar race fix
+   v1.8.46 — hard reload scrollbar race fix
    Prevent the page-sized canvas from being counted as the source
    of document height during Ctrl+F5 / cold loads.
 ============================================================= */
@@ -2870,7 +2870,7 @@ body {
 
 
 /* =============================================================
-   v1.8.45 — fixed wrapper + page canvas
+   v1.8.46 — fixed wrapper + page canvas
    Background scrolls with content through compositor transform,
    but the canvas cannot create a second page scrollbar.
 ============================================================= */
@@ -2916,7 +2916,7 @@ body {
 
 
 /* =============================================================
-   v1.8.45 — stronger useful-links hover + glow
+   v1.8.46 — stronger useful-links hover + glow
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -3014,5 +3014,127 @@ body {
       0 0 45px rgba(255,78,156,.33),
       0 0 105px rgba(51,220,255,.15),
       inset 0 1px 0 rgba(255,255,255,.16) !important;
+  }
+}
+
+
+/* =============================================================
+   v1.8.46 — stronger global block glow + useful links glow
+============================================================= */
+
+@media (hover: hover) and (pointer: fine) {
+  /* Big site blocks/cards: +60% stronger hover glow */
+  .panel:hover,
+  .glass:hover,
+  .hero-card:hover,
+  .clip-card:hover,
+  .schedule-card:hover,
+  .community-card:hover,
+  .collab-card:hover {
+    border-color: rgba(217, 166, 255, .54) !important;
+    box-shadow:
+      0 28px 68px rgba(0,0,0,.42),
+      0 0 0 1px rgba(217,166,255,.16),
+      0 0 38px rgba(179,92,255,.26),
+      0 0 92px rgba(126,45,255,.15),
+      inset 0 1px 0 rgba(255,255,255,.12) !important;
+  }
+
+  /* Useful links cells: another +50% glow on top of v1.8.45 */
+  .links .platform-card:hover,
+  #links .platform-card:hover {
+    border-color: rgba(238, 204, 255, .92) !important;
+    background:
+      radial-gradient(circle at 20% 50%, rgba(179,92,255,.42), transparent 52%),
+      radial-gradient(circle at 90% 12%, rgba(255,255,255,.20), transparent 38%),
+      linear-gradient(180deg, rgba(255,255,255,.145), rgba(255,255,255,.058)) !important;
+    box-shadow:
+      0 28px 70px rgba(0,0,0,.42),
+      0 0 0 1px rgba(238,204,255,.34),
+      0 0 68px rgba(179,92,255,.54),
+      0 0 162px rgba(126,45,255,.27),
+      inset 0 1px 0 rgba(255,255,255,.22) !important;
+  }
+
+  .links .platform-card:hover::before,
+  #links .platform-card:hover::before {
+    opacity: 1 !important;
+    background:
+      radial-gradient(circle at 22% 50%, rgba(179,92,255,.50), transparent 44%),
+      radial-gradient(circle at 86% 15%, rgba(255,255,255,.23), transparent 38%),
+      linear-gradient(135deg, rgba(179,92,255,.32), rgba(255,255,255,.080)) !important;
+  }
+
+  .links .platform-card:hover .platform-icon,
+  #links .platform-card:hover .platform-icon {
+    filter: brightness(1.46) saturate(1.58) !important;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.26),
+      0 0 50px rgba(179,92,255,.58),
+      0 0 102px rgba(126,45,255,.30),
+      inset 0 1px 0 rgba(255,255,255,.24) !important;
+  }
+
+  .links .platform-card:hover strong,
+  #links .platform-card:hover strong {
+    color: #fff !important;
+    text-shadow:
+      0 0 22px rgba(255,255,255,.34),
+      0 0 42px rgba(179,92,255,.50) !important;
+  }
+
+  .links .platform-card:hover span,
+  #links .platform-card:hover span {
+    color: rgba(250,246,255,.98) !important;
+  }
+
+  .links .platform-card[href*="t.me"]:hover,
+  #links .platform-card[href*="t.me"]:hover {
+    border-color: rgba(82, 202, 255, .95) !important;
+    box-shadow:
+      0 28px 70px rgba(0,0,0,.42),
+      0 0 68px rgba(82,202,255,.54),
+      0 0 158px rgba(139,61,255,.22),
+      inset 0 1px 0 rgba(255,255,255,.22) !important;
+  }
+
+  .links .platform-card[href*="vk.com"]:hover,
+  #links .platform-card[href*="vk.com"]:hover {
+    border-color: rgba(112, 170, 255, .94) !important;
+    box-shadow:
+      0 28px 70px rgba(0,0,0,.42),
+      0 0 68px rgba(112,170,255,.50),
+      0 0 158px rgba(139,61,255,.22),
+      inset 0 1px 0 rgba(255,255,255,.22) !important;
+  }
+
+  .links .platform-card[href*="youtube.com"]:hover,
+  #links .platform-card[href*="youtube.com"]:hover {
+    border-color: rgba(255, 104, 128, .95) !important;
+    box-shadow:
+      0 28px 70px rgba(0,0,0,.42),
+      0 0 68px rgba(255,104,128,.50),
+      0 0 158px rgba(139,61,255,.22),
+      inset 0 1px 0 rgba(255,255,255,.22) !important;
+  }
+
+  .links .platform-card[href*="twitch.tv"]:hover,
+  #links .platform-card[href*="twitch.tv"]:hover {
+    border-color: rgba(198, 154, 255, .98) !important;
+    box-shadow:
+      0 28px 70px rgba(0,0,0,.42),
+      0 0 72px rgba(198,154,255,.62),
+      0 0 170px rgba(139,61,255,.32),
+      inset 0 1px 0 rgba(255,255,255,.22) !important;
+  }
+
+  .links .platform-card[href*="tiktok.com"]:hover,
+  #links .platform-card[href*="tiktok.com"]:hover {
+    border-color: rgba(255, 96, 170, .95) !important;
+    box-shadow:
+      0 28px 70px rgba(0,0,0,.42),
+      0 0 68px rgba(255,96,170,.50),
+      0 0 158px rgba(51,220,255,.22),
+      inset 0 1px 0 rgba(255,255,255,.22) !important;
   }
 }
