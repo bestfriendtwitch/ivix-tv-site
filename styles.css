@@ -3040,3 +3040,271 @@ main {
     font-size: 17px !important;
   }
 }
+
+
+/* =============================================================
+   v1.8.33 — support title normalized + cleaner orb visual
+============================================================= */
+
+/* Make “Поддержать канал” title match other panel titles */
+.support-centered .panel-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 0 14px !important;
+  font-size: inherit !important;
+  line-height: normal !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  color: inherit !important;
+  text-shadow: none !important;
+}
+
+.support-centered .panel-title .purple-icon {
+  display: inline-flex !important;
+  width: auto !important;
+  height: auto !important;
+  flex: 0 0 auto;
+  place-items: unset !important;
+  border-radius: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  color: var(--accent, #b65cff) !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+
+.support-centered .panel-title h2 {
+  margin: 0 !important;
+  max-width: none !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  text-transform: inherit !important;
+  color: inherit !important;
+  text-shadow: inherit !important;
+}
+
+/* kill decorative title line from previous attempt */
+.support-centered .panel-title::after,
+.support.support-centered::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Keep support card neat inside the 3-column grid */
+.support.support-centered {
+  grid-template-columns: minmax(0, 1fr) minmax(145px, 34%) !important;
+  gap: 18px !important;
+  min-height: 0 !important;
+  padding: 24px !important;
+}
+
+.support-centered .support-copy {
+  justify-content: flex-start !important;
+}
+
+.support-centered .support-copy p {
+  margin: 0 0 14px !important;
+  font-size: inherit !important;
+  line-height: 1.55 !important;
+}
+
+.support-pills {
+  margin: 0 0 18px !important;
+  gap: 8px !important;
+}
+
+.support-pills span {
+  min-height: 31px !important;
+  padding: 7px 10px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+}
+
+.support-centered .support-copy .btn,
+.support-centered .btn {
+  min-width: 0 !important;
+  width: 100% !important;
+  min-height: 48px !important;
+  padding: 0 16px !important;
+  border-radius: 13px !important;
+  font-size: 14px !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.support-centered .support-copy .btn::before,
+.support-centered .btn::before {
+  width: auto !important;
+  height: auto !important;
+  margin-right: 4px !important;
+  font-size: 22px !important;
+}
+
+.support-centered .support-copy .btn::after,
+.support-centered .btn::after {
+  margin-left: auto !important;
+  font-size: 24px !important;
+}
+
+/* Remove the ugly vertical rounded rectangle around the orb */
+.support-visual {
+  min-height: 210px !important;
+  border: 0 !important;
+  background:
+    radial-gradient(circle at 50% 58%, rgba(179,92,255,.18), transparent 47%),
+    radial-gradient(circle at 50% 80%, rgba(255,255,255,.035), transparent 28%) !important;
+  overflow: visible !important;
+}
+
+.support-visual::before {
+  content: none !important;
+  display: none !important;
+}
+
+.support-visual::after {
+  bottom: 22px !important;
+  width: min(220px, 88%) !important;
+  height: 42px !important;
+  opacity: .76 !important;
+}
+
+/* Orb animation closer to selected reference:
+   smooth swirling energy sphere + rings, no fan/spokes, no rectangle. */
+.jar-glow {
+  width: clamp(118px, 12vw, 168px) !important;
+  height: clamp(118px, 12vw, 168px) !important;
+  border-radius: 50% !important;
+  overflow: visible !important;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.96) 0 8%, rgba(255,255,255,.78) 9% 12%, rgba(190,85,255,.34) 13% 20%, rgba(52,13,102,.55) 21% 34%, transparent 35%),
+    radial-gradient(circle at 48% 42%, rgba(255,255,255,.34), rgba(213,153,255,.24) 25%, rgba(112,34,205,.22) 54%, rgba(13,5,28,.82) 100%),
+    radial-gradient(circle, transparent 0 49%, rgba(255,255,255,.70) 50%, rgba(222,169,255,.76) 52%, rgba(145,45,255,.24) 57%, transparent 64%) !important;
+  box-shadow:
+    0 0 14px rgba(255,255,255,.20),
+    0 0 34px rgba(179,92,255,.54),
+    0 0 76px rgba(126,45,255,.30),
+    inset 0 0 18px rgba(255,255,255,.20),
+    inset 0 0 48px rgba(179,92,255,.30) !important;
+  animation: supportOrbFloatV33 5.5s ease-in-out infinite !important;
+}
+
+.jar-glow::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -18px !important;
+  width: auto !important;
+  height: auto !important;
+  left: -18px !important;
+  right: -18px !important;
+  top: -18px !important;
+  bottom: -18px !important;
+  border-radius: 50% !important;
+  border: 0 !important;
+  background:
+    radial-gradient(circle, transparent 0 56%, rgba(255,255,255,.28) 57% 58%, transparent 60%),
+    conic-gradient(from 40deg,
+      transparent 0deg 42deg,
+      rgba(255,255,255,.18) 48deg 66deg,
+      rgba(178,84,255,.16) 76deg 104deg,
+      transparent 112deg 170deg,
+      rgba(230,188,255,.18) 180deg 212deg,
+      transparent 226deg 300deg,
+      rgba(162,64,255,.15) 312deg 340deg,
+      transparent 350deg 360deg) !important;
+  opacity: .78 !important;
+  filter: blur(.75px);
+  mix-blend-mode: screen;
+  animation: supportOrbSwirlV33 17s linear infinite !important;
+}
+
+.jar-glow::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: -40px !important;
+  border-radius: 50% !important;
+  background:
+    radial-gradient(ellipse at 50% 65%, transparent 0 56%, rgba(216,166,255,.24) 57% 58%, transparent 60%),
+    radial-gradient(ellipse at 50% 67%, transparent 0 68%, rgba(190,126,255,.15) 69% 70%, transparent 72%) !important;
+  opacity: .78 !important;
+  transform: rotateX(68deg);
+  filter: blur(.35px);
+  mix-blend-mode: screen;
+  animation: supportOrbRingsV33 8.5s ease-in-out infinite !important;
+}
+
+.jar-heart {
+  width: clamp(38px, 4.2vw, 56px) !important;
+  height: clamp(38px, 4.2vw, 56px) !important;
+  font-size: clamp(27px, 3.4vw, 40px) !important;
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255,255,255,.38), rgba(190,92,255,.34) 46%, rgba(73,20,148,.34)) !important;
+  box-shadow:
+    0 0 22px rgba(255,255,255,.38),
+    0 0 48px rgba(179,92,255,.62),
+    inset 0 1px 0 rgba(255,255,255,.36) !important;
+  animation: supportHeartPulseV33 3.4s ease-in-out infinite !important;
+}
+
+@keyframes supportOrbFloatV33 {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1.02) saturate(1.08);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.018);
+    filter: brightness(1.13) saturate(1.16);
+  }
+}
+
+@keyframes supportOrbSwirlV33 {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes supportOrbRingsV33 {
+  0%, 100% {
+    transform: rotateX(68deg) scale(1);
+    opacity: .66;
+  }
+  50% {
+    transform: rotateX(68deg) scale(1.08);
+    opacity: .86;
+  }
+}
+
+@keyframes supportHeartPulseV33 {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1) !important;
+    filter: brightness(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.10) !important;
+    filter: brightness(1.18);
+  }
+}
+
+@media (max-width: 1180px) {
+  .support.support-centered {
+    grid-template-columns: 1fr !important;
+  }
+
+  .support-visual {
+    min-height: 210px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .support.support-centered {
+    padding: 22px !important;
+  }
+
+  .support-centered .panel-title {
+    margin-bottom: 14px !important;
+  }
+
+  .support-visual {
+    display: none !important;
+  }
+}
