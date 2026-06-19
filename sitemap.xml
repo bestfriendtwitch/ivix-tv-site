@@ -1,15 +1,7 @@
-{
-  "name": "IVIX_TV",
-  "short_name": "IVIX_TV",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#05040a",
-  "theme_color": "#7c35ff",
-  "icons": [
-    {
-      "src": "assets/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
-  ]
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://ivixtv.ru/</loc>
+    <priority>1.0</priority>
+  </url>
+</urlset>
