@@ -3,42 +3,28 @@
   <defs>
     <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
-      <stop offset=".38" stop-color="#ffffff" stop-opacity=".40"/>
-      <stop offset=".60" stop-color="#b25cff" stop-opacity=".38"/>
+      <stop offset=".45" stop-color="#ffffff" stop-opacity=".36"/>
+      <stop offset=".65" stop-color="#b25cff" stop-opacity=".34"/>
       <stop offset="1" stop-color="#8b3dff" stop-opacity="0"/>
-    </linearGradient>
-    <linearGradient id="violetShard" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0" stop-color="#8b3dff" stop-opacity="0"/>
-      <stop offset=".50" stop-color="#d8bcff" stop-opacity=".30"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
   </defs>
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
     <g stroke="url(#glass)" stroke-width="3">
-      <path d="M60 610 L270 420 L510 620 L730 535"/>
-      <path d="M160 1120 L420 910 L760 1110 L1125 1080"/>
-      <path d="M1250 330 L1510 165 L1830 390 L1668 704"/>
-      <path d="M1160 1050 L1500 820 L1900 1080 L1690 1500"/>
-      <path d="M220 1860 L540 1600 L910 1810 L1180 1980"/>
+      <path d="M60 610 L270 420 L510 620"/>
+      <path d="M160 1120 L420 910 L760 1110"/>
+      <path d="M1250 330 L1510 165 L1830 390"/>
+      <path d="M1160 1050 L1500 820 L1900 1080"/>
+      <path d="M220 1860 L540 1600 L910 1810"/>
       <path d="M1180 1840 L1540 1580 L1960 1840"/>
     </g>
-    <g stroke="url(#violetShard)" stroke-width="2">
-      <path d="M270 420 L420 910"/>
-      <path d="M510 620 L760 1110"/>
-      <path d="M1510 165 L1500 820"/>
-      <path d="M1830 390 L1900 1080"/>
-      <path d="M540 1600 L1540 1580"/>
-    </g>
-    <g stroke="#b25cff" stroke-opacity=".24" stroke-width="1">
+    <g stroke="#b25cff" stroke-opacity=".22" stroke-width="1">
       <path d="M60 610 L270 420 L510 620 L310 790 Z"/>
       <path d="M1250 330 L1510 165 L1830 390 L1580 560 Z"/>
       <path d="M1160 1050 L1500 820 L1900 1080 L1580 1240 Z"/>
-      <path d="M220 1860 L540 1600 L910 1810 L430 2040 Z"/>
     </g>
   </g>
   <g fill="#ffffff" fill-opacity=".72">
     <circle cx="270" cy="420" r="2.5"/><circle cx="420" cy="910" r="2.4"/><circle cx="1510" cy="165" r="2.6"/>
     <circle cx="1500" cy="820" r="2.4"/><circle cx="540" cy="1600" r="2.4"/><circle cx="1540" cy="1580" r="2.6"/>
-    <circle cx="1125" cy="1080" r="2.5"/><circle cx="1690" cy="1500" r="2.6"/>
   </g>
 </svg>
