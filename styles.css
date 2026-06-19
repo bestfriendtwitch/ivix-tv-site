@@ -1061,3 +1061,154 @@ h1 {
   .social-icons-rich.social-icons-brand { grid-template-columns: 1fr; }
   .clip-thumb-modern strong { font-size: 18px; }
 }
+
+
+/* v1.8.2 hero/chat/icon/clip polish */
+
+.hero-main {
+  padding-top: 46px;
+  padding-bottom: 30px;
+}
+.hero-copy-main {
+  padding: 20px 0 14px;
+}
+.hero-copy-main h1 {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+.hero-copy-main .tagline {
+  margin-bottom: 18px;
+}
+.twitch-mark {
+  width: 1em;
+  height: 1em;
+}
+.social-icons-brand .tw span {
+  align-items: center;
+  justify-items: center;
+}
+.social-icons-brand .tw .brand-icon,
+.social-row .tw .brand-icon,
+.btn-icon .twitch-mark,
+.icon-link .twitch-mark {
+  transform: translateY(0.02em);
+}
+.clip-thumb-modern {
+  justify-content: flex-start;
+  gap: 0;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), inset 0 -32px 60px rgba(0,0,0,.34);
+}
+.clip-thumb-modern::before {
+  opacity: 1;
+}
+.clip-thumb-modern::after {
+  inset: 0;
+  height: auto;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(3,2,8,.05) 0%, rgba(3,2,8,.14) 40%, rgba(3,2,8,.82) 100%),
+    radial-gradient(circle at 82% 20%, rgba(255,255,255,.12), transparent 10%),
+    radial-gradient(circle at 20% 82%, rgba(124,53,255,.16), transparent 16%);
+  filter: none;
+  z-index: 1;
+}
+.clip-thumb-modern span {
+  align-self: flex-start;
+  top: auto;
+  left: auto;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(12, 10, 20, .58);
+  border: 1px solid rgba(255,255,255,.1);
+  color: #f6f0ff;
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+}
+.clip-thumb-modern span::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b35cff;
+  box-shadow: 0 0 12px rgba(179,92,255,.55);
+}
+.clip-thumb-modern strong {
+  margin-top: auto;
+  max-width: calc(100% - 56px);
+  font-size: 24px;
+  line-height: 1.02;
+  letter-spacing: -.02em;
+}
+.clip-thumb-modern small {
+  display: block;
+  max-width: 78%;
+  margin-top: 8px;
+  color: #ded3f8;
+  font-size: 13px;
+  line-height: 1.3;
+}
+.clip-thumb-modern i {
+  width: 42px;
+  height: 42px;
+  right: 14px;
+  bottom: 14px;
+  font-size: 14px;
+}
+.clip-thumb-all::before {
+  background:
+    radial-gradient(circle at 22% 26%, rgba(255,255,255,.16), transparent 11%),
+    radial-gradient(circle at 72% 30%, rgba(168, 86, 255, .62), transparent 21%),
+    radial-gradient(circle at 54% 74%, rgba(106, 59, 255, .30), transparent 24%),
+    linear-gradient(135deg, #21163c, #080610 76%);
+}
+.clip-thumb-month::before {
+  background:
+    radial-gradient(circle at 26% 24%, rgba(255, 149, 93, .46), transparent 11%),
+    radial-gradient(circle at 62% 64%, rgba(178, 88, 255, .52), transparent 20%),
+    radial-gradient(circle at 84% 26%, rgba(255,255,255,.08), transparent 8%),
+    linear-gradient(135deg, #1f162d, #080610 78%);
+}
+.clip-thumb-vod::before {
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255, 229, 188, .22), transparent 10%),
+    radial-gradient(circle at 74% 40%, rgba(120, 58, 255, .48), transparent 20%),
+    radial-gradient(circle at 58% 74%, rgba(66, 46, 160, .24), transparent 24%),
+    linear-gradient(135deg, #19172b, #080610 78%);
+}
+.clip-thumb-all strong::after,
+.clip-thumb-month strong::after,
+.clip-thumb-vod strong::after {
+  content: "";
+  display: block;
+  width: 74px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(179,92,255,.9), rgba(255,255,255,.18));
+}
+@media (max-width: 980px) {
+  .hero-main {
+    padding-top: 28px;
+    padding-bottom: 20px;
+  }
+}
+@media (max-width: 760px) {
+  .hero-main {
+    padding-top: 20px;
+  }
+  .hero-copy-main {
+    padding-top: 8px;
+  }
+  .clip-thumb-modern strong {
+    font-size: 22px;
+  }
+  .clip-thumb-modern small {
+    max-width: 88%;
+  }
+}
