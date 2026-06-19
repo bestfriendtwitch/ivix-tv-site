@@ -2183,7 +2183,7 @@ html {
 }
 
 
-/* v1.8.39 — clean starfield integration
+/* v1.8.41 — clean starfield integration
    Background is owned by background.js only.
    Removed old pseudo backgrounds, old noise overlay and old constellation layers. */
 html,
@@ -2279,7 +2279,7 @@ main {
 
 
 /* =============================================================
-   v1.8.39 — clean template support panel + smooth fixed starfield
+   v1.8.41 — clean template support panel + smooth fixed starfield
 ============================================================= */
 
 html,
@@ -2551,7 +2551,7 @@ body {
 
 
 /* =============================================================
-   v1.8.39 — fix support card alignment
+   v1.8.41 — fix support card alignment
 ============================================================= */
 
 /* Old base CSS had .support { display:flex }, which pushed the title sideways.
@@ -2628,7 +2628,7 @@ body {
 
 
 /* =============================================================
-   v1.8.39 — stronger useful-links hover accent
+   v1.8.41 — stronger useful-links hover accent
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -2745,4 +2745,58 @@ body {
       0 0 70px rgba(51,220,255,.10),
       inset 0 1px 0 rgba(255,255,255,.11) !important;
   }
+}
+
+
+/* =============================================================
+   v1.8.41 — scroll-world background safety
+============================================================= */
+
+html,
+body {
+  overflow-x: hidden !important;
+}
+
+#ivix-bg-canvas {
+  position: fixed !important;
+  inset: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+
+/* =============================================================
+   v1.8.41 — scrollbar watchdog safety layer
+   Keep only the browser page scrollbar. Prevent bg canvas/body
+   from creating accidental duplicate scrollbars.
+============================================================= */
+
+html {
+  overflow-x: hidden !important;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+body {
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  max-width: 100vw !important;
+}
+
+#ivix-bg-canvas {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  contain: layout paint size style !important;
+  pointer-events: none !important;
 }
