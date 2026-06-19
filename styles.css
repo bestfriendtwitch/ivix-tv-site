@@ -913,3 +913,151 @@ h1 {
   .support .jar { transform: none; }
 }
 
+
+/* v1.8.1 requested layout fixes */
+.hero-copy-main h1 {
+  margin-bottom: 30px;
+}
+.hero-copy-main .tagline {
+  margin-top: 0;
+  margin-bottom: 20px;
+  line-height: 1.22;
+}
+
+.live-zone .stream-actions-clean {
+  min-height: 52px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.live-zone .stream-actions-clean a {
+  margin-left: auto;
+}
+.live-zone .chat-card {
+  min-height: 590px;
+}
+.live-zone .chat-embed-wrap {
+  min-height: 530px;
+  height: 100%;
+}
+.live-zone .chat-open-row {
+  display: none;
+}
+
+.social-icons-rich.social-icons-brand {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.social-icons-brand .social-link {
+  min-height: 84px;
+  grid-template-columns: 46px minmax(0, 1fr);
+  grid-template-areas: "icon title" "icon desc";
+  align-content: center;
+  align-items: center;
+  padding: 13px;
+  gap: 0 12px;
+  overflow: hidden;
+}
+.social-icons-brand .social-link span {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+}
+.social-icons-brand .social-link b,
+.social-icons-brand .social-link small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.social-icons-brand .social-link b {
+  font-size: 13px;
+  line-height: 1.1;
+}
+.social-icons-brand .social-link small {
+  font-size: 11px;
+  line-height: 1.15;
+  margin-top: -4px;
+}
+.social-panel .btn.full {
+  margin-top: 18px;
+}
+
+.clip-thumb-modern {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 5px;
+  padding: 14px;
+  isolation: isolate;
+}
+.clip-thumb-modern::before {
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255,255,255,.18), transparent 12%),
+    radial-gradient(circle at 76% 28%, rgba(179, 92, 255, .48), transparent 22%),
+    radial-gradient(circle at 42% 72%, rgba(86, 39, 180, .42), transparent 27%),
+    linear-gradient(145deg, rgba(21,16,38,.96), rgba(4,3,9,.96));
+}
+.clip-thumb-modern::after {
+  inset: 0;
+  height: auto;
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.58)),
+    linear-gradient(135deg, rgba(139,61,255,.16), transparent 48%);
+  filter: none;
+  z-index: 1;
+}
+.clip-thumb-modern span,
+.clip-thumb-modern strong,
+.clip-thumb-modern small,
+.clip-thumb-modern i {
+  position: relative;
+  z-index: 3;
+}
+.clip-thumb-modern strong {
+  max-width: calc(100% - 50px);
+  color: #fff;
+  font-size: 17px;
+  line-height: 1.1;
+  text-shadow: 0 2px 14px rgba(0,0,0,.5);
+}
+.clip-thumb-modern small {
+  max-width: calc(100% - 48px);
+  color: #d9cfff;
+  font-size: 12px;
+  line-height: 1.25;
+}
+.clip-thumb-all::before {
+  background:
+    radial-gradient(circle at 24% 20%, rgba(255,255,255,.16), transparent 12%),
+    radial-gradient(circle at 70% 24%, rgba(165, 76, 255, .62), transparent 23%),
+    linear-gradient(145deg, #1a1330, #05040a 76%);
+}
+.clip-thumb-month::before {
+  background:
+    radial-gradient(circle at 25% 25%, rgba(255, 122, 54, .45), transparent 14%),
+    radial-gradient(circle at 70% 62%, rgba(154, 72, 255, .55), transparent 24%),
+    linear-gradient(145deg, #1a1328, #06040d 78%);
+}
+.clip-thumb-vod::before {
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 220, 180, .34), transparent 13%),
+    radial-gradient(circle at 72% 46%, rgba(125, 58, 255, .5), transparent 25%),
+    linear-gradient(145deg, #161425, #05040a 78%);
+}
+
+@media (max-width: 1320px) {
+  .live-zone .chat-embed-wrap { min-height: 460px; }
+  .social-icons-rich.social-icons-brand { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 980px) {
+  .hero-copy-main h1 { margin-bottom: 22px; }
+  .live-zone .stream-actions-clean { justify-content: flex-start; }
+}
+@media (max-width: 760px) {
+  .hero-copy-main .tagline { margin-bottom: 16px; }
+  .live-zone .stream-actions-clean { margin: 0 10px 10px; align-items: flex-start; }
+  .social-icons-rich.social-icons-brand { grid-template-columns: 1fr; }
+  .clip-thumb-modern strong { font-size: 18px; }
+}
