@@ -1,9 +1,10 @@
 /* =============================================================
-   IVIX_TV — анимированный фон "созвездие" (v2, неоновое свечение)
-   • тёмная база как в оригинале (#080415)
-   • светящиеся линии (блум) + светящиеся узлы + звёздное поле
-   • огоньки-импульсы, ползущие по линиям (линия подсвечивается)
-   • параллакс по скроллу и мыши
+   IVIX_TV — анимированный фон "созвездие" (v3, тёмный минимализм)
+   • почти чёрная база (#090315), тонкие резкие линии
+   • БЕЗ белого: максимум средне-фиолетовый
+   • огоньки = мягкие световые блики вдоль ОТРЕЗКА линии,
+     которые зажигаются и плавно гаснут в случайных местах
+   • очень плавные движения + параллакс (скролл + мышь)
    -------------------------------------------------------------
    Подключение — одна строка перед </body>:
        <script src="background.js" defer></script>
@@ -12,48 +13,49 @@
   "use strict";
 
   const CONFIG = {
-    // true  — холст сам рисует тёмную базу и становится фоном сайта (рекомендуется);
-    // false — база НЕ рисуется, созвездие накладывается поверх текущего фона сайта.
     takeOverBackground: true,
-    forceTransparentPage: true, // делать html/body прозрачными (только при takeOverBackground)
+    forceTransparentPage: true,
 
-    // Тёмная база (как в оригинале)
-    baseTop:    "#0b0518",
-    baseMid:    "#08030f",
-    baseBottom: "#06030c",
+    // Тёмная почти-чёрная база (как на референсе rgb(9,3,21))
+    baseTop:    "#0b0419",
+    baseMid:    "#080315",
+    baseBottom: "#06030f",
 
-    // Палитра (rgb)
-    lineGlow:   "120, 70, 230",   // мягкое сияние линий
-    lineCore:   "180, 130, 255",  // яркое ядро линий
-    node:       "150, 95, 245",   // свечение узлов
-    nodeCore:   "245, 240, 255",  // ядро узла
-    star:       "200, 180, 255",  // звёзды
-    pulseGlow:  "168, 85, 247",   // свечение огонька
-    pulseCore:  "255, 250, 255",  // ядро огонька
+    // Палитра (rgb) — НИКАКОГО белого
+    lineGlow:  "90, 45, 165",    // мягкое сияние линий (тонкое)
+    lineCore:  "136, 84, 216",   // ядро линии
+    node:      "120, 80, 185",   // тусклые узлы
+    star:      "150, 130, 205",  // звёзды
+    pulseCore: "150, 102, 200",  // центр блика (макс. яркость ~rgb(146,105,196))
+    pulseEdge: "120, 55, 178",   // края блика
 
-    // мягкие облака для глубины
     nebula: [
-      { x: 0.12, y: 0.14, r: 0.55, c: "124, 53, 255", a: 0.10 },
-      { x: 0.90, y: 0.22, r: 0.60, c: "150, 70, 240", a: 0.10 },
-      { x: 0.74, y: 0.90, r: 0.62, c: "92, 40, 200",  a: 0.08 },
+      { x: 0.10, y: 0.12, r: 0.55, c: "110, 50, 220", a: 0.07 },
+      { x: 0.92, y: 0.20, r: 0.58, c: "130, 60, 230", a: 0.07 },
+      { x: 0.76, y: 0.92, r: 0.60, c: "80, 35, 180",  a: 0.06 },
     ],
 
-    stars: { density: 9000, depth: 0.10, parallax: 0.20, twinkle: 0.7 },
+    stars: { density: 11000, depth: 0.10, parallax: 0.20, twinkle: 0.6 },
 
-    maxPan: 240, mousePan: 30, dprCap: 2,
+    maxPan: 230, mousePan: 26, dprCap: 2,
+
+    // Плавность
+    mouseEase: 0.035,   // меньше = плавнее реакция на мышь
+    scrollEase: 0.06,   // сглаживание параллакса по скроллу
 
     // Слои созвездия: дальний → ближний
     layers: [
-      { density: 46000, depth: 0.40, parallax: 0.55, linkDist: 230, maxLinks: 3,
-        lineW: 1.0, glowW: 5, glowA: 0.10, coreA: 0.30, nodeR: 2.0, hubEvery: 5,
-        pulses: 4, speed: 60, drift: 7 },
-      { density: 34000, depth: 0.85, parallax: 1.00, linkDist: 250, maxLinks: 3,
-        lineW: 1.3, glowW: 7, glowA: 0.14, coreA: 0.42, nodeR: 2.6, hubEvery: 4,
-        pulses: 6, speed: 80, drift: 11 },
+      { density: 42000, depth: 0.40, parallax: 0.55, linkDist: 235, maxLinks: 3,
+        lineW: 1.0, glowW: 3, glowA: 0.07, coreA: 0.40, nodeR: 0.9, nodeA: 0.22,
+        drift: 3.5, driftSpeed: 0.18,
+        pulses: 3, pulseLen: 70, speed: 30, peak: 0.62 },
+      { density: 30000, depth: 0.85, parallax: 1.00, linkDist: 255, maxLinks: 3,
+        lineW: 1.1, glowW: 4, glowA: 0.09, coreA: 0.54, nodeR: 1.1, nodeA: 0.28,
+        drift: 5, driftSpeed: 0.24,
+        pulses: 4, pulseLen: 95, speed: 40, peak: 0.72 },
     ],
   };
 
-  // ---- Canvas ----
   const canvas = document.createElement("canvas");
   canvas.id = "ivix-bg-canvas";
   canvas.setAttribute("aria-hidden", "true");
@@ -77,29 +79,26 @@
 
   const ctx = canvas.getContext("2d", { alpha: true });
 
-  // ---- Состояние ----
   let W = 0, H = 0, dpr = 1;
   let layers = [], stars = null, baseGrad = null;
-  let glowNode = null, glowPulse = null;
-  let scrollFrac = 0;
+  let scrollFrac = 0, scrollDisp = 0;
   let mx = 0, my = 0, tmx = 0, tmy = 0;
   let lastT = 0, rafId = null;
   const reduceMotion = window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const rand = (a, b) => a + Math.random() * (b - a);
+  const smooth = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 
-  // Пре-рендер мягкого свечения (спрайт) для узлов/огоньков — даёт настоящий блум
-  function makeGlowSprite(size, color, hardness) {
-    const c = document.createElement("canvas");
-    c.width = c.height = size;
-    const g = c.getContext("2d");
-    const grd = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-    grd.addColorStop(0, "rgba(" + color + ",1)");
-    grd.addColorStop(hardness, "rgba(" + color + ",0.45)");
-    grd.addColorStop(1, "rgba(" + color + ",0)");
-    g.fillStyle = grd;
-    g.fillRect(0, 0, size, size);
-    return c;
+  function newPulse(cfg, edges) {
+    const e = edges[(Math.random() * edges.length) | 0];
+    const fwd = Math.random() < 0.5;
+    return {
+      a: fwd ? e[0] : e[1], b: fwd ? e[1] : e[0],
+      t: rand(0.1, 0.9),
+      speed: cfg.speed * rand(0.8, 1.25),
+      life: 0, maxLife: rand(2.4, 5.0),
+      state: "active", wait: 0, trail: [],
+    };
   }
 
   function buildLayer(cfg) {
@@ -111,8 +110,7 @@
       nodes.push({
         bx: rand(-50, worldW - 50), by: rand(-CONFIG.maxPan, H),
         px: rand(0, Math.PI * 2), py: rand(0, Math.PI * 2),
-        ps: rand(0.25, 0.7), x: 0, y: 0, pulse: rand(0, Math.PI * 2),
-        hub: i % cfg.hubEvery === 0,
+        ps: rand(0.5, 1.0), x: 0, y: 0,
       });
     }
     const adj = nodes.map(() => []);
@@ -121,7 +119,6 @@
     const d2 = cfg.linkDist * cfg.linkDist;
     const kmax = cfg.maxLinks || 3;
     for (let i = 0; i < nodes.length; i++) {
-      // ближайшие соседи в радиусе linkDist
       const near = [];
       for (let j = 0; j < nodes.length; j++) {
         if (j === i) continue;
@@ -140,9 +137,9 @@
     }
     const pulses = [];
     for (let t = 0; t < cfg.pulses && edges.length; t++) {
-      const e = edges[(Math.random() * edges.length) | 0];
-      pulses.push({ a: e[0], b: e[1], t: Math.random(),
-        speed: cfg.speed * rand(0.8, 1.3), trail: [] });
+      const p = newPulse(cfg, edges);
+      p.life = rand(0, p.maxLife);           // рассинхрон старта
+      pulses.push(p);
     }
     return { cfg, nodes, edges, adj, pulses, worldH };
   }
@@ -153,16 +150,13 @@
     const arr = [];
     for (let i = 0; i < n; i++) {
       arr.push({ bx: rand(0, worldW), by: rand(-CONFIG.maxPan, H),
-        r: rand(0.4, 1.3), a: rand(0.25, 0.8), ph: rand(0, Math.PI * 2),
-        sp: rand(0.5, 1.6) });
+        r: rand(0.4, 1.1), a: rand(0.12, 0.4), ph: rand(0, Math.PI * 2),
+        sp: rand(0.4, 1.2) });
     }
     return arr;
   }
 
-  function rebuild() {
-    layers = CONFIG.layers.map(buildLayer);
-    stars = buildStars();
-  }
+  function rebuild() { layers = CONFIG.layers.map(buildLayer); stars = buildStars(); }
 
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, CONFIG.dprCap);
@@ -174,8 +168,6 @@
     baseGrad.addColorStop(0, CONFIG.baseTop);
     baseGrad.addColorStop(0.55, CONFIG.baseMid);
     baseGrad.addColorStop(1, CONFIG.baseBottom);
-    glowNode = makeGlowSprite(64, CONFIG.node, 0.22);
-    glowPulse = makeGlowSprite(96, CONFIG.pulseGlow, 0.18);
     rebuild();
     if (reduceMotion) drawStatic();
   }
@@ -200,12 +192,11 @@
     ctx.globalCompositeOperation = "source-over";
     if (CONFIG.takeOverBackground) { ctx.fillStyle = baseGrad; ctx.fillRect(0, 0, W, H); }
     else ctx.clearRect(0, 0, W, H);
-    // облака
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
     for (const n of CONFIG.nebula) {
       const px = n.x * W + mx * CONFIG.mousePan * 1.6;
-      const py = n.y * H - scrollFrac * CONFIG.maxPan * 0.5 + my * CONFIG.mousePan * 1.6;
+      const py = n.y * H - scrollDisp * CONFIG.maxPan * 0.5 + my * CONFIG.mousePan * 1.6;
       const r = n.r * Math.max(W, H);
       const g = ctx.createRadialGradient(px, py, 0, px, py, r);
       g.addColorStop(0, "rgba(" + n.c + "," + n.a + ")");
@@ -217,7 +208,7 @@
 
   function renderStars(tnow) {
     const cfg = CONFIG.stars;
-    const offY = -scrollFrac * CONFIG.maxPan * cfg.parallax + my * CONFIG.mousePan * cfg.depth;
+    const offY = -scrollDisp * CONFIG.maxPan * cfg.parallax + my * CONFIG.mousePan * cfg.depth;
     const offX = mx * CONFIG.mousePan * cfg.depth;
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
@@ -231,29 +222,46 @@
     ctx.restore();
   }
 
+  // Мягкий вытянутый блик вдоль отрезка (без яркого ядра, без белого)
+  function drawSmear(x, y, ux, uy, half, alpha, peak) {
+    const x0 = x - ux * half, y0 = y - uy * half;
+    const x1 = x + ux * half, y1 = y + uy * half;
+    const passes = [[1.4, 1.0], [4, 0.5], [9, 0.22]]; // ширина, доля яркости -> мягкое размытие
+    for (const [w, k] of passes) {
+      const g = ctx.createLinearGradient(x0, y0, x1, y1);
+      g.addColorStop(0.0, "rgba(" + CONFIG.pulseEdge + ",0)");
+      g.addColorStop(0.5, "rgba(" + CONFIG.pulseCore + "," + (peak * alpha * k).toFixed(3) + ")");
+      g.addColorStop(1.0, "rgba(" + CONFIG.pulseEdge + ",0)");
+      ctx.strokeStyle = g;
+      ctx.lineWidth = w;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    }
+  }
+
   function renderLayer(layer, dt, tnow) {
     const cfg = layer.cfg;
-    const offY = -scrollFrac * CONFIG.maxPan * cfg.parallax + my * CONFIG.mousePan * cfg.depth;
+    const offY = -scrollDisp * CONFIG.maxPan * cfg.parallax + my * CONFIG.mousePan * cfg.depth;
     const offX = mx * CONFIG.mousePan * cfg.depth;
     for (const n of layer.nodes) {
-      n.x = n.bx + offX + Math.sin(tnow * n.ps + n.px) * cfg.drift;
-      n.y = n.by + offY + Math.cos(tnow * n.ps + n.py) * cfg.drift;
+      n.x = n.bx + offX + Math.sin(tnow * cfg.driftSpeed * n.ps + n.px) * cfg.drift;
+      n.y = n.by + offY + Math.cos(tnow * cfg.driftSpeed * n.ps + n.py) * cfg.drift;
     }
 
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
     ctx.lineCap = "round";
 
-    // ЛИНИИ — проход 1: мягкое сияние (блум)
-    ctx.lineWidth = cfg.glowW;
-    ctx.strokeStyle = "rgba(" + CONFIG.lineGlow + "," + cfg.glowA + ")";
-    ctx.beginPath();
-    for (const [i, j] of layer.edges) {
-      const a = layer.nodes[i], b = layer.nodes[j];
-      ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+    // линии: тонкое сияние + резкое ядро
+    if (cfg.glowA > 0) {
+      ctx.lineWidth = cfg.glowW;
+      ctx.strokeStyle = "rgba(" + CONFIG.lineGlow + "," + cfg.glowA + ")";
+      ctx.beginPath();
+      for (const [i, j] of layer.edges) {
+        const a = layer.nodes[i], b = layer.nodes[j];
+        ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
-    // ЛИНИИ — проход 2: яркое ядро
     ctx.lineWidth = cfg.lineW;
     ctx.strokeStyle = "rgba(" + CONFIG.lineCore + "," + cfg.coreA + ")";
     ctx.beginPath();
@@ -263,65 +271,48 @@
     }
     ctx.stroke();
 
-    // УЗЛЫ — свечение (спрайт) + ядро
+    // узлы: едва заметные точки (без ореолов, без белого)
+    ctx.fillStyle = "rgba(" + CONFIG.node + "," + cfg.nodeA + ")";
     for (const n of layer.nodes) {
-      const k = n.hub ? 1.7 : 1.0;
-      const pr = cfg.nodeR * k * (3.2 + 0.5 * Math.sin(tnow * 1.4 + n.pulse));
-      ctx.globalAlpha = n.hub ? 0.55 : 0.4;
-      ctx.drawImage(glowNode, n.x - pr, n.y - pr, pr * 2, pr * 2);
-    }
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = "rgba(" + CONFIG.nodeCore + ",0.9)";
-    for (const n of layer.nodes) {
-      const cr = cfg.nodeR * (n.hub ? 1.15 : 0.7);
-      ctx.beginPath(); ctx.arc(n.x, n.y, cr, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(n.x, n.y, cfg.nodeR, 0, Math.PI * 2); ctx.fill();
     }
 
-    // ОГОНЬКИ — импульс, подсвечивающий линию + хвост
+    // огоньки: зажигаются и гаснут в случайных местах, ползут по линиям
     for (const p of layer.pulses) {
+      if (p.state === "wait") {
+        p.wait -= dt;
+        if (p.wait <= 0) Object.assign(p, newPulse(cfg, layer.edges));
+        continue;
+      }
       const A = layer.nodes[p.a], B = layer.nodes[p.b];
       const ex = B.x - A.x, ey = B.y - A.y, len = Math.hypot(ex, ey) || 1;
-      if (!reduceMotion) p.t += (p.speed * dt) / len;
-      if (p.t >= 1) {
-        p.t -= 1;
-        const nxt = nextNode(layer, p.a, p.b);
-        p.a = p.b; p.b = nxt; p.trail.length = 0;
+      if (!reduceMotion) {
+        p.life += dt;
+        p.t += (p.speed * dt) / len;
+        if (p.t >= 1) { p.t -= 1; const nx = nextNode(layer, p.a, p.b); p.a = p.b; p.b = nx; }
+        if (p.life >= p.maxLife) { p.state = "wait"; p.wait = rand(0.5, 3.2); continue; }
       }
+      // плавная огибающая: вспышка -> ровно -> угасание
+      const f = p.life / p.maxLife;
+      const env = reduceMotion ? 0.8 : smooth(Math.min(f / 0.32, 1)) * smooth(Math.min((1 - f) / 0.4, 1));
+      if (env <= 0.01) continue;
       const x = A.x + ex * p.t, y = A.y + ey * p.t;
       const ux = ex / len, uy = ey / len;
 
-      // линия "загорается" вокруг импульса: яркий отрезок с градиентом
-      const seg = 46;
-      const x0 = x - ux * seg, y0 = y - uy * seg;
-      const x1 = x + ux * seg, y1 = y + uy * seg;
-      const lg = ctx.createLinearGradient(x0, y0, x1, y1);
-      lg.addColorStop(0, "rgba(" + CONFIG.pulseGlow + ",0)");
-      lg.addColorStop(0.5, "rgba(" + CONFIG.pulseCore + ",0.9)");
-      lg.addColorStop(1, "rgba(" + CONFIG.pulseGlow + ",0)");
-      ctx.strokeStyle = lg;
-      ctx.lineWidth = cfg.lineW + 1.2;
-      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+      drawSmear(x, y, ux, uy, cfg.pulseLen * 0.5, env, cfg.peak);
 
-      // хвост
+      // короткий мягкий хвост (тоже фиолетовый, без ядра)
       p.trail.push(x, y);
-      if (p.trail.length > 18) p.trail.splice(0, p.trail.length - 18);
+      if (p.trail.length > 10) p.trail.splice(0, p.trail.length - 10);
       for (let k = 0; k < p.trail.length - 2; k += 2) {
-        const f = k / p.trail.length;
-        ctx.strokeStyle = "rgba(" + CONFIG.pulseGlow + "," + (0.04 + f * 0.22) + ")";
-        ctx.lineWidth = (cfg.nodeR) * (0.5 + f * 1.2);
+        const tf = k / p.trail.length;
+        ctx.strokeStyle = "rgba(" + CONFIG.pulseEdge + "," + (cfg.peak * env * tf * 0.18).toFixed(3) + ")";
+        ctx.lineWidth = 1 + tf * 2;
         ctx.beginPath();
         ctx.moveTo(p.trail[k], p.trail[k + 1]);
         ctx.lineTo(p.trail[k + 2], p.trail[k + 3]);
         ctx.stroke();
       }
-
-      // свечение + ядро огонька
-      const gr = cfg.nodeR * 7;
-      ctx.globalAlpha = 0.95;
-      ctx.drawImage(glowPulse, x - gr, y - gr, gr * 2, gr * 2);
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = "rgba(" + CONFIG.pulseCore + ",1)";
-      ctx.beginPath(); ctx.arc(x, y, cfg.nodeR * 0.85, 0, Math.PI * 2); ctx.fill();
     }
     ctx.restore();
   }
@@ -329,7 +320,9 @@
   function frame(t) {
     const dt = Math.min(0.05, (t - lastT) / 1000) || 0;
     lastT = t;
-    mx += (tmx - mx) * 0.05; my += (tmy - my) * 0.05;
+    mx += (tmx - mx) * CONFIG.mouseEase;
+    my += (tmy - my) * CONFIG.mouseEase;
+    scrollDisp += (scrollFrac - scrollDisp) * CONFIG.scrollEase;
     const tnow = t / 1000;
     renderBase();
     renderStars(tnow);
@@ -339,6 +332,7 @@
 
   function drawStatic() {
     lastT = performance.now();
+    scrollDisp = scrollFrac;
     const tnow = lastT / 1000;
     renderBase(); renderStars(tnow);
     for (const layer of layers) renderLayer(layer, 0, tnow);
@@ -351,7 +345,7 @@
   function debounce(fn, ms) { let id; return function () { clearTimeout(id); id = setTimeout(fn, ms); }; }
 
   function start() {
-    resize(); onScroll();
+    resize(); onScroll(); scrollDisp = scrollFrac;
     window.addEventListener("resize", debounce(resize, 200), { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("mousemove", onMouse, { passive: true });
