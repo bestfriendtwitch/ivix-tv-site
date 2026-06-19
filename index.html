@@ -37,7 +37,13 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="noise" aria-hidden="true"></div>
+  <div class="bg-scene" aria-hidden="true">
+    <div class="bg-layer bg-layer-far" data-depth="0.045"></div>
+    <div class="bg-layer bg-layer-mid" data-depth="0.115"></div>
+    <div class="bg-layer bg-layer-near" data-depth="0.205"></div>
+    <div class="bg-layer bg-layer-shards" data-depth="0.315"></div>
+  </div>
+<div class="noise" aria-hidden="true"></div>
 
   <header class="site-header">
     <a class="logo" href="#home" aria-label="IVIX_TV главная"><span>IVIX</span><em>tv</em></a>
@@ -273,7 +279,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала · ivixtv.ru. <span class="site-version">v1.8.23</span></p>
+    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала · ivixtv.ru. <span class="site-version">v1.8.24</span></p>
     <a href="#home">Наверх ↑</a>
   </footer>
 

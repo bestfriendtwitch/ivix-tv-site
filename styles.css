@@ -2707,3 +2707,130 @@ main,
       center center;
   }
 }
+
+
+/* v1.8.24 — layered constellation scene
+   Real DOM layers + JS transform parallax. No body-background parallax. */
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 15% 22%, rgba(132, 48, 255, .28), transparent 27%),
+    radial-gradient(circle at 86% 18%, rgba(153, 76, 255, .22), transparent 26%),
+    radial-gradient(circle at 60% 72%, rgba(75, 20, 150, .10), transparent 35%),
+    linear-gradient(180deg, #08050f 0%, #05040a 48%, #030209 100%) !important;
+  background-image:
+    radial-gradient(circle at 15% 22%, rgba(132, 48, 255, .28), transparent 27%),
+    radial-gradient(circle at 86% 18%, rgba(153, 76, 255, .22), transparent 26%),
+    radial-gradient(circle at 60% 72%, rgba(75, 20, 150, .10), transparent 35%),
+    linear-gradient(180deg, #08050f 0%, #05040a 48%, #030209 100%) !important;
+  animation: none !important;
+}
+
+.bg-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  perspective: 1200px;
+  contain: layout paint;
+}
+
+.bg-layer {
+  position: absolute;
+  inset: -14%;
+  background-repeat: repeat-y;
+  background-position: center top;
+  background-size: 100% 2400px;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.bg-layer-far {
+  background-image: url("/assets/bg/constellation-far.svg?v=1824");
+  opacity: .34;
+  filter: blur(.2px) saturate(1.05);
+}
+
+.bg-layer-mid {
+  background-image: url("/assets/bg/constellation-mid.svg?v=1824");
+  opacity: .47;
+  filter: saturate(1.08);
+  animation: ivixBgLayerBreathA 13s ease-in-out infinite;
+}
+
+.bg-layer-near {
+  background-image: url("/assets/bg/constellation-near.svg?v=1824");
+  opacity: .52;
+  filter: saturate(1.10) brightness(1.02);
+}
+
+.bg-layer-shards {
+  background-image: url("/assets/bg/constellation-shards.svg?v=1824");
+  opacity: .50;
+  mix-blend-mode: screen;
+  filter: saturate(1.12) brightness(1.06);
+  animation: ivixBgLayerBreathB 10s ease-in-out infinite;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 20% 24%, rgba(179, 92, 255, .055), transparent 22%),
+    radial-gradient(circle at 84% 18%, rgba(179, 92, 255, .045), transparent 22%),
+    radial-gradient(circle at 50% 90%, rgba(126, 45, 255, .035), transparent 28%);
+  opacity: .55;
+  animation: none !important;
+}
+
+body::after {
+  opacity: .16 !important;
+}
+
+.noise {
+  opacity: .08 !important;
+  mix-blend-mode: overlay !important;
+}
+
+.site-header,
+main,
+.site-footer {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes ivixBgLayerBreathA {
+  0%, 100% { opacity: .43; }
+  50% { opacity: .50; }
+}
+
+@keyframes ivixBgLayerBreathB {
+  0%, 100% { opacity: .43; filter: saturate(1.08) brightness(1.02); }
+  50% { opacity: .56; filter: saturate(1.16) brightness(1.08); }
+}
+
+@media (max-width: 760px) {
+  .bg-layer {
+    inset: -10% -42%;
+    background-size: 180% 2100px;
+  }
+
+  .bg-layer-far { opacity: .26; }
+  .bg-layer-mid { opacity: .36; }
+  .bg-layer-near { opacity: .42; }
+  .bg-layer-shards { opacity: .38; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-layer {
+    animation: none !important;
+    transform: none !important;
+  }
+}
