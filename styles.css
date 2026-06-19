@@ -2206,3 +2206,249 @@ html {
     transform: none;
   }
 }
+
+
+/* v1.8.11 — Step 5: final atmosphere
+   Scope: styles.css only. Subtle background, light accents, neon lines, smoother menu. */
+
+/* Safer smooth anchor feel */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Extra ambient layer without layout changes */
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 82% 4%, rgba(179,92,255,.115), transparent 24%),
+    radial-gradient(circle at 7% 22%, rgba(126,45,255,.105), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(93,41,203,.10), transparent 34%),
+    linear-gradient(180deg, rgba(5,4,10,.02), rgba(5,4,10,.34));
+}
+
+body::after {
+  content: "IVIX IVIX IVIX";
+  position: fixed;
+  left: -28px;
+  top: 82px;
+  width: 360px;
+  height: 240px;
+  pointer-events: none;
+  z-index: -1;
+  color: rgba(139,61,255,.105);
+  font-family: "Russo One", sans-serif;
+  font-size: 38px;
+  line-height: 1.35;
+  letter-spacing: 2px;
+  transform: rotate(-8deg);
+  text-shadow: 0 0 22px rgba(139,61,255,.12);
+  opacity: .9;
+}
+
+/* The original noise layer becomes a little more cinematic */
+.noise {
+  opacity: .42;
+}
+
+/* Thin neon separators inside major cards */
+.panel,
+.stream-card,
+.chat-card,
+.collab-box {
+  position: relative;
+}
+
+.panel::after,
+.stream-card::after,
+.chat-card::after,
+.collab-box::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(190,126,255,.28), transparent);
+  opacity: .65;
+}
+
+/* Calm atmospheric highlights per section */
+.about {
+  background:
+    radial-gradient(circle at 86% 78%, rgba(101,46,195,.10), transparent 30%),
+    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
+}
+
+.support {
+  background:
+    radial-gradient(circle at 78% 70%, rgba(179,92,255,.13), transparent 31%),
+    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
+}
+
+.social-panel {
+  background:
+    radial-gradient(circle at 76% 10%, rgba(179,92,255,.10), transparent 28%),
+    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
+}
+
+.commands {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(179,92,255,.12), transparent 26%),
+    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
+}
+
+.schedule {
+  background:
+    radial-gradient(circle at 92% 72%, rgba(179,92,255,.12), transparent 30%),
+    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
+}
+
+.clips {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(179,92,255,.11), transparent 28%),
+    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
+}
+
+/* Header/menu final polish */
+.site-header {
+  background:
+    linear-gradient(180deg, rgba(8,6,14,.88), rgba(5,4,10,.72));
+  box-shadow: 0 12px 36px rgba(0,0,0,.32);
+}
+
+.logo {
+  text-shadow: 0 0 18px rgba(179,92,255,.22);
+}
+
+.main-nav a {
+  position: relative;
+  transition: color .18s ease, opacity .18s ease, text-shadow .18s ease;
+}
+
+.main-nav a.active {
+  color: #fff;
+  text-shadow: 0 0 14px rgba(179,92,255,.34);
+}
+
+.main-nav a::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -18px;
+  width: 0;
+  height: 1px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(179,92,255,.95), transparent);
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: width .22s ease, opacity .22s ease;
+}
+
+.main-nav a.active::before,
+.main-nav a:hover::before {
+  width: 72px;
+  opacity: .8;
+}
+
+/* Existing underline remains, but less aggressive */
+.main-nav a::after {
+  box-shadow: 0 0 18px rgba(179,92,255,.42);
+}
+
+/* Slightly more premium buttons, no size changes */
+.btn-primary {
+  box-shadow:
+    0 14px 30px rgba(126,45,255,.28),
+    inset 0 1px 0 rgba(255,255,255,.24);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.04);
+}
+
+.btn-ghost:hover {
+  background: rgba(139,61,255,.075);
+  border-color: rgba(190,126,255,.24);
+}
+
+/* Reveal animation a bit smoother */
+.reveal {
+  animation-duration: .78s;
+  animation-timing-function: cubic-bezier(.2, .72, .22, 1);
+}
+
+/* Gentle idle glow on a few decorative icons, very subtle */
+.purple-icon {
+  animation: ivixSoftPulse 4.8s ease-in-out infinite;
+}
+
+@keyframes ivixSoftPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 0 rgba(179,92,255,0));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(179,92,255,.22));
+  }
+}
+
+/* Media cards get a tiny neon line, not a redesign */
+.clip-card::after,
+.command-category::after,
+.social-icons-brand .social-link::after {
+  pointer-events: none;
+}
+
+/* Footer atmosphere */
+.site-footer {
+  border-top-color: rgba(190,126,255,.12);
+  background:
+    linear-gradient(90deg, transparent, rgba(139,61,255,.035), transparent);
+}
+
+/* Performance/accessibility */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .purple-icon,
+  .reveal {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body::after {
+    font-size: 28px;
+    width: 260px;
+    top: 76px;
+    opacity: .62;
+  }
+
+  .main-nav a::before {
+    bottom: -12px;
+  }
+
+  .main-nav a.active::before,
+  .main-nav a:hover::before {
+    width: 52px;
+  }
+
+  .panel::after,
+  .stream-card::after,
+  .chat-card::after,
+  .collab-box::after {
+    left: 14px;
+    right: 14px;
+  }
+}
