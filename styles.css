@@ -2753,3 +2753,37 @@ h1 .hero-underscore {
     transform: none !important;
   }
 }
+
+/* hero art — декоративный звёздный портрет, сливается с фоном */
+.hero-main { position: relative; z-index: 1; }
+.hero-copy-main { position: relative; z-index: 2; }
+.hero-art {
+  position: absolute;
+  top: 50%;
+  right: -2%;
+  transform: translateY(-50%);
+  width: min(60%, 880px);
+  aspect-ratio: 1500 / 844;
+  background: url("assets/hero-art.webp") center right / contain no-repeat;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .96;
+  -webkit-mask-image: radial-gradient(125% 135% at 72% 46%, #000 58%, transparent 88%);
+          mask-image: radial-gradient(125% 135% at 72% 46%, #000 58%, transparent 88%);
+}
+@media (min-width: 1100px) { .hero-main { min-height: 540px; } }
+@media (max-width: 1100px) {
+  .hero-art { opacity: .7; width: min(64%, 620px); right: -6%; }
+}
+@media (max-width: 760px) {
+  .hero-art {
+    inset: 0 0 auto 0;
+    width: 100%; height: 260px;
+    transform: none; aspect-ratio: auto;
+    background-position: center top; background-size: cover;
+    opacity: .4;
+    -webkit-mask-image: linear-gradient(#000 30%, transparent 100%);
+            mask-image: linear-gradient(#000 30%, transparent 100%);
+  }
+}
+@media (max-width: 480px) { .hero-art { opacity: .28; height: 200px; } }
