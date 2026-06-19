@@ -2536,3 +2536,90 @@ body::after {
     transform: none;
   }
 }
+
+
+/* v1.8.13 — fix visible geometric background layer
+   Previous v1.8.12 grid was hidden under body background because of negative z-index. */
+
+body {
+  isolation: isolate;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -12vh -10vw;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .54;
+  background:
+    radial-gradient(circle at 82% 4%, rgba(179,92,255,.055), transparent 24%),
+    radial-gradient(circle at 7% 22%, rgba(126,45,255,.052), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(93,41,203,.050), transparent 34%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1700 1300'%3E%0A  %3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%0A    %3Cpath d='M-120 350 L180 510 L455 170 L735 355 L1010 120 L1290 330 L1820 90' stroke='#a855ff' stroke-opacity='.18' stroke-width='2'/%3E%0A    %3Cpath d='M-80 820 L210 700 L470 910 L720 650 L985 790 L1260 560 L1760 770' stroke='#b35cff' stroke-opacity='.14' stroke-width='2'/%3E%0A    %3Cpath d='M35 1140 L290 925 L590 1090 L850 950 L1140 1150 L1460 910 L1800 1060' stroke='#7c35ff' stroke-opacity='.13' stroke-width='1.5'/%3E%0A    %3Cpath d='M90 120 L270 360 L135 650 L390 760 L535 510 L810 590 L960 380 L1235 490 L1440 275 L1630 430' stroke='#d8bcff' stroke-opacity='.11' stroke-width='1.5'/%3E%0A    %3Cpath d='M260 510 L470 910 M735 355 L720 650 M1010 120 L985 790 M1290 330 L1260 560 M1440 275 L1460 910' stroke='#a855ff' stroke-opacity='.08' stroke-width='1'/%3E%0A    %3Cpath d='M-90 450 L180 510 L270 360 L455 170' stroke='#ffffff' stroke-opacity='.12' stroke-width='2.1'/%3E%0A    %3Cpath d='M1260 560 L1460 910 L1800 1060' stroke='#ffffff' stroke-opacity='.09' stroke-width='2'/%3E%0A  %3C/g%3E%0A  %3Cg fill='#caa6ff' fill-opacity='.34'%3E%0A    %3Ccircle cx='180' cy='510' r='3'/%3E%0A    %3Ccircle cx='455' cy='170' r='3.1'/%3E%0A    %3Ccircle cx='735' cy='355' r='2.5'/%3E%0A    %3Ccircle cx='1010' cy='120' r='3'/%3E%0A    %3Ccircle cx='1290' cy='330' r='2.7'/%3E%0A    %3Ccircle cx='210' cy='700' r='2.5'/%3E%0A    %3Ccircle cx='470' cy='910' r='3'/%3E%0A    %3Ccircle cx='720' cy='650' r='2.4'/%3E%0A    %3Ccircle cx='985' cy='790' r='3'/%3E%0A    %3Ccircle cx='1260' cy='560' r='3.1'/%3E%0A    %3Ccircle cx='1460' cy='910' r='2.7'/%3E%0A  %3C/g%3E%0A%3C/svg%3E") center top / 1780px 1360px repeat-y;
+  filter: drop-shadow(0 0 8px rgba(179,92,255,.09));
+  transform: translate3d(0, 0, 0) scale(1.02);
+  will-change: transform, background-position;
+}
+
+.noise {
+  z-index: 1;
+  opacity: .16;
+}
+
+.site-header,
+main,
+.site-footer {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes ivixGeoScrollVisible {
+  from {
+    transform: translate3d(0, -4vh, 0) scale(1.02);
+    background-position:
+      center center,
+      center center,
+      center center,
+      center -120px;
+  }
+  to {
+    transform: translate3d(0, 8vh, 0) scale(1.055);
+    background-position:
+      center center,
+      center center,
+      center center,
+      center 260px;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  body::before {
+    animation: ivixGeoScrollVisible linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  body::before {
+    inset: -8vh -34vw;
+    opacity: .42;
+    background-size:
+      auto,
+      auto,
+      auto,
+      1260px 980px;
+  }
+
+  .noise {
+    opacity: .13;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none !important;
+    transform: none;
+  }
+}
