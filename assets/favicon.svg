@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#090612"/>
-  <text x="7" y="41" font-family="Arial Black, Arial, sans-serif" font-size="22" font-weight="900" fill="#f6efff">IVIX</text>
+  <rect width="64" height="64" rx="16" fill="#07040d"/>
+  <path d="M13 43 22 16h8l-9 27h-8Zm19 0 4-12-8-15h9l3 7 7-7h10L43 31l7 12h-9l-4-7-6 7h-9Z" fill="#fff"/>
+  <path d="M52 44c3 0 5-2 5-5s-2-5-5-5-5 2-5 5 2 5 5 5Z" fill="#9d4dff"/>
 </svg>
