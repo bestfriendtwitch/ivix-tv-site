@@ -663,3 +663,16 @@ h1 {
 @media (max-width: 760px) {
   .chat-card { display: none; }
 }
+
+/* v1.7.3: show “На телефон” only on mobile */
+.install-panel {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .install-panel {
+    display: block;
+    grid-column: auto;
+  }
+}
+
