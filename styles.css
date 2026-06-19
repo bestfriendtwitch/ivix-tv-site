@@ -2962,231 +2962,281 @@ body {
 }
 
 
-/* v1.8.19 — constellation/glass network closer to visual mockup
-   CSS only. Replaces random scratch lines with connected node geometry and stronger parallax. */
+/* v1.8.21 — safe constellation correction
+   Rollback from crooked v1.8.20. CSS only, no SVG/data-url.
+   Goal: distributed constellation-like geometry, not a left-side vertical strip. */
 
 body {
-  position: relative;
-  overflow-x: hidden;
+  background-image:
+    /* constellation nodes — distributed across viewport */
+    radial-gradient(circle at 7% 18%, rgba(230,210,255,.36) 0 1.6px, transparent 3px),
+    radial-gradient(circle at 16% 34%, rgba(178,92,255,.34) 0 2px, transparent 3.5px),
+    radial-gradient(circle at 10% 60%, rgba(230,210,255,.28) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 22% 78%, rgba(178,92,255,.31) 0 1.8px, transparent 3.4px),
+
+    radial-gradient(circle at 34% 14%, rgba(230,210,255,.25) 0 1.4px, transparent 3px),
+    radial-gradient(circle at 44% 31%, rgba(178,92,255,.26) 0 1.7px, transparent 3.3px),
+    radial-gradient(circle at 38% 58%, rgba(230,210,255,.23) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 49% 82%, rgba(178,92,255,.26) 0 1.7px, transparent 3.3px),
+
+    radial-gradient(circle at 63% 18%, rgba(230,210,255,.25) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 72% 38%, rgba(178,92,255,.30) 0 1.9px, transparent 3.5px),
+    radial-gradient(circle at 66% 66%, rgba(230,210,255,.23) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 77% 86%, rgba(178,92,255,.28) 0 1.7px, transparent 3.3px),
+
+    radial-gradient(circle at 88% 14%, rgba(230,210,255,.31) 0 1.7px, transparent 3.3px),
+    radial-gradient(circle at 94% 42%, rgba(178,92,255,.34) 0 2px, transparent 3.6px),
+    radial-gradient(circle at 87% 70%, rgba(230,210,255,.25) 0 1.5px, transparent 3px),
+
+    /* connected glass-like lines, grouped by regions */
+    linear-gradient(34deg, transparent 0 10.9%, rgba(230,210,255,.17) 11.02%, rgba(230,210,255,.17) 11.20%, transparent 11.34% 100%),
+    linear-gradient(126deg, transparent 0 18.8%, rgba(178,92,255,.18) 18.94%, rgba(178,92,255,.18) 19.15%, transparent 19.30% 100%),
+    linear-gradient(58deg, transparent 0 27.9%, rgba(178,92,255,.13) 28.04%, rgba(178,92,255,.13) 28.20%, transparent 28.34% 100%),
+
+    linear-gradient(143deg, transparent 0 34.9%, rgba(230,210,255,.13) 35.04%, rgba(230,210,255,.13) 35.20%, transparent 35.34% 100%),
+    linear-gradient(27deg, transparent 0 42.8%, rgba(178,92,255,.15) 42.94%, rgba(178,92,255,.15) 43.12%, transparent 43.26% 100%),
+    linear-gradient(102deg, transparent 0 50.7%, rgba(230,210,255,.11) 50.82%, rgba(230,210,255,.11) 50.98%, transparent 51.12% 100%),
+
+    linear-gradient(150deg, transparent 0 58.9%, rgba(178,92,255,.16) 59.04%, rgba(178,92,255,.16) 59.22%, transparent 59.36% 100%),
+    linear-gradient(61deg, transparent 0 66.8%, rgba(230,210,255,.12) 66.94%, rgba(230,210,255,.12) 67.10%, transparent 67.24% 100%),
+    linear-gradient(116deg, transparent 0 74.8%, rgba(178,92,255,.14) 74.94%, rgba(178,92,255,.14) 75.10%, transparent 75.24% 100%),
+
+    /* a few brighter cinematic shards */
+    linear-gradient(31deg, transparent 0 47.2%, rgba(255,255,255,.16) 47.30%, rgba(255,255,255,.16) 47.42%, transparent 47.54% 100%),
+    linear-gradient(149deg, transparent 0 52.6%, rgba(216,188,255,.13) 52.70%, rgba(216,188,255,.13) 52.84%, transparent 52.98% 100%),
+    linear-gradient(83deg, transparent 0 37.8%, rgba(255,255,255,.08) 37.88%, rgba(255,255,255,.08) 38.00%, transparent 38.14% 100%),
+
+    /* atmosphere */
+    radial-gradient(circle at 10% 28%, rgba(132,48,255,.30), transparent 26%),
+    radial-gradient(circle at 90% 25%, rgba(132,48,255,.24), transparent 25%),
+    radial-gradient(circle at 52% 4%, rgba(115,30,255,.13), transparent 34%),
+    radial-gradient(circle at 76% 84%, rgba(115,30,255,.15), transparent 28%),
+    linear-gradient(180deg, #080511 0%, #05040a 48%, #080511 100%);
+
+  background-size:
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+    100vw 1400px,
+
+    760px 620px,
+    840px 680px,
+    700px 560px,
+    860px 660px,
+    780px 620px,
+    940px 700px,
+    900px 720px,
+    760px 580px,
+    840px 640px,
+    1080px 760px,
+    1180px 820px,
+    880px 620px,
+
+    auto,
+    auto,
+    auto,
+    auto,
+    auto;
+
+  background-position:
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+
+    -180px 80px,
+    120px 20px,
+    -120px 470px,
+    330px 300px,
+    600px 80px,
+    520px 520px,
+    calc(100% - 140px) 80px,
+    calc(100% + 80px) 380px,
+    calc(100% - 240px) 760px,
+    120px 220px,
+    calc(100% - 140px) 250px,
+    520px 780px,
+
+    center center,
+    center center,
+    center center,
+    center center,
+    center center;
+
+  background-attachment: fixed;
+}
+
+/* Clean up the crooked SVG/pseudo approach completely */
+body::before {
   background:
-    radial-gradient(circle at 10% 22%, rgba(136,57,255,.26), transparent 26%),
-    radial-gradient(circle at 88% 18%, rgba(136,57,255,.22), transparent 24%),
-    radial-gradient(circle at 76% 84%, rgba(100,43,215,.14), transparent 26%),
-    linear-gradient(180deg, #07040d 0%, #05040a 48%, #04030a 100%) !important;
+    radial-gradient(circle at 12% 24%, rgba(179,92,255,.07), transparent 22%),
+    radial-gradient(circle at 86% 18%, rgba(179,92,255,.06), transparent 20%),
+    radial-gradient(circle at 58% 80%, rgba(126,45,255,.045), transparent 24%);
+  opacity: .75;
+  z-index: -2;
+  transform: none;
   animation: none !important;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -2;
-  opacity: .98;
-  background-image:
-    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201600%201900%22%20fill%3D%22none%22%3E%0A%20%20%3Crect%20width%3D%221600%22%20height%3D%221900%22%20fill%3D%22transparent%22/%3E%0A%20%20%3Cg%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Cg%20stroke%3D%22rgba%28173%2C96%2C255%2C0.18%29%22%20stroke-width%3D%224.8%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M40%20120%20L180%2040%20L310%20150%20L520%2080%20L690%20210%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M70%20520%20L210%20420%20L330%20570%20L510%20470%20L630%20610%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1020%2090%20L1160%2030%20L1310%20140%20L1490%2070%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M980%20590%20L1150%20470%20L1310%20640%20L1500%20540%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M420%20240%20L660%20340%20L870%20250%20L1060%20380%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M470%20620%20L690%20520%20L920%20650%20L1120%20560%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M380%20990%20L640%20890%20L850%201020%20L1080%20930%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M450%201360%20L700%201260%20L900%201390%20L1160%201300%22/%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%20%20%3Cg%20fill%3D%22rgba%28216%2C188%2C255%2C0.16%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22520%22%20cy%3D%2280%22%20r%3D%2226%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221160%22%20cy%3D%2230%22%20r%3D%2234%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22920%22%20cy%3D%22650%22%20r%3D%2224%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221290%22%20cy%3D%221610%22%20r%3D%2228%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22470%22%20cy%3D%221580%22%20r%3D%2224%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22850%22%20cy%3D%221020%22%20r%3D%2220%22/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201600%201900%22%20fill%3D%22none%22%3E%0A%20%20%3Crect%20width%3D%221600%22%20height%3D%221900%22%20fill%3D%22transparent%22/%3E%0A%20%20%3Cg%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Cg%20stroke%3D%22rgba%28192%2C140%2C255%2C0.34%29%22%20stroke-width%3D%221.7%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M40%20120%20L180%2040%20L310%20150%20L520%2080%20L690%20210%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M110%20290%20L260%20210%20L370%20330%20L560%20260%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M70%20520%20L210%20420%20L330%20570%20L510%20470%20L630%20610%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M120%20830%20L300%20710%20L460%20880%20L610%20760%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M80%201170%20L260%201040%20L430%201210%20L620%201090%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M110%201540%20L280%201410%20L470%201580%20L650%201460%22/%3E%0A%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1020%2090%20L1160%2030%20L1310%20140%20L1490%2070%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M950%20310%20L1100%20210%20L1250%20350%20L1450%20260%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M980%20590%20L1150%20470%20L1310%20640%20L1500%20540%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M930%20910%20L1110%20790%20L1270%20960%20L1470%20840%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M960%201230%20L1140%201100%20L1320%201270%20L1510%201140%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M940%201570%20L1120%201450%20L1290%201610%20L1480%201490%22/%3E%0A%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M420%20240%20L660%20340%20L870%20250%20L1060%20380%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M470%20620%20L690%20520%20L920%20650%20L1120%20560%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M380%20990%20L640%20890%20L850%201020%20L1080%20930%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M450%201360%20L700%201260%20L900%201390%20L1160%201300%22/%3E%0A%20%20%20%20%3C/g%3E%0A%0A%20%20%20%20%3Cg%20stroke%3D%22rgba%28250%2C241%2C255%2C0.22%29%22%20stroke-width%3D%222.2%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M180%2040%20L260%20210%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M260%20210%20L210%20420%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M210%20420%20L300%20710%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M300%20710%20L260%201040%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M260%201040%20L280%201410%22/%3E%0A%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1160%2030%20L1100%20210%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1100%20210%20L1150%20470%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1150%20470%20L1110%20790%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1110%20790%20L1140%201100%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1140%201100%20L1120%201450%22/%3E%0A%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M520%2080%20L660%20340%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M870%20250%20L920%20650%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M640%20890%20L700%201260%22/%3E%0A%20%20%20%20%3C/g%3E%0A%0A%20%20%20%20%3Cg%20stroke%3D%22rgba%28223%2C196%2C255%2C0.46%29%22%20stroke-width%3D%221.3%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M690%20210%20L870%20250%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M630%20610%20L920%20650%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M610%20760%20L850%201020%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M620%201090%20L900%201390%22/%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%0A%20%20%3Cg%20fill%3D%22rgba%28215%2C190%2C255%2C0.92%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22180%22%20cy%3D%2240%22%20r%3D%222.7%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22310%22%20cy%3D%22150%22%20r%3D%222.1%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22520%22%20cy%3D%2280%22%20r%3D%223.5%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22260%22%20cy%3D%22210%22%20r%3D%222.8%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22330%22%20cy%3D%22570%22%20r%3D%222.1%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22460%22%20cy%3D%22880%22%20r%3D%222.7%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22430%22%20cy%3D%221210%22%20r%3D%222.2%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22470%22%20cy%3D%221580%22%20r%3D%222.9%22/%3E%0A%0A%20%20%20%20%3Ccircle%20cx%3D%221160%22%20cy%3D%2230%22%20r%3D%223.6%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221310%22%20cy%3D%22140%22%20r%3D%222.4%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221100%22%20cy%3D%22210%22%20r%3D%222.9%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221250%22%20cy%3D%22350%22%20r%3D%222.4%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221150%22%20cy%3D%22470%22%20r%3D%223.0%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221270%22%20cy%3D%22960%22%20r%3D%222.2%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221320%22%20cy%3D%221270%22%20r%3D%222.7%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221290%22%20cy%3D%221610%22%20r%3D%223.2%22/%3E%0A%0A%20%20%20%20%3Ccircle%20cx%3D%22660%22%20cy%3D%22340%22%20r%3D%222.2%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22870%22%20cy%3D%22250%22%20r%3D%223.0%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22690%22%20cy%3D%22520%22%20r%3D%222.0%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22920%22%20cy%3D%22650%22%20r%3D%223.1%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22640%22%20cy%3D%22890%22%20r%3D%222.0%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22850%22%20cy%3D%221020%22%20r%3D%222.4%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22700%22%20cy%3D%221260%22%20r%3D%222.0%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22900%22%20cy%3D%221390%22%20r%3D%223.0%22/%3E%0A%20%20%3C/g%3E%0A%0A%20%20%3Cg%20fill%3D%22rgba%28184%2C92%2C255%2C0.22%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22520%22%20cy%3D%2280%22%20r%3D%2214%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221160%22%20cy%3D%2230%22%20r%3D%2218%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22920%22%20cy%3D%22650%22%20r%3D%2212%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221290%22%20cy%3D%221610%22%20r%3D%2214%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22470%22%20cy%3D%221580%22%20r%3D%2212%22/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E"),
-    radial-gradient(circle at 18% 22%, rgba(168,92,255,.10), transparent 28%),
-    radial-gradient(circle at 84% 16%, rgba(168,92,255,.08), transparent 24%),
-    radial-gradient(circle at 60% 70%, rgba(120,55,255,.05), transparent 28%);
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-  background-size: 108% auto, 108% auto, 100% 100%, 100% 100%, 100% 100%;
-  background-position: center -40px, center -40px, center center, center center, center center;
-  filter: saturate(1.12) brightness(1.04);
-  will-change: background-position, transform, opacity;
-}
-
-/* keep IVIX text but quieter */
 body::after {
-  opacity: .32 !important;
+  opacity: .24 !important;
 }
 
-/* Calm the grid/noise so the constellation layer is visible */
 .noise {
-  opacity: .11 !important;
+  opacity: .10 !important;
+  mix-blend-mode: overlay !important;
 }
 
-.site-header,
-main,
-.site-footer {
-  position: relative;
-  z-index: 2;
-}
-
-@keyframes ivixConstellationFloat {
-  0%, 100% {
-    opacity: .95;
-    filter: saturate(1.08) brightness(1.02);
-  }
-  50% {
-    opacity: 1;
-    filter: saturate(1.18) brightness(1.08);
-  }
-}
-
-@keyframes ivixConstellationScroll {
+@keyframes ivixSafeConstellationScroll {
   from {
     background-position:
-      center -220px,
-      center -120px,
+      0 -90px,
+      0 -70px,
+      0 -50px,
+      0 -80px,
+      0 -60px,
+      0 -40px,
+      0 -70px,
+      0 -50px,
+      0 -80px,
+      0 -60px,
+      0 -45px,
+      0 -65px,
+      0 -85px,
+      0 -60px,
+      0 -40px,
+
+      -180px 20px,
+      120px -40px,
+      -120px 390px,
+      330px 220px,
+      600px 20px,
+      520px 440px,
+      calc(100% - 140px) 20px,
+      calc(100% + 80px) 300px,
+      calc(100% - 240px) 680px,
+      120px 140px,
+      calc(100% - 140px) 160px,
+      520px 700px,
+
+      center center,
+      center center,
       center center,
       center center,
       center center;
-    transform: translate3d(0, -20px, 0) scale(1.03);
   }
+
   to {
     background-position:
-      center 520px,
-      center 260px,
+      0 300px,
+      0 250px,
+      0 220px,
+      0 280px,
+      0 240px,
+      0 210px,
+      0 270px,
+      0 220px,
+      0 300px,
+      0 250px,
+      0 220px,
+      0 260px,
+      0 290px,
+      0 250px,
+      0 220px,
+
+      -180px 420px,
+      120px 350px,
+      -120px 820px,
+      330px 690px,
+      600px 420px,
+      520px 910px,
+      calc(100% - 140px) 460px,
+      calc(100% + 80px) 780px,
+      calc(100% - 240px) 1180px,
+      120px 610px,
+      calc(100% - 140px) 650px,
+      520px 1220px,
+
+      center center,
+      center center,
       center center,
       center center,
       center center;
-    transform: translate3d(0, 80px, 0) scale(1.08);
   }
-}
-
-/* fallback gentle motion if scroll-driven animation unsupported */
-@keyframes ivixConstellationDrift {
-  0% {
-    background-position: center -40px, center -40px, center center, center center, center center;
-    transform: translate3d(0, 0, 0) scale(1.02);
-  }
-  50% {
-    background-position: center -22px, center -10px, center center, center center, center center;
-    transform: translate3d(0, 8px, 0) scale(1.03);
-  }
-  100% {
-    background-position: center -40px, center -40px, center center, center center, center center;
-    transform: translate3d(0, 0, 0) scale(1.02);
-  }
-}
-
-body::before {
-  animation: ivixConstellationDrift 12s ease-in-out infinite, ivixConstellationFloat 8s ease-in-out infinite;
 }
 
 @supports (animation-timeline: scroll()) {
-  body::before {
-    animation:
-      ivixConstellationScroll linear both,
-      ivixConstellationFloat 8s ease-in-out infinite;
-    animation-timeline: scroll(root), auto;
-    animation-range: 0 100%, normal;
-    animation-duration: auto, 8s;
-    animation-fill-mode: both, none;
+  body {
+    animation: ivixSafeConstellationScroll linear both !important;
+    animation-timeline: scroll(root);
+    animation-range: 0 100%;
   }
 }
 
 @media (max-width: 760px) {
-  body::before {
-    background-size: 165% auto, 165% auto, 100% 100%, 100% 100%, 100% 100%;
-    background-position: center -30px, center -30px, center center, center center, center center;
-  }
+  body {
+    background-size:
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
+      100vw 1080px,
 
-  @supports (animation-timeline: scroll()) {
-    body::before {
-      animation-range: 0 100%, normal;
-    }
+      620px 500px,
+      690px 540px,
+      600px 480px,
+      700px 540px,
+      640px 500px,
+      740px 560px,
+      720px 560px,
+      640px 500px,
+      700px 540px,
+      880px 620px,
+      940px 660px,
+      720px 520px,
+
+      auto,
+      auto,
+      auto,
+      auto,
+      auto;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body::before {
+  body {
     animation: none !important;
   }
-}
-
-
-/* v1.8.20 — distribute geometry over whole viewport, more volumetric/chaotic, more cinematic */
-body {
-  background:
-    radial-gradient(circle at 12% 18%, rgba(138,61,255,.30), transparent 26%),
-    radial-gradient(circle at 84% 16%, rgba(153,76,255,.24), transparent 25%),
-    radial-gradient(circle at 82% 78%, rgba(121,49,236,.12), transparent 28%),
-    radial-gradient(circle at 34% 62%, rgba(84,35,173,.08), transparent 22%),
-    linear-gradient(180deg, #08050f 0%, #05030b 44%, #030209 100%) !important;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: -8%;
-  pointer-events: none;
-  z-index: -2;
-  opacity: .98;
-  background-image:
-    radial-gradient(circle at 18% 22%, rgba(204,144,255,.08), transparent 20%),
-    radial-gradient(circle at 82% 18%, rgba(204,144,255,.07), transparent 18%),
-    radial-gradient(circle at 52% 55%, rgba(182,86,255,.045), transparent 22%),
-    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201600%202200%22%20fill%3D%22none%22%3E%0A%3Crect%20width%3D%221600%22%20height%3D%222200%22%20fill%3D%22transparent%22/%3E%0A%3Cg%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%3Cg%20stroke%3D%22rgba%28178%2C98%2C255%2C0.16%29%22%20stroke-width%3D%225.4%22%3E%0A%20%20%20%20%3Cpolyline%20points%3D%2230%2C190%20120%2C120%20215%2C205%20315%2C120%20428%2C190%20520%2C95%20635%2C170%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%2235%2C760%20145%2C660%20252%2C745%20356%2C655%20470%2C745%20588%2C682%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%2235%2C1500%20155%2C1390%20280%2C1496%20398%2C1405%20510%2C1518%20630%2C1450%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22980%2C120%201098%2C50%201220%2C152%201350%2C82%201500%2C168%201570%2C122%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22965%2C760%201080%2C652%201208%2C772%201340%2C675%201468%2C780%201572%2C710%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22972%2C1490%201088%2C1386%201212%2C1496%201348%2C1400%201470%2C1510%201570%2C1440%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22520%2C250%20645%2C180%20790%2C270%20925%2C192%201085%2C290%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22460%2C590%20610%2C498%20760%2C612%20920%2C530%201098%2C630%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22420%2C960%20568%2C852%20734%2C980%20896%2C890%201062%2C1010%201208%2C920%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22455%2C1328%20606%2C1218%20760%2C1342%20930%2C1248%201100%2C1360%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22435%2C1705%20610%2C1595%20770%2C1710%20940%2C1620%201118%2C1725%22/%3E%0A%20%20%3C/g%3E%0A%20%20%3Cg%20stroke%3D%22rgba%28255%2C255%2C255%2C0.08%29%22%20stroke-width%3D%228%22%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22520%2C95%20645%2C180%20610%2C498%20445%2C465%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22790%2C270%20925%2C192%20920%2C530%20760%2C612%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%221098%2C50%201220%2C152%201188%2C432%201065%2C320%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22568%2C852%20734%2C980%20760%2C1342%20606%2C1218%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%221068%2C1018%201186%2C1135%201212%2C1496%201088%2C1386%22/%3E%0A%20%20%3C/g%3E%0A%3C/g%3E%0A%3Cg%20fill%3D%22rgba%28201%2C116%2C255%2C0.22%29%22%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%2214%22/%3E%3Ccircle%20cx%3D%22520%22%20cy%3D%2295%22%20r%3D%2226%22/%3E%3Ccircle%20cx%3D%221098%22%20cy%3D%2250%22%20r%3D%2234%22/%3E%0A%20%20%3Ccircle%20cx%3D%22760%22%20cy%3D%22612%22%20r%3D%2222%22/%3E%3Ccircle%20cx%3D%221062%22%20cy%3D%221010%22%20r%3D%2224%22/%3E%3Ccircle%20cx%3D%221100%22%20cy%3D%221360%22%20r%3D%2228%22/%3E%0A%20%20%3Ccircle%20cx%3D%221118%22%20cy%3D%221725%22%20r%3D%2228%22/%3E%3Ccircle%20cx%3D%22300%22%20cy%3D%221858%22%20r%3D%2222%22/%3E%3Ccircle%20cx%3D%221478%22%20cy%3D%221882%22%20r%3D%2226%22/%3E%0A%3C/g%3E%0A%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201600%202200%22%20fill%3D%22none%22%3E%0A%3Crect%20width%3D%221600%22%20height%3D%222200%22%20fill%3D%22transparent%22/%3E%0A%3Cg%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%3Cg%20stroke%3D%22rgba%28214%2C184%2C255%2C0.34%29%22%20stroke-width%3D%221.9%22%3E%0A%20%20%20%20%3Cpolyline%20points%3D%2230%2C190%20120%2C120%20215%2C205%20315%2C120%20428%2C190%20520%2C95%20635%2C170%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%2285%2C430%20180%2C360%20262%2C438%20355%2C378%20445%2C465%20560%2C382%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%2235%2C760%20145%2C660%20252%2C745%20356%2C655%20470%2C745%20588%2C682%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%2255%2C1120%20165%2C1015%20285%2C1112%20392%2C1022%20505%2C1115%20620%2C1038%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%2235%2C1500%20155%2C1390%20280%2C1496%20398%2C1405%20510%2C1518%20630%2C1450%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%2248%2C1860%20170%2C1746%20300%2C1858%20420%2C1768%20548%2C1880%20665%2C1810%22/%3E%0A%0A%20%20%20%20%3Cpolyline%20points%3D%22980%2C120%201098%2C50%201220%2C152%201350%2C82%201500%2C168%201570%2C122%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22945%2C420%201065%2C320%201188%2C432%201316%2C340%201448%2C442%201568%2C368%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22965%2C760%201080%2C652%201208%2C772%201340%2C675%201468%2C780%201572%2C710%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22950%2C1125%201068%2C1018%201186%2C1135%201315%2C1040%201452%2C1158%201560%2C1080%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22972%2C1490%201088%2C1386%201212%2C1496%201348%2C1400%201470%2C1510%201570%2C1440%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22986%2C1855%201105%2C1744%201228%2C1856%201352%2C1768%201478%2C1882%201585%2C1808%22/%3E%0A%0A%20%20%20%20%3Cpolyline%20points%3D%22520%2C250%20645%2C180%20790%2C270%20925%2C192%201085%2C290%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22460%2C590%20610%2C498%20760%2C612%20920%2C530%201098%2C630%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22420%2C960%20568%2C852%20734%2C980%20896%2C890%201062%2C1010%201208%2C920%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22455%2C1328%20606%2C1218%20760%2C1342%20930%2C1248%201100%2C1360%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22435%2C1705%20610%2C1595%20770%2C1710%20940%2C1620%201118%2C1725%22/%3E%0A%0A%20%20%20%20%3Cpolyline%20points%3D%22210%2C205%20262%2C438%20252%2C745%20285%2C1112%20280%2C1496%20300%2C1858%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22315%2C120%20355%2C378%20356%2C655%20392%2C1022%20398%2C1405%20420%2C1768%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22520%2C95%20560%2C382%20588%2C682%20620%2C1038%20630%2C1450%20665%2C1810%22/%3E%0A%0A%20%20%20%20%3Cpolyline%20points%3D%221098%2C50%201065%2C320%201080%2C652%201068%2C1018%201088%2C1386%201105%2C1744%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%221220%2C152%201188%2C432%201208%2C772%201186%2C1135%201212%2C1496%201228%2C1856%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%221350%2C82%201316%2C340%201340%2C675%201315%2C1040%201348%2C1400%201352%2C1768%22/%3E%0A%0A%20%20%20%20%3Cpolyline%20points%3D%22428%2C190%20645%2C180%20760%2C612%20896%2C890%20930%2C1248%201118%2C1725%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22635%2C170%20790%2C270%20920%2C530%201062%2C1010%201100%2C1360%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22445%2C465%20610%2C498%20734%2C980%20760%2C1342%20940%2C1620%22/%3E%0A%20%20%3C/g%3E%0A%0A%20%20%3Cg%20stroke%3D%22rgba%28255%2C255%2C255%2C0.10%29%22%20stroke-width%3D%222.2%22%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22120%2C120%20180%2C360%20145%2C660%20165%2C1015%20155%2C1390%20170%2C1746%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22925%2C192%20920%2C530%20896%2C890%20930%2C1248%20940%2C1620%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%221500%2C168%201448%2C442%201468%2C780%201452%2C1158%201470%2C1510%201478%2C1882%22/%3E%0A%20%20%20%20%3Cpolyline%20points%3D%22520%2C250%20460%2C590%20420%2C960%20455%2C1328%20435%2C1705%22/%3E%0A%20%20%3C/g%3E%0A%0A%20%20%3Cg%20stroke%3D%22rgba%28201%2C126%2C255%2C0.26%29%22%20stroke-width%3D%221.1%22%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22120%2C120%20215%2C205%20180%2C360%2085%2C430%22/%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22520%2C95%20645%2C180%20610%2C498%20445%2C465%22/%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22790%2C270%20925%2C192%20920%2C530%20760%2C612%22/%3E%0A%20%20%20%20%3Cpolygon%20points%3D%221098%2C50%201220%2C152%201188%2C432%201065%2C320%22/%3E%0A%20%20%20%20%3Cpolygon%20points%3D%221316%2C340%201448%2C442%201468%2C780%201340%2C675%22/%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22568%2C852%20734%2C980%20760%2C1342%20606%2C1218%22/%3E%0A%20%20%20%20%3Cpolygon%20points%3D%221068%2C1018%201186%2C1135%201212%2C1496%201088%2C1386%22/%3E%0A%20%20%20%20%3Cpolygon%20points%3D%22300%2C1858%20420%2C1768%20610%2C1595%20548%2C1880%22/%3E%0A%20%20%3C/g%3E%0A%3C/g%3E%0A%3Cg%20fill%3D%22rgba%28236%2C226%2C255%2C0.92%29%22%3E%0A%20%20%3Ccircle%20cx%3D%22120%22%20cy%3D%22120%22%20r%3D%223.4%22/%3E%3Ccircle%20cx%3D%22215%22%20cy%3D%22205%22%20r%3D%222.3%22/%3E%3Ccircle%20cx%3D%22315%22%20cy%3D%22120%22%20r%3D%223.1%22/%3E%0A%20%20%3Ccircle%20cx%3D%22520%22%20cy%3D%2295%22%20r%3D%224.1%22/%3E%3Ccircle%20cx%3D%22645%22%20cy%3D%22180%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22790%22%20cy%3D%22270%22%20r%3D%223.0%22/%3E%0A%20%20%3Ccircle%20cx%3D%22925%22%20cy%3D%22192%22%20r%3D%222.7%22/%3E%3Ccircle%20cx%3D%221098%22%20cy%3D%2250%22%20r%3D%224.2%22/%3E%3Ccircle%20cx%3D%221220%22%20cy%3D%22152%22%20r%3D%223.1%22/%3E%0A%20%20%3Ccircle%20cx%3D%221350%22%20cy%3D%2282%22%20r%3D%222.9%22/%3E%3Ccircle%20cx%3D%221500%22%20cy%3D%22168%22%20r%3D%222.4%22/%3E%0A%20%20%3Ccircle%20cx%3D%22180%22%20cy%3D%22360%22%20r%3D%222.4%22/%3E%3Ccircle%20cx%3D%22355%22%20cy%3D%22378%22%20r%3D%222.2%22/%3E%3Ccircle%20cx%3D%22445%22%20cy%3D%22465%22%20r%3D%222.2%22/%3E%0A%20%20%3Ccircle%20cx%3D%22610%22%20cy%3D%22498%22%20r%3D%222.3%22/%3E%3Ccircle%20cx%3D%22760%22%20cy%3D%22612%22%20r%3D%222.7%22/%3E%3Ccircle%20cx%3D%22920%22%20cy%3D%22530%22%20r%3D%222.2%22/%3E%0A%20%20%3Ccircle%20cx%3D%221065%22%20cy%3D%22320%22%20r%3D%222.7%22/%3E%3Ccircle%20cx%3D%221188%22%20cy%3D%22432%22%20r%3D%222.2%22/%3E%3Ccircle%20cx%3D%221316%22%20cy%3D%22340%22%20r%3D%222.8%22/%3E%0A%20%20%3Ccircle%20cx%3D%221448%22%20cy%3D%22442%22%20r%3D%222.1%22/%3E%3Ccircle%20cx%3D%22145%22%20cy%3D%22660%22%20r%3D%222.2%22/%3E%3Ccircle%20cx%3D%22356%22%20cy%3D%22655%22%20r%3D%222.2%22/%3E%0A%20%20%3Ccircle%20cx%3D%22470%22%20cy%3D%22745%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22588%22%20cy%3D%22682%22%20r%3D%222.2%22/%3E%3Ccircle%20cx%3D%22734%22%20cy%3D%22980%22%20r%3D%222.6%22/%3E%0A%20%20%3Ccircle%20cx%3D%22896%22%20cy%3D%22890%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%221062%22%20cy%3D%221010%22%20r%3D%222.7%22/%3E%3Ccircle%20cx%3D%221208%22%20cy%3D%22920%22%20r%3D%222.2%22/%3E%0A%20%20%3Ccircle%20cx%3D%221080%22%20cy%3D%22652%22%20r%3D%222.9%22/%3E%3Ccircle%20cx%3D%221208%22%20cy%3D%22772%22%20r%3D%222.6%22/%3E%3Ccircle%20cx%3D%221340%22%20cy%3D%22675%22%20r%3D%222.4%22/%3E%0A%20%20%3Ccircle%20cx%3D%221468%22%20cy%3D%22780%22%20r%3D%222.8%22/%3E%3Ccircle%20cx%3D%22165%22%20cy%3D%221015%22%20r%3D%222.2%22/%3E%3Ccircle%20cx%3D%22285%22%20cy%3D%221112%22%20r%3D%222.1%22/%3E%0A%20%20%3Ccircle%20cx%3D%22392%22%20cy%3D%221022%22%20r%3D%222.2%22/%3E%3Ccircle%20cx%3D%22505%22%20cy%3D%221115%22%20r%3D%222.4%22/%3E%3Ccircle%20cx%3D%22620%22%20cy%3D%221038%22%20r%3D%222.0%22/%3E%0A%20%20%3Ccircle%20cx%3D%221068%22%20cy%3D%221018%22%20r%3D%222.7%22/%3E%3Ccircle%20cx%3D%221186%22%20cy%3D%221135%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%221315%22%20cy%3D%221040%22%20r%3D%222.3%22/%3E%0A%20%20%3Ccircle%20cx%3D%221452%22%20cy%3D%221158%22%20r%3D%222.8%22/%3E%3Ccircle%20cx%3D%22606%22%20cy%3D%221218%22%20r%3D%222.1%22/%3E%3Ccircle%20cx%3D%22760%22%20cy%3D%221342%22%20r%3D%222.6%22/%3E%0A%20%20%3Ccircle%20cx%3D%22930%22%20cy%3D%221248%22%20r%3D%222.3%22/%3E%3Ccircle%20cx%3D%221100%22%20cy%3D%221360%22%20r%3D%223.0%22/%3E%3Ccircle%20cx%3D%221088%22%20cy%3D%221386%22%20r%3D%222.4%22/%3E%0A%20%20%3Ccircle%20cx%3D%221212%22%20cy%3D%221496%22%20r%3D%222.6%22/%3E%3Ccircle%20cx%3D%221348%22%20cy%3D%221400%22%20r%3D%222.2%22/%3E%3Ccircle%20cx%3D%221470%22%20cy%3D%221510%22%20r%3D%222.6%22/%3E%0A%20%20%3Ccircle%20cx%3D%22155%22%20cy%3D%221390%22%20r%3D%222.1%22/%3E%3Ccircle%20cx%3D%22280%22%20cy%3D%221496%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22398%22%20cy%3D%221405%22%20r%3D%222.2%22/%3E%0A%20%20%3Ccircle%20cx%3D%22510%22%20cy%3D%221518%22%20r%3D%222.6%22/%3E%3Ccircle%20cx%3D%22630%22%20cy%3D%221450%22%20r%3D%222.0%22/%3E%3Ccircle%20cx%3D%22610%22%20cy%3D%221595%22%20r%3D%222.1%22/%3E%0A%20%20%3Ccircle%20cx%3D%22770%22%20cy%3D%221710%22%20r%3D%222.8%22/%3E%3Ccircle%20cx%3D%22940%22%20cy%3D%221620%22%20r%3D%222.6%22/%3E%3Ccircle%20cx%3D%221118%22%20cy%3D%221725%22%20r%3D%223.2%22/%3E%0A%20%20%3Ccircle%20cx%3D%22170%22%20cy%3D%221746%22%20r%3D%222.1%22/%3E%3Ccircle%20cx%3D%22300%22%20cy%3D%221858%22%20r%3D%222.7%22/%3E%3Ccircle%20cx%3D%22420%22%20cy%3D%221768%22%20r%3D%222.2%22/%3E%0A%20%20%3Ccircle%20cx%3D%22548%22%20cy%3D%221880%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%22665%22%20cy%3D%221810%22%20r%3D%222.3%22/%3E%3Ccircle%20cx%3D%221105%22%20cy%3D%221744%22%20r%3D%222.2%22/%3E%0A%20%20%3Ccircle%20cx%3D%221228%22%20cy%3D%221856%22%20r%3D%222.5%22/%3E%3Ccircle%20cx%3D%221352%22%20cy%3D%221768%22%20r%3D%222.2%22/%3E%3Ccircle%20cx%3D%221478%22%20cy%3D%221882%22%20r%3D%222.8%22/%3E%0A%3C/g%3E%0A%3Cg%20fill%3D%22rgba%28182%2C97%2C255%2C0.28%29%22%3E%0A%20%20%3Ccircle%20cx%3D%22520%22%20cy%3D%2295%22%20r%3D%2216%22/%3E%3Ccircle%20cx%3D%221098%22%20cy%3D%2250%22%20r%3D%2220%22/%3E%3Ccircle%20cx%3D%22760%22%20cy%3D%22612%22%20r%3D%2214%22/%3E%0A%20%20%3Ccircle%20cx%3D%221062%22%20cy%3D%221010%22%20r%3D%2216%22/%3E%3Ccircle%20cx%3D%221100%22%20cy%3D%221360%22%20r%3D%2218%22/%3E%3Ccircle%20cx%3D%221118%22%20cy%3D%221725%22%20r%3D%2218%22/%3E%0A%20%20%3Ccircle%20cx%3D%22300%22%20cy%3D%221858%22%20r%3D%2216%22/%3E%3Ccircle%20cx%3D%221478%22%20cy%3D%221882%22%20r%3D%2218%22/%3E%0A%3C/g%3E%0A%3C/svg%3E");
-  background-repeat: no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;
-  background-size: 100% 100%,100% 100%,100% 100%,132% auto,132% auto;
-  background-position: center center,center center,center center,center center,center center;
-  filter: saturate(1.14) brightness(1.03) contrast(1.03);
-  will-change: transform, background-position, opacity;
-}
-
-/* make the watermark quieter so the geometry reads cleaner */
-body::after {
-  opacity: .18 !important;
-}
-
-.noise { opacity: .09 !important; }
-
-@keyframes ivixCinePulse {
-  0%,100% { opacity: .95; filter: saturate(1.10) brightness(1.02); }
-  50% { opacity: 1; filter: saturate(1.20) brightness(1.07); }
-}
-
-@keyframes ivixCineDrift {
-  0% {
-    background-position: center center, center center, center center, 48% 48%, 50% 50%;
-    transform: translate3d(0,0,0) scale(1.04);
-  }
-  50% {
-    background-position: center center, center center, center center, 50% 49%, 52% 51%;
-    transform: translate3d(0,10px,0) scale(1.055);
-  }
-  100% {
-    background-position: center center, center center, center center, 48% 48%, 50% 50%;
-    transform: translate3d(0,0,0) scale(1.04);
-  }
-}
-
-@keyframes ivixCineScroll {
-  from {
-    background-position: center center, center center, center center, 47% 42%, 52% 46%;
-    transform: translate3d(0,-30px,0) scale(1.04);
-  }
-  to {
-    background-position: center center, center center, center center, 53% 58%, 48% 64%;
-    transform: translate3d(0,120px,0) scale(1.13);
-  }
-}
-
-body::before {
-  animation: ivixCineDrift 14s ease-in-out infinite, ivixCinePulse 8s ease-in-out infinite;
-}
-
-@supports (animation-timeline: scroll()) {
-  body::before {
-    animation: ivixCineScroll linear both, ivixCinePulse 8s ease-in-out infinite;
-    animation-timeline: scroll(root), auto;
-    animation-range: 0 100%, normal;
-    animation-duration: auto, 8s;
-    animation-fill-mode: both, none;
-  }
-}
-
-@media (max-width: 760px) {
-  body::before {
-    inset: -10%;
-    background-size: 100% 100%,100% 100%,100% 100%,190% auto,190% auto;
-    background-position: center center,center center,center center,center center,center center;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body::before { animation: none !important; }
 }
