@@ -1,12 +1,12 @@
 /* =============================================================
-   IVIX_TV — page-scrolling rotating galaxy starfield (v10 / site v1.8.33)
+   IVIX_TV — scrolling page-canvas galaxy starfield (v11 / site v1.8.34)
    • mobile: canvas не создается;
    • desktop: 30 FPS;
-   • canvas fixed, but stars live in page coordinates and scroll with content;
-   • clockwise rotation around center of the whole page;
-   • faster rotation;
-   • lighter trail / less motion blur;
-   • no scroll-fixed background behavior.
+   • canvas is absolute full-page layer, so it scrolls with content naturally;
+   • stars rotate clockwise around page center;
+   • rotation is faster than v1.8.33;
+   • lighter trail / less blur;
+   • scroll no longer fights animation because the browser scrolls the canvas.
 ============================================================= */
 (function () {
   "use strict";
@@ -20,7 +20,8 @@
 
   const CONFIG = {
     targetFps: 30,
-    dprCap: 1.45,
+    dprCap: 1.18,
+    maxCanvasHeight: 7200,
 
     colorsTop: [
       "205, 218, 255",
@@ -38,46 +39,35 @@
     ],
 
     warmChance: 0.07,
-    mouseAmount: 76,
+    mouseAmount: 52,
     mouseEase: 0.055,
 
-    // Faster clockwise page-galaxy rotation.
-    galaxyRotation: 0.0065,
+    // Clockwise. Full turn is still slow, but visibly faster than previous.
+    galaxyRotation: 0.0078,
 
-    // Higher alpha = shorter trail, lower alpha = longer blur.
-    trailAlpha: 0.58,
+    // Short trail: cheap and not too blurry.
+    trailAlpha: 0.72,
 
     shootingStars: true,
     shootingEvery: [15, 34],
     nebulae: true,
 
     layers: [
-      { density: 2550,  r: [0.24, 0.62], a: [0.04, 0.16], tw: [0.10, 0.42], twDepth: 0.34, pMouse: 0.08, rotation: 0.42, glow: 0.00, drift: [0.7, 1.8], rayChance: 0.00 },
-      { density: 5400,  r: [0.34, 0.92], a: [0.08, 0.30], tw: [0.14, 0.62], twDepth: 0.46, pMouse: 0.24, rotation: 0.68, glow: 0.035, drift: [1.1, 3.0], rayChance: 0.005 },
-      { density: 11800, r: [0.50, 1.34], a: [0.16, 0.52], tw: [0.18, 0.82], twDepth: 0.54, pMouse: 0.45, rotation: 0.94, glow: 0.12, drift: [1.8, 4.6], rayChance: 0.014 },
-      { density: 31000, r: [0.80, 2.05], a: [0.26, 0.72], tw: [0.20, 0.98], twDepth: 0.60, pMouse: 0.70, rotation: 1.20, glow: 0.25, drift: [2.4, 6.2], rayChance: 0.032 },
-      { density: 90000, r: [1.20, 2.75], a: [0.34, 0.78], tw: [0.16, 0.72], twDepth: 0.48, pMouse: 0.90, rotation: 1.45, glow: 0.34, drift: [3.0, 7.5], rayChance: 0.10 },
+      { density: 2600,  r: [0.24, 0.62], a: [0.04, 0.16], tw: [0.10, 0.42], twDepth: 0.34, pMouse: 0.05, rotation: 0.42, glow: 0.00, drift: [0.6, 1.5], rayChance: 0.00 },
+      { density: 5600,  r: [0.34, 0.92], a: [0.08, 0.30], tw: [0.14, 0.62], twDepth: 0.46, pMouse: 0.15, rotation: 0.68, glow: 0.03, drift: [0.9, 2.4], rayChance: 0.005 },
+      { density: 12200, r: [0.50, 1.34], a: [0.16, 0.52], tw: [0.18, 0.82], twDepth: 0.54, pMouse: 0.28, rotation: 0.95, glow: 0.10, drift: [1.4, 3.5], rayChance: 0.014 },
+      { density: 33000, r: [0.80, 2.05], a: [0.26, 0.72], tw: [0.20, 0.98], twDepth: 0.60, pMouse: 0.44, rotation: 1.22, glow: 0.22, drift: [1.8, 4.8], rayChance: 0.030 },
+      { density: 98000, r: [1.20, 2.75], a: [0.34, 0.78], tw: [0.16, 0.72], twDepth: 0.48, pMouse: 0.58, rotation: 1.48, glow: 0.28, drift: [2.2, 5.6], rayChance: 0.09 },
     ],
   };
 
   const canvas = document.createElement("canvas");
   canvas.id = "ivix-bg-canvas";
   canvas.setAttribute("aria-hidden", "true");
-  Object.assign(canvas.style, {
-    position: "fixed",
-    inset: "0",
-    width: "100vw",
-    height: "100vh",
-    zIndex: "0",
-    pointerEvents: "none",
-    display: "block",
-    background: "transparent",
-  });
 
   const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
 
   let W = 0;
-  let H = 0;
   let pageH = 0;
   let dpr = 1;
   let quality = 1;
@@ -85,7 +75,6 @@
   let lastDraw = 0;
   let firstFrame = true;
   let lastResizeKey = "";
-  let scrollY = 0;
 
   let margin = 0;
   let layers = [];
@@ -105,18 +94,25 @@
   const lerp = (a, b, t) => a + (b - a) * t;
 
   function injectCss() {
-    if (document.getElementById("ivix-bg-page-orbit-style")) return;
+    if (document.getElementById("ivix-bg-page-canvas-style")) return;
 
     const style = document.createElement("style");
-    style.id = "ivix-bg-page-orbit-style";
+    style.id = "ivix-bg-page-canvas-style";
     style.textContent = `
-      html, body { background-color: #05030b; }
+      html, body {
+        background-color: #05030b;
+      }
+
+      body {
+        position: relative;
+      }
 
       #ivix-bg-canvas {
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: var(--ivix-page-bg-height, 100vh) !important;
         z-index: 0 !important;
         pointer-events: none !important;
         display: block !important;
@@ -127,7 +123,9 @@
         z-index: 2;
       }
 
-      .site-header { z-index: 1200 !important; }
+      .site-header {
+        z-index: 1200 !important;
+      }
 
       .bg-scene,
       .bg-layer,
@@ -175,8 +173,8 @@
       size / 2, size / 2, size / 2
     );
 
-    gradient.addColorStop(0, "rgba(" + color + ",0.50)");
-    gradient.addColorStop(0.22, "rgba(" + color + ",0.14)");
+    gradient.addColorStop(0, "rgba(" + color + ",0.46)");
+    gradient.addColorStop(0.22, "rgba(" + color + ",0.12)");
     gradient.addColorStop(1, "rgba(" + color + ",0)");
 
     g.fillStyle = gradient;
@@ -190,12 +188,12 @@
     const cores = navigator.hardwareConcurrency || 4;
 
     let q = 1;
-    if (area > 2400000) q *= 0.72;
-    else if (area > 1700000) q *= 0.82;
-    if (cores <= 4) q *= 0.82;
-    if (cores <= 2) q *= 0.68;
+    if (area > 2400000) q *= 0.70;
+    else if (area > 1700000) q *= 0.80;
+    if (cores <= 4) q *= 0.80;
+    if (cores <= 2) q *= 0.66;
 
-    return clamp(q, 0.46, 1);
+    return clamp(q, 0.44, 1);
   }
 
   function buildLayer(cfg, layerIndex) {
@@ -219,13 +217,13 @@
         colorBottom: pair.bottom,
         glow: Math.random() < cfg.glow,
         ray: isBright,
-        rayLen: rand(8, 21) * (0.7 + r * 0.28),
+        rayLen: rand(8, 20) * (0.7 + r * 0.26),
         rayAngle: rand(0, Math.PI),
-        rayAlpha: rand(0.055, 0.16) * (layerIndex + 1) / CONFIG.layers.length,
+        rayAlpha: rand(0.05, 0.15) * (layerIndex + 1) / CONFIG.layers.length,
         driftAmpX: rand(cfg.drift[0], cfg.drift[1]),
-        driftAmpY: rand(cfg.drift[0], cfg.drift[1]) * 0.55,
-        driftSpeedX: rand(0.026, 0.080),
-        driftSpeedY: rand(0.024, 0.074),
+        driftAmpY: rand(cfg.drift[0], cfg.drift[1]) * 0.50,
+        driftSpeedX: rand(0.020, 0.060),
+        driftSpeedY: rand(0.018, 0.055),
         driftPhaseX: rand(0, Math.PI * 2),
         driftPhaseY: rand(0, Math.PI * 2),
       });
@@ -237,12 +235,13 @@
   function buildNebulae() {
     if (!CONFIG.nebulae) return [];
 
-    const scale = clamp(Math.min(W, H) / 900, 0.72, 1.20);
+    const viewportH = window.innerHeight || 900;
+    const scale = clamp(Math.min(W, viewportH) / 900, 0.72, 1.15);
 
     return [
-      { x: W * 0.12, y: pageH * 0.18, w: W * 0.72 * scale, h: H * 0.58 * scale, rot: -0.12, colorA: "132, 70, 255", colorB: "80, 38, 160", alpha: 0.044, speed: 0.022, phase: rand(0, Math.PI * 2) },
-      { x: W * 0.86, y: pageH * 0.34, w: W * 0.74 * scale, h: H * 0.54 * scale, rot: 0.18, colorA: "180, 104, 255", colorB: "68, 26, 140", alpha: 0.034, speed: 0.020, phase: rand(0, Math.PI * 2) },
-      { x: W * 0.48, y: pageH * 0.66, w: W * 0.82 * scale, h: H * 0.50 * scale, rot: -0.06, colorA: "116, 74, 255", colorB: "44, 22, 92", alpha: 0.030, speed: 0.018, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.12, y: pageH * 0.18, w: W * 0.72 * scale, h: viewportH * 0.58 * scale, rot: -0.12, colorA: "132, 70, 255", colorB: "80, 38, 160", alpha: 0.035, speed: 0.018, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.86, y: pageH * 0.34, w: W * 0.74 * scale, h: viewportH * 0.54 * scale, rot: 0.18, colorA: "180, 104, 255", colorB: "68, 26, 140", alpha: 0.028, speed: 0.016, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.48, y: pageH * 0.66, w: W * 0.82 * scale, h: viewportH * 0.50 * scale, rot: -0.06, colorA: "116, 74, 255", colorB: "44, 22, 92", alpha: 0.024, speed: 0.014, phase: rand(0, Math.PI * 2) },
     ];
   }
 
@@ -254,7 +253,7 @@
     glowSprites = {};
     const allColors = CONFIG.colorsTop.concat(CONFIG.colorsBottom);
     for (const color of allColors) {
-      glowSprites[color] = makeGlow(50, color);
+      glowSprites[color] = makeGlow(46, color);
     }
 
     firstFrame = true;
@@ -266,38 +265,35 @@
       return;
     }
 
-    const rect = canvas.getBoundingClientRect();
-    W = Math.max(1, Math.round(rect.width || window.innerWidth || 1));
-    H = Math.max(1, Math.round(rect.height || window.innerHeight || 1));
-    pageH = Math.max(
-      H,
+    W = Math.max(1, Math.round(document.documentElement.clientWidth || window.innerWidth || 1));
+    const naturalPageH = Math.max(
+      window.innerHeight || 1,
       document.documentElement.scrollHeight || 0,
       document.body.scrollHeight || 0
     );
+    pageH = Math.min(Math.max(window.innerHeight || 1, naturalPageH), CONFIG.maxCanvasHeight);
 
     const nextDpr = Math.min(window.devicePixelRatio || 1, CONFIG.dprCap);
-    const resizeKey = W + "x" + H + "x" + pageH + "@" + nextDpr.toFixed(2);
+    const resizeKey = W + "x" + pageH + "@" + nextDpr.toFixed(2);
 
     if (resizeKey === lastResizeKey && layers.length) return;
     lastResizeKey = resizeKey;
 
     dpr = nextDpr;
+
+    canvas.style.setProperty("--ivix-page-bg-height", pageH + "px");
     canvas.width = Math.round(W * dpr);
-    canvas.height = Math.round(H * dpr);
+    canvas.height = Math.round(pageH * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    margin = Math.max(W, H) * 0.24 + CONFIG.mouseAmount;
+    margin = Math.max(W, window.innerHeight || 900) * 0.24 + CONFIG.mouseAmount;
     rebuild();
   }
 
-  function onScroll() {
-    scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-  }
-
   function onMouse(e) {
-    if (!W || !H) return;
+    if (!W || !pageH) return;
     tmx = (e.clientX / W) * 2 - 1;
-    tmy = (e.clientY / H) * 2 - 1;
+    tmy = (e.clientY / Math.max(1, window.innerHeight || 1)) * 2 - 1;
   }
 
   function drawSpaceBase(isFirst) {
@@ -305,63 +301,58 @@
 
     if (!isFirst) {
       ctx.fillStyle = "rgba(5, 3, 11, " + CONFIG.trailAlpha + ")";
-      ctx.fillRect(0, 0, W, H);
+      ctx.fillRect(0, 0, W, pageH);
       return;
     }
 
-    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    const grad = ctx.createLinearGradient(0, 0, 0, pageH);
     grad.addColorStop(0, "#05030b");
     grad.addColorStop(0.44, "#100520");
     grad.addColorStop(1, "#05030b");
 
     ctx.globalAlpha = 1;
     ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, W, pageH);
   }
 
   function drawAmbientGlow() {
-    const worldShift = -(scrollY * 0.18) % H;
-
-    const sideA = ctx.createRadialGradient(W * 0.10, H * 0.25 + worldShift, 0, W * 0.10, H * 0.25 + worldShift, W * 0.55);
-    sideA.addColorStop(0, "rgba(116, 50, 255, 0.038)");
-    sideA.addColorStop(0.48, "rgba(82, 32, 180, 0.014)");
+    const sideA = ctx.createRadialGradient(W * 0.10, pageH * 0.22, 0, W * 0.10, pageH * 0.22, W * 0.55);
+    sideA.addColorStop(0, "rgba(116, 50, 255, 0.032)");
+    sideA.addColorStop(0.48, "rgba(82, 32, 180, 0.012)");
     sideA.addColorStop(1, "rgba(82, 32, 180, 0)");
     ctx.fillStyle = sideA;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, W, pageH);
 
-    const sideB = ctx.createRadialGradient(W * 0.92, H * 0.20 + worldShift * 0.5, 0, W * 0.92, H * 0.20 + worldShift * 0.5, W * 0.55);
-    sideB.addColorStop(0, "rgba(155, 70, 255, 0.034)");
-    sideB.addColorStop(0.44, "rgba(94, 36, 190, 0.012)");
+    const sideB = ctx.createRadialGradient(W * 0.92, pageH * 0.42, 0, W * 0.92, pageH * 0.42, W * 0.55);
+    sideB.addColorStop(0, "rgba(155, 70, 255, 0.030)");
+    sideB.addColorStop(0.44, "rgba(94, 36, 190, 0.011)");
     sideB.addColorStop(1, "rgba(94, 36, 190, 0)");
     ctx.fillStyle = sideB;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, W, pageH);
   }
 
   function drawOrganicNebula(n, tnow) {
-    const screenY = n.y - scrollY;
-    if (screenY < -H || screenY > H * 2) return;
-
     const pulse = Math.sin(tnow * n.speed + n.phase) * 0.5 + 0.5;
     const shapeA = Math.sin(tnow * n.speed * 0.7 + n.phase * 1.3);
     const shapeB = Math.cos(tnow * n.speed * 0.9 + n.phase * 0.8);
 
     ctx.save();
-    ctx.translate(n.x + shapeA * W * 0.010, screenY + shapeB * H * 0.008);
-    ctx.rotate(n.rot + shapeA * 0.020);
+    ctx.translate(n.x + shapeA * W * 0.008, n.y + shapeB * (window.innerHeight || 900) * 0.006);
+    ctx.rotate(n.rot + shapeA * 0.018);
     ctx.scale(n.w / 2, n.h / 2);
 
     ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = n.alpha * (0.72 + pulse * 0.28);
+    ctx.globalAlpha = n.alpha * (0.70 + pulse * 0.25);
 
-    for (let i = 0; i < 3; i += 1) {
-      const ang = i * 2.1 + n.phase;
-      const cx = Math.cos(ang + tnow * n.speed * 0.36) * (0.10 + i * 0.018);
-      const cy = Math.sin(ang * 1.15 - tnow * n.speed * 0.32) * (0.09 + i * 0.012);
-      const radius = 0.50 + i * 0.095;
+    for (let i = 0; i < 2; i += 1) {
+      const ang = i * 2.3 + n.phase;
+      const cx = Math.cos(ang + tnow * n.speed * 0.30) * (0.10 + i * 0.018);
+      const cy = Math.sin(ang * 1.15 - tnow * n.speed * 0.28) * (0.09 + i * 0.012);
+      const radius = 0.55 + i * 0.10;
 
       const gradient = ctx.createRadialGradient(cx, cy, 0.04, cx, cy, radius);
-      gradient.addColorStop(0, "rgba(" + n.colorA + ",0.34)");
-      gradient.addColorStop(0.40, "rgba(" + n.colorB + ",0.12)");
+      gradient.addColorStop(0, "rgba(" + n.colorA + ",0.30)");
+      gradient.addColorStop(0.42, "rgba(" + n.colorB + ",0.10)");
       gradient.addColorStop(1, "rgba(" + n.colorB + ",0)");
 
       ctx.fillStyle = gradient;
@@ -391,9 +382,9 @@
       const grad = ctx.createLinearGradient(px - dx, py - dy, px + dx, py + dy);
 
       grad.addColorStop(0, "rgba(" + color + ",0)");
-      grad.addColorStop(0.47, "rgba(" + color + "," + (opacity * 0.32).toFixed(3) + ")");
+      grad.addColorStop(0.47, "rgba(" + color + "," + (opacity * 0.30).toFixed(3) + ")");
       grad.addColorStop(0.50, "rgba(255,255,255," + opacity.toFixed(3) + ")");
-      grad.addColorStop(0.53, "rgba(" + color + "," + (opacity * 0.32).toFixed(3) + ")");
+      grad.addColorStop(0.53, "rgba(" + color + "," + (opacity * 0.30).toFixed(3) + ")");
       grad.addColorStop(1, "rgba(" + color + ",0)");
 
       ctx.strokeStyle = grad;
@@ -404,8 +395,8 @@
       ctx.stroke();
     }
 
-    strokeLine(angle, len, 0.54, a);
-    strokeLine(angle + Math.PI / 2, len * 0.50, 0.38, a * 0.42);
+    strokeLine(angle, len, 0.52, a);
+    strokeLine(angle + Math.PI / 2, len * 0.48, 0.36, a * 0.40);
 
     ctx.restore();
   }
@@ -417,12 +408,12 @@
 
     shoot = {
       x: fromLeft ? rand(-0.10, 0.32) * W : rand(0.68, 1.10) * W,
-      y: rand(-0.08, 0.34) * H,
+      y: (window.scrollY || 0) + rand(-0.08, 0.34) * (window.innerHeight || 900),
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
       life: 0,
       max: rand(0.72, 1.22),
-      len: rand(130, 210),
+      len: rand(130, 205),
       color: Math.random() < 0.25 ? CONFIG.colorsTop[4] : CONFIG.colorsTop[1],
     };
   }
@@ -457,12 +448,12 @@
     ctx.globalCompositeOperation = "lighter";
 
     const gradient = ctx.createLinearGradient(shoot.x, shoot.y, tailX, tailY);
-    gradient.addColorStop(0, "rgba(" + shoot.color + "," + (0.64 * env).toFixed(3) + ")");
-    gradient.addColorStop(0.38, "rgba(" + shoot.color + "," + (0.24 * env).toFixed(3) + ")");
+    gradient.addColorStop(0, "rgba(" + shoot.color + "," + (0.60 * env).toFixed(3) + ")");
+    gradient.addColorStop(0.38, "rgba(" + shoot.color + "," + (0.22 * env).toFixed(3) + ")");
     gradient.addColorStop(1, "rgba(" + shoot.color + ",0)");
 
     ctx.strokeStyle = gradient;
-    ctx.lineWidth = 1.10;
+    ctx.lineWidth = 1.05;
     ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(shoot.x, shoot.y);
@@ -475,7 +466,7 @@
   function drawStars(tnow) {
     ctx.globalCompositeOperation = "lighter";
 
-    const colorShift = clamp(scrollY / Math.max(1, pageH - H), 0, 1) * 0.55;
+    const colorShift = 0.32;
     const cx = W / 2;
     const cy = pageH / 2;
 
@@ -484,7 +475,7 @@
       const mouseX = -mx * CONFIG.mouseAmount * cfg.pMouse;
       const mouseY = -my * CONFIG.mouseAmount * cfg.pMouse;
 
-      // Positive angle is clockwise in canvas coordinates because Y goes downward.
+      // Positive angle is clockwise in canvas coordinates because Y grows downward.
       const rot = tnow * CONFIG.galaxyRotation * cfg.rotation;
       const cos = Math.cos(rot);
       const sin = Math.sin(rot);
@@ -497,22 +488,16 @@
         const dx = s.x - cx;
         const dy = s.y - cy;
 
-        const wx = cx + dx * cos - dy * sin;
-        const wy = cy + dx * sin + dy * cos;
+        const px = cx + dx * cos - dy * sin + mouseX + Math.sin(tnow * s.driftSpeedX + s.driftPhaseX) * s.driftAmpX;
+        const py = cy + dx * sin + dy * cos + mouseY + Math.cos(tnow * s.driftSpeedY + s.driftPhaseY) * s.driftAmpY;
 
-        const driftX = Math.sin(tnow * s.driftSpeedX + s.driftPhaseX) * s.driftAmpX;
-        const driftY = Math.cos(tnow * s.driftSpeedY + s.driftPhaseY) * s.driftAmpY;
-
-        const px = wx + mouseX + driftX;
-        const py = wy - scrollY + mouseY + driftY;
-
-        if (px < -80 || px > W + 80 || py < -80 || py > H + 80) continue;
+        if (px < -90 || px > W + 90 || py < -90 || py > pageH + 90) continue;
 
         const color = mixRgb(s.colorTop, s.colorBottom, colorShift);
 
         if (s.glow) {
-          const gr = s.r * 4.3;
-          ctx.globalAlpha = a * 0.34;
+          const gr = s.r * 4.1;
+          ctx.globalAlpha = a * 0.30;
           const sprite = glowSprites[s.colorTop] || glowSprites[CONFIG.colorsTop[1]];
           ctx.drawImage(sprite, px - gr, py - gr, gr * 2, gr * 2);
           ctx.globalAlpha = 1;
@@ -526,9 +511,9 @@
         ctx.fill();
 
         if (s.r > 1.7) {
-          ctx.fillStyle = "rgba(255,255,255," + Math.min(0.40, a * 0.54).toFixed(3) + ")";
+          ctx.fillStyle = "rgba(255,255,255," + Math.min(0.38, a * 0.52).toFixed(3) + ")";
           ctx.beginPath();
-          ctx.arc(px, py, Math.max(0.28, s.r * 0.30), 0, Math.PI * 2);
+          ctx.arc(px, py, Math.max(0.27, s.r * 0.29), 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -606,30 +591,29 @@
 
     if (!mounted) {
       mounted = true;
-      (document.body || document.documentElement).appendChild(canvas);
+      (document.body || document.documentElement).prepend(canvas);
     }
 
     resize();
-    onScroll();
     nextShoot = performance.now() / 1000 + rand(5, 12);
 
-    const debouncedResize = debounce(resize, 220);
+    const debouncedResize = debounce(resize, 250);
     const debouncedPageResize = debounce(() => {
-      const newPageH = Math.max(
-        H,
+      const newPageH = Math.min(Math.max(
+        window.innerHeight || 1,
         document.documentElement.scrollHeight || 0,
         document.body.scrollHeight || 0
-      );
-      if (Math.abs(newPageH - pageH) > 160) {
+      ), CONFIG.maxCanvasHeight);
+
+      if (Math.abs(newPageH - pageH) > 180) {
         lastResizeKey = "";
         resize();
       }
-    }, 420);
+    }, 500);
 
     window.addEventListener("resize", debouncedResize, { passive: true });
     window.addEventListener("orientationchange", debouncedResize, { passive: true });
     window.addEventListener("mousemove", onMouse, { passive: true });
-    window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
 
     if (window.ResizeObserver) {

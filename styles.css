@@ -3308,3 +3308,447 @@ main {
     display: none !important;
   }
 }
+
+
+/* =============================================================
+   v1.8.34 — reference-style support card + organic panel title
+============================================================= */
+
+/* Normalize the support title to match every other block title */
+.support.support-centered .panel-title,
+.support-centered .panel-title {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 0 18px !important;
+  padding: 0 !important;
+  font: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  text-transform: inherit !important;
+  color: inherit !important;
+  text-shadow: none !important;
+}
+
+.support.support-centered .panel-title .purple-icon,
+.support-centered .panel-title .purple-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  flex: 0 0 auto !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  color: var(--accent, #b65cff) !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
+
+.support.support-centered .panel-title h2,
+.support-centered .panel-title h2 {
+  margin: 0 !important;
+  max-width: none !important;
+  font: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  text-transform: inherit !important;
+  color: inherit !important;
+  text-shadow: inherit !important;
+}
+
+/* Kill old oversized/decorative title line */
+.support.support-centered .panel-title::after,
+.support-centered .panel-title::after,
+.support.support-centered::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Reference-inspired card, but fitted into current grid */
+.support.support-centered {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.02fr) minmax(150px, .78fr) !important;
+  grid-template-rows: auto 1fr !important;
+  grid-template-areas:
+    "title title"
+    "copy visual" !important;
+  column-gap: 20px !important;
+  row-gap: 0 !important;
+  min-height: 0 !important;
+  padding: 24px !important;
+  overflow: hidden !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(197,135,255,.34) !important;
+  background:
+    radial-gradient(circle at 75% 52%, rgba(140,51,255,.16), transparent 34%),
+    radial-gradient(circle at 15% 18%, rgba(185,101,255,.12), transparent 36%),
+    linear-gradient(135deg, rgba(31,18,49,.82), rgba(8,5,16,.94) 54%, rgba(13,7,24,.88)) !important;
+  box-shadow:
+    0 26px 70px rgba(0,0,0,.44),
+    0 0 0 1px rgba(255,255,255,.035),
+    0 0 34px rgba(139,61,255,.12),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+.support.support-centered::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, transparent 0 5%, rgba(190,126,255,.10) 12%, transparent 28%),
+    radial-gradient(circle at 100% 0%, rgba(207,158,255,.13), transparent 28%);
+  opacity: .80;
+}
+
+.support.support-centered .panel-title {
+  grid-area: title !important;
+  z-index: 3;
+}
+
+.support.support-centered .support-copy {
+  grid-area: copy !important;
+  position: relative !important;
+  z-index: 3 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding-top: 2px;
+}
+
+/* Small reference-like line below title, but subtle */
+.support.support-centered .support-copy::before {
+  content: "";
+  display: block;
+  width: min(265px, 100%);
+  height: 9px;
+  margin: 0 0 18px;
+  background:
+    radial-gradient(circle at 0 50%, rgba(190,126,255,.92) 0 4px, transparent 5px),
+    linear-gradient(90deg, rgba(190,126,255,.60), rgba(190,126,255,.18) 68%, transparent 68%),
+    repeating-linear-gradient(90deg, transparent 0 12px, rgba(190,126,255,.36) 12px 17px);
+  background-size: 100% 2px, 78% 2px, 92px 2px;
+  background-position: 0 50%, 18px 50%, right 50%;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 7px rgba(179,92,255,.28));
+  opacity: .82;
+}
+
+.support.support-centered .support-copy p {
+  max-width: 340px !important;
+  margin: 0 0 16px !important;
+  color: rgba(226,216,242,.82) !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+.support.support-centered .support-pills {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin: 0 0 20px !important;
+}
+
+.support.support-centered .support-pills span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  min-height: 31px !important;
+  padding: 7px 10px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(188,111,255,.32) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(179,92,255,.15), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.062), rgba(255,255,255,.022)) !important;
+  color: #eee4ff !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  letter-spacing: .015em !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 0 14px rgba(139,61,255,.07);
+}
+
+.support.support-centered .support-pills span:nth-child(1)::before { content: "⌁"; color: #bd72ff; }
+.support.support-centered .support-pills span:nth-child(2)::before { content: "✦"; color: #bd72ff; }
+.support.support-centered .support-pills span:nth-child(3)::before { content: "▰"; color: #bd72ff; }
+
+.support.support-centered .support-copy .btn,
+.support.support-centered .btn {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 360px !important;
+  min-height: 52px !important;
+  margin-top: auto !important;
+  padding: 0 15px !important;
+  border-radius: 14px !important;
+  justify-content: flex-start !important;
+  gap: 9px !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  letter-spacing: .02em !important;
+  white-space: normal !important;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,.24), transparent 35%),
+    linear-gradient(135deg, #b448ff, #7b22f5 54%, #9b3dff) !important;
+  border: 1px solid rgba(239,205,255,.44) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.08),
+    0 15px 34px rgba(126,45,255,.32),
+    0 0 34px rgba(179,92,255,.20),
+    inset 0 1px 0 rgba(255,255,255,.30),
+    inset 0 -14px 24px rgba(77,22,163,.22) !important;
+}
+
+.support.support-centered .support-copy .btn::before,
+.support.support-centered .btn::before {
+  content: "♡";
+  display: inline-grid;
+  place-items: center;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 4px 0 0 !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+}
+
+.support.support-centered .support-copy .btn::after,
+.support.support-centered .btn::after {
+  content: "→";
+  margin-left: auto !important;
+  font-size: 23px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+}
+
+.support.support-centered .support-visual {
+  grid-area: visual !important;
+  position: relative !important;
+  z-index: 2 !important;
+  display: grid !important;
+  place-items: center !important;
+  min-height: 228px !important;
+  height: 100% !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 22px !important;
+  background:
+    radial-gradient(circle at 50% 58%, rgba(179,92,255,.18), transparent 47%),
+    radial-gradient(circle at 50% 82%, rgba(255,255,255,.035), transparent 28%) !important;
+}
+
+.support.support-centered .support-visual::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(190,126,255,.12);
+  background:
+    radial-gradient(circle at 50% 55%, rgba(126,45,255,.10), transparent 44%),
+    linear-gradient(180deg, rgba(255,255,255,.018), transparent) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.support.support-centered .support-visual::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  width: min(210px, 88%);
+  height: 46px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse at center, rgba(255,255,255,.62), rgba(213,159,255,.52) 16%, rgba(143,62,255,.18) 44%, transparent 72%),
+    radial-gradient(ellipse at center, transparent 0 42%, rgba(217,170,255,.32) 43% 45%, transparent 47%) !important;
+  border: 1px solid rgba(190,126,255,.26);
+  box-shadow:
+    0 0 19px rgba(255,255,255,.13),
+    0 0 46px rgba(179,92,255,.30),
+    0 0 82px rgba(126,45,255,.12);
+  opacity: .74;
+}
+
+/* Orb: smooth rings, no rectangle, no fan */
+.support.support-centered .jar-glow {
+  position: relative !important;
+  z-index: 5 !important;
+  width: clamp(120px, 12vw, 170px) !important;
+  height: clamp(120px, 12vw, 170px) !important;
+  min-width: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  overflow: visible !important;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.96) 0 8%, rgba(255,255,255,.78) 9% 12%, rgba(190,85,255,.34) 13% 20%, rgba(52,13,102,.55) 21% 34%, transparent 35%),
+    radial-gradient(circle at 48% 42%, rgba(255,255,255,.34), rgba(213,153,255,.24) 25%, rgba(112,34,205,.22) 54%, rgba(13,5,28,.82) 100%),
+    radial-gradient(circle, transparent 0 49%, rgba(255,255,255,.70) 50%, rgba(222,169,255,.76) 52%, rgba(145,45,255,.24) 57%, transparent 64%) !important;
+  box-shadow:
+    0 0 14px rgba(255,255,255,.20),
+    0 0 34px rgba(179,92,255,.54),
+    0 0 76px rgba(126,45,255,.30),
+    inset 0 0 18px rgba(255,255,255,.20),
+    inset 0 0 48px rgba(179,92,255,.30) !important;
+  animation: supportOrbFloatV34 5.5s ease-in-out infinite !important;
+}
+
+.support.support-centered .jar-glow::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -20px !important;
+  left: -20px !important;
+  right: -20px !important;
+  top: -20px !important;
+  bottom: -20px !important;
+  width: auto !important;
+  height: auto !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background:
+    radial-gradient(circle, transparent 0 57%, rgba(255,255,255,.24) 58% 59%, transparent 61%),
+    conic-gradient(from 40deg,
+      transparent 0deg 42deg,
+      rgba(255,255,255,.16) 48deg 66deg,
+      rgba(178,84,255,.14) 76deg 104deg,
+      transparent 112deg 170deg,
+      rgba(230,188,255,.16) 180deg 212deg,
+      transparent 226deg 300deg,
+      rgba(162,64,255,.13) 312deg 340deg,
+      transparent 350deg 360deg) !important;
+  opacity: .74 !important;
+  filter: blur(.70px);
+  mix-blend-mode: screen;
+  animation: supportOrbSwirlV34 17s linear infinite !important;
+}
+
+.support.support-centered .jar-glow::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: -42px !important;
+  border-radius: 50% !important;
+  background:
+    radial-gradient(ellipse at 50% 65%, transparent 0 56%, rgba(216,166,255,.22) 57% 58%, transparent 60%),
+    radial-gradient(ellipse at 50% 67%, transparent 0 68%, rgba(190,126,255,.13) 69% 70%, transparent 72%) !important;
+  opacity: .72 !important;
+  transform: rotateX(68deg);
+  filter: blur(.35px);
+  mix-blend-mode: screen;
+  animation: supportOrbRingsV34 8.5s ease-in-out infinite !important;
+}
+
+.support.support-centered .jar-heart {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  z-index: 6 !important;
+  transform: translate(-50%, -50%) !important;
+  width: clamp(38px, 4.2vw, 56px) !important;
+  height: clamp(38px, 4.2vw, 56px) !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 50% !important;
+  color: #fff !important;
+  font-size: clamp(27px, 3.4vw, 40px) !important;
+  line-height: 1 !important;
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255,255,255,.38), rgba(190,92,255,.34) 46%, rgba(73,20,148,.34)) !important;
+  border: 1px solid rgba(255,255,255,.30);
+  box-shadow:
+    0 0 22px rgba(255,255,255,.36),
+    0 0 48px rgba(179,92,255,.58),
+    inset 0 1px 0 rgba(255,255,255,.34) !important;
+  text-shadow: 0 0 14px rgba(255,255,255,.48);
+  animation: supportHeartPulseV34 3.4s ease-in-out infinite !important;
+}
+
+.support.support-centered .jar-text,
+.support.support-centered .coin {
+  display: none !important;
+}
+
+@keyframes supportOrbFloatV34 {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1.02) saturate(1.08);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.018);
+    filter: brightness(1.13) saturate(1.16);
+  }
+}
+
+@keyframes supportOrbSwirlV34 {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes supportOrbRingsV34 {
+  0%, 100% {
+    transform: rotateX(68deg) scale(1);
+    opacity: .62;
+  }
+  50% {
+    transform: rotateX(68deg) scale(1.08);
+    opacity: .82;
+  }
+}
+
+@keyframes supportHeartPulseV34 {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1) !important;
+    filter: brightness(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.10) !important;
+    filter: brightness(1.18);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .support.support-centered:hover .jar-glow::before {
+    opacity: .84 !important;
+  }
+
+  .support.support-centered:hover .jar-glow::after {
+    opacity: .82 !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  .support.support-centered {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "title"
+      "copy"
+      "visual" !important;
+  }
+
+  .support.support-centered .support-copy .btn,
+  .support.support-centered .btn {
+    max-width: 420px !important;
+  }
+
+  .support.support-centered .support-visual {
+    min-height: 230px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .support.support-centered {
+    padding: 22px !important;
+  }
+
+  .support.support-centered .support-visual {
+    display: none !important;
+  }
+}
