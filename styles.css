@@ -2703,3 +2703,86 @@ main,
     transform: none;
   }
 }
+
+
+/* v1.8.15 — real SVG asset geometric background
+   This uses /assets/geo-bg.svg instead of CSS data-url, so the browser loads it reliably. */
+
+body {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(132, 48, 255, .30), transparent 25%),
+    radial-gradient(circle at 84% 8%, rgba(70, 23, 145, .23), transparent 24%),
+    radial-gradient(circle at 76% 84%, rgba(115, 30, 255, .18), transparent 26%),
+    linear-gradient(180deg, #080511 0%, #05040a 48%, #080511 100%);
+}
+
+.noise {
+  opacity: 1 !important;
+  mix-blend-mode: screen !important;
+  z-index: 49 !important;
+  background:
+    url("/assets/geo-bg.svg?v=1815") center top / 1780px 1280px repeat-y,
+    radial-gradient(circle at 18% 26%, rgba(179,92,255,.08), transparent 18%),
+    radial-gradient(circle at 86% 28%, rgba(179,92,255,.07), transparent 20%),
+    linear-gradient(rgba(255,255,255,.010) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.010) 1px, transparent 1px) !important;
+  background-size:
+    1780px 1280px,
+    auto,
+    auto,
+    34px 34px,
+    34px 34px !important;
+  filter: drop-shadow(0 0 8px rgba(179,92,255,.20));
+}
+
+.site-header,
+main,
+.site-footer {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes ivixGeoAssetScroll {
+  from {
+    background-position:
+      center -130px,
+      center center,
+      center center,
+      0 0,
+      0 0;
+  }
+  to {
+    background-position:
+      center 260px,
+      center center,
+      center center,
+      0 34px,
+      34px 0;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .noise {
+    animation: ivixGeoAssetScroll linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .noise {
+    opacity: .62 !important;
+    background-size:
+      1240px 900px,
+      auto,
+      auto,
+      34px 34px,
+      34px 34px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .noise {
+    animation: none !important;
+  }
+}
