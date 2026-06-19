@@ -889,7 +889,7 @@ h1 {
 }
 
 
-/* v1.8.1 requested layout fixes */
+/* v1.8.50 requested layout fixes */
 .hero-copy-main h1 {
   margin-bottom: 30px;
 }
@@ -1038,7 +1038,7 @@ h1 {
 }
 
 
-/* v1.8.2 hero/chat/icon/clip polish */
+/* v1.8.50 hero/chat/icon/clip polish */
 
 .hero-main {
   padding-top: 46px;
@@ -1189,7 +1189,7 @@ h1 {
 }
 
 
-/* v1.8.5 clip preview cleanup + stable nav anchors */
+/* v1.8.50 clip preview cleanup + stable nav anchors */
 .clip-thumb-modern {
   min-height: 170px;
   padding: 16px;
@@ -1317,7 +1317,7 @@ h1 {
 
 
 
-/* v1.8.5 simplified clips, two-item nav, centered support */
+/* v1.8.50 simplified clips, two-item nav, centered support */
 html {
   scroll-padding-top: 88px;
 }
@@ -1543,7 +1543,7 @@ html {
 }
 
 
-/* v1.8.5 requested fixes: exact about scroll, larger player, mobile chat, live status, support layout */
+/* v1.8.50 requested fixes: exact about scroll, larger player, mobile chat, live status, support layout */
 #about {
   scroll-margin-top: 80px;
 }
@@ -1732,7 +1732,7 @@ html {
 }
 
 
-/* v1.8.8 — softer visual polish + Step 2 clip cards
+/* v1.8.50 — softer visual polish + Step 2 clip cards
    Scope: styles.css only. Glow rolled back to calm values. */
 
 /* Calm global cards back down */
@@ -1962,7 +1962,7 @@ html {
 }
 
 
-/* v1.8.9 — Step 3: chat commands grouping
+/* v1.8.50 — Step 3: chat commands grouping
    Scope: commands HTML + styles only. Player/DNS/Timeweb untouched. */
 
 .commands-upgraded {
@@ -2097,7 +2097,7 @@ html {
 }
 
 
-/* v1.8.10 — micro polish for existing “Полезные ссылки” buttons only
+/* v1.8.50 — micro polish for existing “Полезные ссылки” buttons only
    Keeps the current compact 2-column layout. No HTML/JS changes. */
 
 .social-icons-rich.social-icons-brand {
@@ -2183,7 +2183,7 @@ html {
 }
 
 
-/* v1.8.49 — clean starfield integration
+/* v1.8.50 — clean starfield integration
    Background is owned by background.js only.
    Removed old pseudo backgrounds, old noise overlay and old constellation layers. */
 html,
@@ -2279,7 +2279,7 @@ main {
 
 
 /* =============================================================
-   v1.8.49 — clean template support panel + smooth fixed starfield
+   v1.8.50 — clean template support panel + smooth fixed starfield
 ============================================================= */
 
 html,
@@ -2551,7 +2551,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — fix support card alignment
+   v1.8.50 — fix support card alignment
 ============================================================= */
 
 /* Old base CSS had .support { display:flex }, which pushed the title sideways.
@@ -2628,7 +2628,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — stronger useful-links hover accent
+   v1.8.50 — stronger useful-links hover accent
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -2749,7 +2749,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — scroll-world background safety
+   v1.8.50 — scroll-world background safety
 ============================================================= */
 
 html,
@@ -2770,7 +2770,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — scrollbar watchdog safety layer
+   v1.8.50 — scrollbar watchdog safety layer
    Keep only the browser page scrollbar. Prevent bg canvas/body
    from creating accidental duplicate scrollbars.
 ============================================================= */
@@ -2803,7 +2803,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — page-canvas background, no scroll lag
+   v1.8.50 — page-canvas background, no scroll lag
    Old principle restored: the background canvas is an absolute
    page-sized layer and scrolls naturally with the document.
 ============================================================= */
@@ -2842,7 +2842,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — hard reload scrollbar race fix
+   v1.8.50 — hard reload scrollbar race fix
    Prevent the page-sized canvas from being counted as the source
    of document height during Ctrl+F5 / cold loads.
 ============================================================= */
@@ -2870,7 +2870,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — fixed wrapper + page canvas
+   v1.8.50 — fixed wrapper + page canvas
    Background scrolls with content through compositor transform,
    but the canvas cannot create a second page scrollbar.
 ============================================================= */
@@ -2916,7 +2916,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — stronger useful-links hover + glow
+   v1.8.50 — stronger useful-links hover + glow
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -3019,7 +3019,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — stronger global block glow + useful links glow
+   v1.8.50 — stronger global block glow + useful links glow
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -3040,7 +3040,7 @@ body {
       inset 0 1px 0 rgba(255,255,255,.12) !important;
   }
 
-  /* Useful links cells: another +50% glow on top of v1.8.45 */
+  /* Useful links cells: another +50% glow on top of v1.8.50 */
   .links .platform-card:hover,
   #links .platform-card:hover {
     border-color: rgba(238, 204, 255, .92) !important;
@@ -3141,7 +3141,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — hero title spacing and cleaner underline
+   v1.8.50 — hero title spacing and cleaner underline
 ============================================================= */
 
 /* Slightly separate IVIX_TV from the subtitle below */
@@ -3178,7 +3178,7 @@ body {
 
 
 /* =============================================================
-   v1.8.49 — precise hero underscore centering
+   v1.8.50 — precise hero underscore centering
 ============================================================= */
 .hero-copy-main h1 .hero-underscore,
 h1 .hero-underscore {
@@ -3187,4 +3187,96 @@ h1 .hero-underscore {
   margin-right: 0.06em;
   transform: translate(0.11em, -0.01em) scaleX(1.03);
   transform-origin: center bottom;
+}
+
+
+/* =============================================================
+   v1.8.50 — hero CTA micro-animation
+   Легкий magnetic-hover + мягкий диагональный блик.
+============================================================= */
+@media (hover: hover) and (pointer: fine) {
+  .hero-buttons .btn {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      transform .18s ease,
+      border-color .18s ease,
+      box-shadow .18s ease,
+      background .18s ease;
+  }
+
+  .hero-buttons .btn::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: -45% -70%;
+    pointer-events: none;
+    background: linear-gradient(
+      115deg,
+      transparent 0%,
+      transparent 38%,
+      rgba(255,255,255,.00) 42%,
+      rgba(255,255,255,.28) 49%,
+      rgba(255,255,255,.08) 55%,
+      transparent 62%,
+      transparent 100%
+    );
+    transform: translateX(-72%) skewX(-12deg);
+    opacity: 0;
+  }
+
+  .hero-buttons .btn > *,
+  .hero-buttons .btn {
+    z-index: 1;
+  }
+
+  .hero-buttons .btn:hover {
+    transform: translateY(-3px) scale(1.018);
+  }
+
+  .hero-buttons .btn:hover::before {
+    opacity: 1;
+    animation: heroButtonSweepV1850 .72s ease-out both;
+  }
+
+  .hero-buttons .btn-primary:hover {
+    box-shadow:
+      0 22px 54px rgba(139,61,255,.45),
+      0 0 54px rgba(179,92,255,.34),
+      inset 0 1px 0 rgba(255,255,255,.26) !important;
+  }
+
+  .hero-buttons .btn-ghost:hover {
+    border-color: rgba(220,176,255,.62);
+    box-shadow:
+      0 18px 42px rgba(0,0,0,.34),
+      0 0 34px rgba(179,92,255,.24),
+      inset 0 1px 0 rgba(255,255,255,.10) !important;
+  }
+
+  .hero-buttons .btn:hover .btn-icon,
+  .hero-buttons .btn-primary:hover svg {
+    transform: translateY(-1px) scale(1.06);
+    filter: brightness(1.14) saturate(1.2);
+  }
+}
+
+@keyframes heroButtonSweepV1850 {
+  0% {
+    transform: translateX(-72%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(72%) skewX(-12deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-buttons .btn,
+  .hero-buttons .btn::before,
+  .hero-buttons .btn:hover {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
 }

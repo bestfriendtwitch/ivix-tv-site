@@ -1,5 +1,5 @@
 /* =============================================================
-   IVIX_TV — fixed-wrapper page canvas starfield (v26 / site v1.8.49)
+   IVIX_TV — fixed-wrapper page canvas starfield (v26 / site v1.8.50)
    • mobile: canvas не создается;
    • desktop: 30 FPS;
    • no second scrollbar: wrapper is fixed + overflow:hidden;
