@@ -1,12 +1,13 @@
 /* =============================================================
-   IVIX_TV — fixed viewport galaxy starfield without duplicate scrollbar (v13 / site v1.8.36)
+   IVIX_TV — smooth fixed galaxy starfield (v14 / site v1.8.37)
    • mobile: canvas не создается;
    • desktop: 30 FPS;
-   • canvas is fixed again, so it cannot create a second scrollbar;
-   • stars are generated in page coordinates and sampled through scrollY;
-   • clockwise faster rotation around page center;
-   • more stars, brighter stars, more random shooting stars;
-   • short trail / lower blur.
+   • fixed viewport canvas, so no duplicate scrollbar;
+   • no scrollY-based star projection, so no scroll jitter;
+   • more stars, brighter stars;
+   • faster clockwise rotation around viewport center;
+   • more random shooting stars;
+   • short trail / low blur.
 ============================================================= */
 (function () {
   "use strict";
@@ -50,11 +51,11 @@
     nebulae: true,
 
     layers: [
-      { density: 2050,  r: [0.24, 0.62], a: [0.04, 0.17], tw: [0.10, 0.42], twDepth: 0.34, pMouse: 0.05, rotation: 0.42, glow: 0.00, drift: [0.6, 1.5], rayChance: 0.00 },
-      { density: 4550,  r: [0.34, 0.95], a: [0.08, 0.32], tw: [0.14, 0.62], twDepth: 0.46, pMouse: 0.15, rotation: 0.70, glow: 0.035, drift: [0.9, 2.4], rayChance: 0.008 },
-      { density: 9800,  r: [0.50, 1.42], a: [0.16, 0.56], tw: [0.18, 0.82], twDepth: 0.54, pMouse: 0.28, rotation: 0.98, glow: 0.12, drift: [1.4, 3.5], rayChance: 0.022 },
-      { density: 26000, r: [0.80, 2.18], a: [0.26, 0.78], tw: [0.20, 0.98], twDepth: 0.60, pMouse: 0.44, rotation: 1.26, glow: 0.26, drift: [1.8, 4.8], rayChance: 0.052 },
-      { density: 70000, r: [1.20, 2.95], a: [0.38, 0.86], tw: [0.16, 0.72], twDepth: 0.48, pMouse: 0.58, rotation: 1.54, glow: 0.36, drift: [2.2, 5.6], rayChance: 0.18 },
+      { density: 1900,  r: [0.24, 0.62], a: [0.04, 0.17], tw: [0.10, 0.42], twDepth: 0.34, pMouse: 0.05, rotation: 0.42, glow: 0.00, drift: [0.6, 1.5], rayChance: 0.00 },
+      { density: 4200,  r: [0.34, 0.95], a: [0.08, 0.32], tw: [0.14, 0.62], twDepth: 0.46, pMouse: 0.15, rotation: 0.70, glow: 0.035, drift: [0.9, 2.4], rayChance: 0.008 },
+      { density: 9000,  r: [0.50, 1.42], a: [0.16, 0.56], tw: [0.18, 0.82], twDepth: 0.54, pMouse: 0.28, rotation: 0.98, glow: 0.12, drift: [1.4, 3.5], rayChance: 0.022 },
+      { density: 24500, r: [0.80, 2.18], a: [0.26, 0.78], tw: [0.20, 0.98], twDepth: 0.60, pMouse: 0.44, rotation: 1.26, glow: 0.26, drift: [1.8, 4.8], rayChance: 0.052 },
+      { density: 66000, r: [1.20, 2.95], a: [0.38, 0.86], tw: [0.16, 0.72], twDepth: 0.48, pMouse: 0.58, rotation: 1.54, glow: 0.36, drift: [2.2, 5.6], rayChance: 0.18 },
     ],
   };
 
@@ -66,8 +67,6 @@
 
   let W = 0;
   let H = 0;
-  let pageH = 0;
-  let scrollY = 0;
   let dpr = 1;
   let quality = 1;
   let frameInterval = 1000 / CONFIG.targetFps;
@@ -93,12 +92,13 @@
   const lerp = (a, b, t) => a + (b - a) * t;
 
   function injectCss() {
-    if (document.getElementById("ivix-bg-fixed-no-scrollbar-style")) return;
+    if (document.getElementById("ivix-bg-smooth-fixed-style")) return;
 
     const style = document.createElement("style");
-    style.id = "ivix-bg-fixed-no-scrollbar-style";
+    style.id = "ivix-bg-smooth-fixed-style";
     style.textContent = `
-      html, body {
+      html,
+      body {
         background-color: #05030b;
         overflow-x: hidden !important;
       }
@@ -193,8 +193,9 @@
   }
 
   function buildLayer(cfg, layerIndex) {
-    const worldArea = W * (pageH + margin * 2);
-    const n = Math.max(10, Math.round((worldArea * quality) / cfg.density));
+    const radiusMax = Math.hypot(W, H) / 2 + margin;
+    const fieldArea = Math.PI * radiusMax * radiusMax;
+    const n = Math.max(10, Math.round((fieldArea * quality) / cfg.density));
     const stars = [];
 
     for (let i = 0; i < n; i += 1) {
@@ -203,8 +204,8 @@
       const isBright = Math.random() < cfg.rayChance || r > 2.28;
 
       stars.push({
-        x: rand(-margin, W + margin),
-        y: rand(-margin, pageH + margin),
+        orbitRadius: Math.sqrt(Math.random()) * radiusMax,
+        angle: rand(0, Math.PI * 2),
         r,
         a: rand(cfg.a[0], cfg.a[1]),
         sp: rand(cfg.tw[0], cfg.tw[1]),
@@ -234,9 +235,9 @@
     const scale = clamp(Math.min(W, H) / 900, 0.72, 1.15);
 
     return [
-      { x: W * 0.12, y: pageH * 0.18, w: W * 0.72 * scale, h: H * 0.58 * scale, rot: -0.12, colorA: "132, 70, 255", colorB: "80, 38, 160", alpha: 0.035, speed: 0.018, phase: rand(0, Math.PI * 2) },
-      { x: W * 0.86, y: pageH * 0.34, w: W * 0.74 * scale, h: H * 0.54 * scale, rot: 0.18, colorA: "180, 104, 255", colorB: "68, 26, 140", alpha: 0.028, speed: 0.016, phase: rand(0, Math.PI * 2) },
-      { x: W * 0.48, y: pageH * 0.66, w: W * 0.82 * scale, h: H * 0.50 * scale, rot: -0.06, colorA: "116, 74, 255", colorB: "44, 22, 92", alpha: 0.024, speed: 0.014, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.12, y: H * 0.22, w: W * 0.72 * scale, h: H * 0.58 * scale, rot: -0.12, colorA: "132, 70, 255", colorB: "80, 38, 160", alpha: 0.035, speed: 0.018, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.86, y: H * 0.34, w: W * 0.74 * scale, h: H * 0.54 * scale, rot: 0.18, colorA: "180, 104, 255", colorB: "68, 26, 140", alpha: 0.028, speed: 0.016, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.48, y: H * 0.66, w: W * 0.82 * scale, h: H * 0.50 * scale, rot: -0.06, colorA: "116, 74, 255", colorB: "44, 22, 92", alpha: 0.024, speed: 0.014, phase: rand(0, Math.PI * 2) },
     ];
   }
 
@@ -262,31 +263,20 @@
 
     W = Math.max(1, Math.round(document.documentElement.clientWidth || window.innerWidth || 1));
     H = Math.max(1, Math.round(window.innerHeight || document.documentElement.clientHeight || 1));
-    pageH = Math.max(
-      H,
-      document.documentElement.scrollHeight || 0,
-      document.body.scrollHeight || 0
-    );
 
     const nextDpr = Math.min(window.devicePixelRatio || 1, CONFIG.dprCap);
-    const resizeKey = W + "x" + H + "x" + pageH + "@" + nextDpr.toFixed(2);
+    const resizeKey = W + "x" + H + "@" + nextDpr.toFixed(2);
 
     if (resizeKey === lastResizeKey && layers.length) return;
     lastResizeKey = resizeKey;
 
     dpr = nextDpr;
-
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     margin = Math.max(W, H) * 0.24 + CONFIG.mouseAmount;
     rebuild();
-  }
-
-  function onScroll() {
-    scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-    firstFrame = true;
   }
 
   function onMouse(e) {
@@ -331,15 +321,12 @@
   }
 
   function drawOrganicNebula(n, tnow) {
-    const screenY = n.y - scrollY;
-    if (screenY < -H || screenY > H * 2) return;
-
     const pulse = Math.sin(tnow * n.speed + n.phase) * 0.5 + 0.5;
     const shapeA = Math.sin(tnow * n.speed * 0.7 + n.phase * 1.3);
     const shapeB = Math.cos(tnow * n.speed * 0.9 + n.phase * 0.8);
 
     ctx.save();
-    ctx.translate(n.x + shapeA * W * 0.008, screenY + shapeB * H * 0.006);
+    ctx.translate(n.x + shapeA * W * 0.008, n.y + shapeB * H * 0.006);
     ctx.rotate(n.rot + shapeA * 0.018);
     ctx.scale(n.w / 2, n.h / 2);
 
@@ -494,9 +481,9 @@
   function drawStars(tnow) {
     ctx.globalCompositeOperation = "lighter";
 
-    const colorShift = clamp(scrollY / Math.max(1, pageH - H), 0, 1) * 0.55;
+    const colorShift = 0.34;
     const cx = W / 2;
-    const cy = pageH / 2;
+    const cy = H / 2;
 
     for (const layer of layers) {
       const cfg = layer.cfg;
@@ -512,14 +499,11 @@
         const a = s.a * tw;
         if (a <= 0.010) continue;
 
-        const dx = s.x - cx;
-        const dy = s.y - cy;
+        const baseX = Math.cos(s.angle) * s.orbitRadius;
+        const baseY = Math.sin(s.angle) * s.orbitRadius;
 
-        const worldX = cx + dx * cos - dy * sin;
-        const worldY = cy + dx * sin + dy * cos;
-
-        const px = worldX + mouseX + Math.sin(tnow * s.driftSpeedX + s.driftPhaseX) * s.driftAmpX;
-        const py = worldY - scrollY + mouseY + Math.cos(tnow * s.driftSpeedY + s.driftPhaseY) * s.driftAmpY;
+        const px = cx + baseX * cos - baseY * sin + mouseX + Math.sin(tnow * s.driftSpeedX + s.driftPhaseX) * s.driftAmpX;
+        const py = cy + baseX * sin + baseY * cos + mouseY + Math.cos(tnow * s.driftSpeedY + s.driftPhaseY) * s.driftAmpY;
 
         if (px < -90 || px > W + 90 || py < -90 || py > H + 90) continue;
 
@@ -625,33 +609,14 @@
     }
 
     resize();
-    onScroll();
     nextShoot = performance.now() / 1000 + rand(3, 7);
 
     const debouncedResize = debounce(resize, 250);
-    const debouncedPageResize = debounce(() => {
-      const newPageH = Math.max(
-        H,
-        document.documentElement.scrollHeight || 0,
-        document.body.scrollHeight || 0
-      );
-
-      if (Math.abs(newPageH - pageH) > 180) {
-        lastResizeKey = "";
-        resize();
-      }
-    }, 500);
 
     window.addEventListener("resize", debouncedResize, { passive: true });
     window.addEventListener("orientationchange", debouncedResize, { passive: true });
     window.addEventListener("mousemove", onMouse, { passive: true });
-    window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
-
-    if (window.ResizeObserver) {
-      const ro = new ResizeObserver(debouncedPageResize);
-      ro.observe(document.body);
-    }
 
     if (media && media.addEventListener) {
       media.addEventListener("change", debouncedResize);
