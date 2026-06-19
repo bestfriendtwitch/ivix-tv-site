@@ -2183,7 +2183,7 @@ html {
 }
 
 
-/* v1.8.46 — clean starfield integration
+/* v1.8.47 — clean starfield integration
    Background is owned by background.js only.
    Removed old pseudo backgrounds, old noise overlay and old constellation layers. */
 html,
@@ -2279,7 +2279,7 @@ main {
 
 
 /* =============================================================
-   v1.8.46 — clean template support panel + smooth fixed starfield
+   v1.8.47 — clean template support panel + smooth fixed starfield
 ============================================================= */
 
 html,
@@ -2551,7 +2551,7 @@ body {
 
 
 /* =============================================================
-   v1.8.46 — fix support card alignment
+   v1.8.47 — fix support card alignment
 ============================================================= */
 
 /* Old base CSS had .support { display:flex }, which pushed the title sideways.
@@ -2628,7 +2628,7 @@ body {
 
 
 /* =============================================================
-   v1.8.46 — stronger useful-links hover accent
+   v1.8.47 — stronger useful-links hover accent
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -2749,7 +2749,7 @@ body {
 
 
 /* =============================================================
-   v1.8.46 — scroll-world background safety
+   v1.8.47 — scroll-world background safety
 ============================================================= */
 
 html,
@@ -2770,7 +2770,7 @@ body {
 
 
 /* =============================================================
-   v1.8.46 — scrollbar watchdog safety layer
+   v1.8.47 — scrollbar watchdog safety layer
    Keep only the browser page scrollbar. Prevent bg canvas/body
    from creating accidental duplicate scrollbars.
 ============================================================= */
@@ -2803,7 +2803,7 @@ body {
 
 
 /* =============================================================
-   v1.8.46 — page-canvas background, no scroll lag
+   v1.8.47 — page-canvas background, no scroll lag
    Old principle restored: the background canvas is an absolute
    page-sized layer and scrolls naturally with the document.
 ============================================================= */
@@ -2842,7 +2842,7 @@ body {
 
 
 /* =============================================================
-   v1.8.46 — hard reload scrollbar race fix
+   v1.8.47 — hard reload scrollbar race fix
    Prevent the page-sized canvas from being counted as the source
    of document height during Ctrl+F5 / cold loads.
 ============================================================= */
@@ -2870,7 +2870,7 @@ body {
 
 
 /* =============================================================
-   v1.8.46 — fixed wrapper + page canvas
+   v1.8.47 — fixed wrapper + page canvas
    Background scrolls with content through compositor transform,
    but the canvas cannot create a second page scrollbar.
 ============================================================= */
@@ -2916,7 +2916,7 @@ body {
 
 
 /* =============================================================
-   v1.8.46 — stronger useful-links hover + glow
+   v1.8.47 — stronger useful-links hover + glow
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -3019,7 +3019,7 @@ body {
 
 
 /* =============================================================
-   v1.8.46 — stronger global block glow + useful links glow
+   v1.8.47 — stronger global block glow + useful links glow
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -3137,4 +3137,41 @@ body {
       0 0 158px rgba(51,220,255,.22),
       inset 0 1px 0 rgba(255,255,255,.22) !important;
   }
+}
+
+
+/* =============================================================
+   v1.8.47 — hero title spacing and cleaner underline
+============================================================= */
+
+/* Slightly separate IVIX_TV from the subtitle below */
+.hero-title,
+.hero h1,
+.hero__title {
+  margin-bottom: clamp(18px, 1.55vw, 28px) !important;
+  line-height: .88 !important;
+}
+
+/* Keep the subtitle visually balanced under the title */
+.hero-kicker,
+.hero-subtitle,
+.hero .eyebrow,
+.hero .lead-title {
+  margin-top: 0 !important;
+}
+
+/* Make the IVIX_TV underline/underscore read cleaner and flatter */
+.hero-title .underscore,
+.hero h1 .underscore,
+.hero__title .underscore {
+  display: inline-block !important;
+  transform: translateY(.045em) scaleX(1.04) !important;
+  transform-origin: center bottom !important;
+}
+
+/* Fallback for the current big wordmark: normalize the last underscore glyph */
+.hero-title,
+.hero h1,
+.hero__title {
+  text-decoration-thickness: 0 !important;
 }
