@@ -1,0 +1,43 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# local env
+.env
+.env.*
+!.env.example
+
+# dependencies / build output
+node_modules/
+dist/
+build/
+
+# temporary / backup files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*_old.*
+*.log
+
+# local upload/check notes
+CHECK_AFTER_UPLOAD.txt
+
+# duplicate browser downloads
+* (1).*
+* (2).*
+* (3).*
+* (4).*
+* (5).*
+
+# unused hosting config files
+# Do not add these unless the hosting setup explicitly requires them.
+_redirects
+_headers
