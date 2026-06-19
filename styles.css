@@ -581,3 +581,31 @@ h1 {
 @media (max-width: 420px) {
   .player-frame { height: 218px; }
 }
+
+/* v1.5 domain + share polish */
+.player-frame {
+  overflow: hidden;
+}
+.player-frame .player-wrap {
+  height: 100%;
+}
+.stream-actions span {
+  line-height: 1.45;
+}
+.clip-card h3,
+.clip-card p,
+.clip-action,
+.clip-meta {
+  position: relative;
+  z-index: 1;
+}
+.clip-action {
+  font-weight: 900;
+  letter-spacing: .02em;
+}
+.social-icons-rich .social-link {
+  color: inherit;
+}
+@media (max-width: 760px) {
+  .stream-card { border-radius: 14px; }
+}
