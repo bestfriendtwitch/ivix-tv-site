@@ -8,9 +8,14 @@ burger?.addEventListener('click', () => {
 });
 
 navLinks.forEach(link => {
-  link.addEventListener('click', () => {
+  link.addEventListener('click', event => {
     nav.classList.remove('open');
     burger?.setAttribute('aria-expanded', 'false');
+
+    if (link.dataset.scrollTop === 'true') {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   });
 });
 
@@ -24,7 +29,7 @@ const navTargets = navLinks
 const setActive = () => {
   if (!navTargets.length) return;
 
-  const anchorY = window.scrollY + Math.min(window.innerHeight * 0.42, 360);
+  const anchorY = window.scrollY + Math.min(window.innerHeight * 0.30, 260);
   let current = navTargets[0];
 
   navTargets.forEach(item => {
