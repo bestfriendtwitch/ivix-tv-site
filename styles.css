@@ -2834,3 +2834,135 @@ main,
     transform: none !important;
   }
 }
+
+
+/* v1.8.25 — fixed top menu + constellation tuned like the approved screenshot
+   Keeps layered parallax. No player/chat changes. */
+
+/* Header must stay visible while scrolling */
+.site-header {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1200 !important;
+  height: 78px;
+  background:
+    linear-gradient(180deg, rgba(8, 6, 14, .94), rgba(5, 4, 10, .78));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(190, 126, 255, .13);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .34);
+}
+
+/* Compensate fixed header so top content doesn't slide under it */
+main {
+  padding-top: 78px;
+}
+
+/* Keep anchor jumps below the fixed header */
+#home,
+#about,
+#links,
+#community,
+#schedule,
+#clips,
+#collab {
+  scroll-margin-top: 92px;
+}
+
+/* Background scene stays behind everything, but visible */
+.bg-scene {
+  z-index: 0 !important;
+}
+
+.site-header,
+main,
+.site-footer {
+  position: relative;
+  z-index: 2;
+}
+
+.site-header {
+  position: fixed !important;
+  z-index: 1200 !important;
+}
+
+/* Tune the constellation composition to match the screenshot:
+   stronger side clusters, calmer center, cleaner glass lines. */
+.bg-layer {
+  inset: -16%;
+  background-position: center top;
+  background-size: 104% 2400px;
+}
+
+.bg-layer-far {
+  opacity: .28;
+  filter: blur(.25px) saturate(1.02);
+}
+
+.bg-layer-mid {
+  opacity: .43;
+  filter: saturate(1.08) brightness(1.01);
+}
+
+.bg-layer-near {
+  opacity: .46;
+  filter: saturate(1.10) brightness(1.02);
+}
+
+.bg-layer-shards {
+  opacity: .58;
+  mix-blend-mode: screen;
+  filter: saturate(1.16) brightness(1.10);
+}
+
+/* Slight cinematic wash, not a fog blanket */
+body::before {
+  opacity: .40 !important;
+}
+
+body::after {
+  opacity: .12 !important;
+}
+
+.noise {
+  opacity: .075 !important;
+}
+
+/* Stronger but still tasteful shard breathing */
+@keyframes ivixBgLayerBreathB {
+  0%, 100% {
+    opacity: .46;
+    filter: saturate(1.12) brightness(1.04);
+  }
+  50% {
+    opacity: .62;
+    filter: saturate(1.22) brightness(1.13);
+  }
+}
+
+@media (max-width: 760px) {
+  .site-header {
+    height: 64px;
+  }
+
+  main {
+    padding-top: 64px;
+  }
+
+  #home,
+  #about,
+  #links,
+  #community,
+  #schedule,
+  #clips,
+  #collab {
+    scroll-margin-top: 76px;
+  }
+
+  .bg-layer {
+    inset: -12% -44%;
+    background-size: 184% 2100px;
+  }
+}

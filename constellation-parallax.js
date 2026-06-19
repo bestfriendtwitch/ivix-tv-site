@@ -22,14 +22,15 @@
     layers.forEach((layer, index) => {
       const depth = parseFloat(layer.dataset.depth || '0.1');
 
-      const y = scrollY * depth;
+      // Stronger real parallax: near layers move much more, far layers stay calmer.
+      const y = scrollY * depth * 1.42;
       const x =
-        Math.sin(progress * Math.PI * 2 + index * 1.35) * (10 + index * 6) +
-        latestMouseX * depth * 14;
+        Math.sin(progress * Math.PI * 2 + index * 1.35) * (12 + index * 7) +
+        latestMouseX * depth * 18;
 
-      const driftY = latestMouseY * depth * 10;
-      const rotate = Math.sin(progress * Math.PI + index * 0.8) * (0.35 + depth * 1.1);
-      const scale = 1 + depth * 0.12;
+      const driftY = latestMouseY * depth * 12;
+      const rotate = Math.sin(progress * Math.PI + index * 0.8) * (0.42 + depth * 1.35);
+      const scale = 1 + depth * 0.13;
 
       layer.style.transform =
         `translate3d(${x.toFixed(2)}px, ${(y + driftY).toFixed(2)}px, 0) ` +
