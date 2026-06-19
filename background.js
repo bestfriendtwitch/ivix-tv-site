@@ -1,44 +1,74 @@
 /* =============================================================
-   IVIX_TV — фотореалистичное звёздное небо (v3)
-   Fixes:
-   • canvas добавляется в конец <body>, не ломает :first-child на мобиле;
-   • размер back-store берётся из фактического размера canvas, а не только innerWidth/innerHeight;
-   • звёзды остаются круглыми на ПК и телефоне;
-   • аккуратные далёкие туманности, очень слабые и органичные;
-   • прозрачный слой позади контента, основной фон сайта не заменяется.
+   IVIX_TV — desktop-only cinematic starfield (v4)
+   Что делает:
+   • на мобильной версии фон НЕ запускается вообще, чтобы не ломать контент;
+   • на ПК звезды круглые, без растяжения canvas;
+   • звезды живут по всей странице, потому что canvas fixed на весь viewport;
+   • сильный mouse-parallax;
+   • звезды чуть хаотично двигаются сами;
+   • больше звезд, больше разнообразия размеров/цветов/мерцания;
+   • качественные мягкие дифракционные лучи у части ярких звезд;
+   • к низу страницы оттенок звезд постепенно уходит в более фиолетово-синий.
 ============================================================= */
 (function () {
   "use strict";
 
+  const MOBILE_QUERY = "(max-width: 760px), (pointer: coarse) and (max-width: 920px)";
+
   const CONFIG = {
-    colors: [
+    desktopOnly: true,
+
+    colorsTop: [
       "205, 218, 255",
       "235, 240, 255",
       "215, 200, 255",
       "190, 172, 255",
       "255, 236, 210",
     ],
-    warmIndex: 4,
-    warmChance: 0.10,
 
-    mouseAmount: 34,
-    maxPan: 118,
-    mouseEase: 0.045,
-    scrollEase: 0.06,
+    colorsBottom: [
+      "158, 188, 255",
+      "185, 162, 255",
+      "205, 125, 255",
+      "130, 100, 255",
+      "225, 198, 255",
+    ],
+
+    warmChance: 0.08,
+
+    mouseAmount: 92,
+    maxPan: 160,
+    mouseEase: 0.060,
+    scrollEase: 0.070,
     dprCap: 2,
 
     shootingStars: true,
-    shootingEvery: [12, 28],
+    shootingEvery: [10, 24],
 
     nebulae: true,
 
+    // density = сколько пикселей площади приходится на одну звезду.
+    // Чем меньше число, тем больше звезд.
     layers: [
-      { density: 2200,  r: [0.30, 0.75], a: [0.05, 0.20], tw: [0.18, 0.65], twDepth: 0.45, pScroll: 0.10, pMouse: 0.04, glow: 0.00 },
-      { density: 5200,  r: [0.45, 1.05], a: [0.10, 0.34], tw: [0.22, 0.90], twDepth: 0.58, pScroll: 0.24, pMouse: 0.15, glow: 0.08 },
-      { density: 11500, r: [0.65, 1.45], a: [0.20, 0.58], tw: [0.26, 1.05], twDepth: 0.68, pScroll: 0.46, pMouse: 0.36, glow: 0.28 },
-      { density: 33000, r: [0.95, 2.10], a: [0.32, 0.82], tw: [0.30, 1.18], twDepth: 0.74, pScroll: 0.76, pMouse: 0.66, glow: 0.52 },
+      { density: 1550,  r: [0.24, 0.70], a: [0.05, 0.18], tw: [0.12, 0.54], twDepth: 0.42, pScroll: 0.06, pMouse: 0.10, glow: 0.00, drift: [1.0, 2.2], rayChance: 0.00 },
+      { density: 3300,  r: [0.36, 1.02], a: [0.09, 0.34], tw: [0.16, 0.78], twDepth: 0.56, pScroll: 0.16, pMouse: 0.34, glow: 0.08, drift: [1.8, 4.2], rayChance: 0.010 },
+      { density: 7000,  r: [0.54, 1.48], a: [0.18, 0.60], tw: [0.20, 0.98], twDepth: 0.66, pScroll: 0.30, pMouse: 0.74, glow: 0.25, drift: [2.8, 6.6], rayChance: 0.032 },
+      { density: 18500, r: [0.85, 2.45], a: [0.30, 0.86], tw: [0.24, 1.18], twDepth: 0.74, pScroll: 0.52, pMouse: 1.15, glow: 0.54, drift: [4.0, 9.5], rayChance: 0.075 },
+      { density: 47000, r: [1.35, 3.10], a: [0.42, 0.90], tw: [0.18, 0.85], twDepth: 0.58, pScroll: 0.72, pMouse: 1.45, glow: 0.82, drift: [5.5, 12.0], rayChance: 0.38 },
     ],
   };
+
+  const media = window.matchMedia ? window.matchMedia(MOBILE_QUERY) : null;
+
+  function isMobileLike() {
+    return CONFIG.desktopOnly && media && media.matches;
+  }
+
+  if (isMobileLike()) {
+    // На мобильных не создаём canvas вообще.
+    // Так фон физически не может перекрыть/сломать контент.
+    return;
+  }
 
   const canvas = document.createElement("canvas");
   canvas.id = "ivix-bg-canvas";
@@ -84,19 +114,45 @@
 
   const rand = (a, b) => a + Math.random() * (b - a);
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  function parseRgb(rgb) {
+    return rgb.split(",").map((x) => parseFloat(x.trim()));
+  }
+
+  function mixRgb(a, b, t) {
+    const ca = parseRgb(a);
+    const cb = parseRgb(b);
+    return [
+      Math.round(lerp(ca[0], cb[0], t)),
+      Math.round(lerp(ca[1], cb[1], t)),
+      Math.round(lerp(ca[2], cb[2], t)),
+    ].join(", ");
+  }
 
   function mount() {
     if (mounted) return;
     mounted = true;
 
-    // Важно: append, не prepend. Так мы не меняем первый элемент body
-    // и не ломаем mobile-верстку, завязанную на :first-child.
+    // append, не prepend — не ломаем :first-child и мобильную верстку.
     (document.body || document.documentElement).appendChild(canvas);
   }
 
-  function pickColor() {
-    if (Math.random() < CONFIG.warmChance) return CONFIG.colors[CONFIG.warmIndex];
-    return CONFIG.colors[(Math.random() * (CONFIG.colors.length - 1)) | 0];
+  function pickColorPair() {
+    const topPalette = CONFIG.colorsTop;
+    const bottomPalette = CONFIG.colorsBottom;
+
+    let i;
+    if (Math.random() < CONFIG.warmChance) {
+      i = 4;
+    } else {
+      i = (Math.random() * (topPalette.length - 1)) | 0;
+    }
+
+    return {
+      top: topPalette[i],
+      bottom: bottomPalette[i % bottomPalette.length],
+    };
   }
 
   function makeGlow(size, color) {
@@ -109,8 +165,8 @@
       size / 2, size / 2, size / 2
     );
 
-    gradient.addColorStop(0, "rgba(" + color + ",0.72)");
-    gradient.addColorStop(0.22, "rgba(" + color + ",0.25)");
+    gradient.addColorStop(0, "rgba(" + color + ",0.68)");
+    gradient.addColorStop(0.20, "rgba(" + color + ",0.23)");
     gradient.addColorStop(1, "rgba(" + color + ",0)");
 
     g.fillStyle = gradient;
@@ -119,24 +175,37 @@
     return c;
   }
 
-  function buildLayer(cfg) {
+  function buildLayer(cfg, layerIndex) {
     const fieldW = W + marginX * 2;
     const fieldH = H + marginY * 2;
-    const n = Math.max(6, Math.round((fieldW * fieldH) / cfg.density));
+    const n = Math.max(10, Math.round((fieldW * fieldH) / cfg.density));
     const stars = [];
 
     for (let i = 0; i < n; i += 1) {
-      const color = pickColor();
+      const pair = pickColorPair();
+      const r = rand(cfg.r[0], cfg.r[1]);
+      const isBright = Math.random() < cfg.rayChance || r > 2.35;
 
       stars.push({
         x: rand(-marginX, W + marginX),
         y: rand(-marginY, H + marginY),
-        r: rand(cfg.r[0], cfg.r[1]),
+        r,
         a: rand(cfg.a[0], cfg.a[1]),
         sp: rand(cfg.tw[0], cfg.tw[1]),
         ph: rand(0, Math.PI * 2),
-        color,
+        colorTop: pair.top,
+        colorBottom: pair.bottom,
         glow: Math.random() < cfg.glow,
+        ray: isBright,
+        rayLen: rand(9, 28) * (0.7 + r * 0.34),
+        rayAngle: rand(0, Math.PI),
+        rayAlpha: rand(0.08, 0.26) * (layerIndex + 1) / CONFIG.layers.length,
+        driftAmpX: rand(cfg.drift[0], cfg.drift[1]),
+        driftAmpY: rand(cfg.drift[0], cfg.drift[1]) * 0.65,
+        driftSpeedX: rand(0.035, 0.125),
+        driftSpeedY: rand(0.028, 0.115),
+        driftPhaseX: rand(0, Math.PI * 2),
+        driftPhaseY: rand(0, Math.PI * 2),
       });
     }
 
@@ -158,21 +227,21 @@
         rot: -0.18,
         colorA: "132, 70, 255",
         colorB: "80, 38, 160",
-        alpha: 0.075,
-        pScroll: 0.055,
-        pMouse: 0.018,
+        alpha: 0.072,
+        pScroll: 0.050,
+        pMouse: 0.055,
       },
       {
-        x: W * 0.84,
+        x: W * 0.86,
         y: H * 0.18,
         w: W * 0.68 * scale,
         h: H * 0.52 * scale,
         rot: 0.22,
         colorA: "180, 104, 255",
         colorB: "68, 26, 140",
-        alpha: 0.060,
-        pScroll: 0.075,
-        pMouse: 0.022,
+        alpha: 0.058,
+        pScroll: 0.070,
+        pMouse: 0.070,
       },
       {
         x: W * 0.60,
@@ -182,9 +251,9 @@
         rot: -0.08,
         colorA: "116, 74, 255",
         colorB: "44, 22, 92",
-        alpha: 0.050,
-        pScroll: 0.10,
-        pMouse: 0.026,
+        alpha: 0.048,
+        pScroll: 0.11,
+        pMouse: 0.085,
       },
     ];
   }
@@ -194,14 +263,19 @@
     nebulae = buildNebulae();
 
     glowSprites = {};
-    for (const color of CONFIG.colors) {
-      glowSprites[color] = makeGlow(64, color);
+    const allColors = CONFIG.colorsTop.concat(CONFIG.colorsBottom);
+    for (const color of allColors) {
+      glowSprites[color] = makeGlow(72, color);
     }
   }
 
   function resize() {
-    // Главный фикс растягивания:
-    // берем фактический CSS-размер canvas, а не предполагаемый innerWidth/innerHeight.
+    if (isMobileLike()) {
+      stopAndRemove();
+      return;
+    }
+
+    // Главный фикс: фактический CSS-размер canvas, чтобы ничего не растягивалось.
     const rect = canvas.getBoundingClientRect();
 
     W = Math.max(1, Math.round(rect.width || window.innerWidth || document.documentElement.clientWidth || 1));
@@ -217,8 +291,8 @@
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    marginX = CONFIG.mouseAmount + 28;
-    marginY = CONFIG.maxPan + CONFIG.mouseAmount + 28;
+    marginX = CONFIG.mouseAmount + 72;
+    marginY = CONFIG.maxPan + CONFIG.mouseAmount + 90;
 
     rebuild();
 
@@ -241,7 +315,7 @@
 
   function spawnShoot() {
     const fromLeft = Math.random() < 0.5;
-    const angle = rand(0.25, 0.58) * (fromLeft ? 1 : -1) + (fromLeft ? 0 : Math.PI);
+    const angle = rand(0.24, 0.56) * (fromLeft ? 1 : -1) + (fromLeft ? 0 : Math.PI);
     const speed = rand(760, 1180);
 
     shoot = {
@@ -252,7 +326,7 @@
       life: 0,
       max: rand(0.72, 1.22),
       len: rand(130, 245),
-      color: Math.random() < 0.28 ? CONFIG.colors[CONFIG.warmIndex] : CONFIG.colors[1],
+      color: Math.random() < 0.28 ? CONFIG.colorsTop[4] : CONFIG.colorsTop[1],
     };
   }
 
@@ -279,10 +353,10 @@
     ctx.arc(0, 0, 1, 0, Math.PI * 2);
     ctx.fill();
 
-    // Темные прожилки внутри облака: не фотореализм NASA, но мягко и органично.
+    // Темные мягкие прожилки.
     ctx.globalCompositeOperation = "source-over";
-    ctx.globalAlpha = n.alpha * 0.40;
-    ctx.strokeStyle = "rgba(4, 3, 10, 0.85)";
+    ctx.globalAlpha = n.alpha * 0.38;
+    ctx.strokeStyle = "rgba(4, 3, 10, 0.84)";
     ctx.lineWidth = 0.025;
     ctx.lineCap = "round";
 
@@ -297,6 +371,46 @@
     ctx.restore();
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "source-over";
+  }
+
+  function drawRay(px, py, star, color, alpha, tnow) {
+    const len = star.rayLen * (0.82 + Math.sin(tnow * star.sp * 0.7 + star.ph) * 0.10);
+    const angle = star.rayAngle;
+    const pulse = 0.72 + Math.sin(tnow * star.sp * 1.2 + star.ph) * 0.28;
+    const a = alpha * star.rayAlpha * pulse;
+
+    if (a <= 0.01) return;
+
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    ctx.lineCap = "round";
+
+    function strokeLine(theta, length, lineWidth, opacity) {
+      const dx = Math.cos(theta) * length;
+      const dy = Math.sin(theta) * length;
+
+      const grad = ctx.createLinearGradient(px - dx, py - dy, px + dx, py + dy);
+      grad.addColorStop(0, "rgba(" + color + ",0)");
+      grad.addColorStop(0.46, "rgba(" + color + "," + (opacity * 0.45).toFixed(3) + ")");
+      grad.addColorStop(0.50, "rgba(255,255,255," + opacity.toFixed(3) + ")");
+      grad.addColorStop(0.54, "rgba(" + color + "," + (opacity * 0.45).toFixed(3) + ")");
+      grad.addColorStop(1, "rgba(" + color + ",0)");
+
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = lineWidth;
+      ctx.beginPath();
+      ctx.moveTo(px - dx, py - dy);
+      ctx.lineTo(px + dx, py + dy);
+      ctx.stroke();
+    }
+
+    // Главная тонкая 4-лучевая дифракция + диагональная слабее.
+    strokeLine(angle, len, 0.72, a);
+    strokeLine(angle + Math.PI / 2, len * 0.60, 0.55, a * 0.55);
+    strokeLine(angle + Math.PI / 4, len * 0.34, 0.42, a * 0.34);
+    strokeLine(angle - Math.PI / 4, len * 0.30, 0.40, a * 0.28);
+
+    ctx.restore();
   }
 
   function drawShoot(dt, tnow) {
@@ -355,6 +469,8 @@
   function drawStars(tnow, isStatic) {
     ctx.globalCompositeOperation = "lighter";
 
+    const colorShift = Math.pow(scrollDisp, 0.82);
+
     for (const layer of layers) {
       const cfg = layer.cfg;
       const offX = -mx * CONFIG.mouseAmount * cfg.pMouse;
@@ -368,23 +484,39 @@
         const a = s.a * tw;
         if (a <= 0.010) continue;
 
-        const px = s.x + offX;
-        const py = s.y + offY;
+        const driftX = reduceMotion ? 0 : Math.sin(tnow * s.driftSpeedX + s.driftPhaseX) * s.driftAmpX;
+        const driftY = reduceMotion ? 0 : Math.cos(tnow * s.driftSpeedY + s.driftPhaseY) * s.driftAmpY;
 
-        if (px < -20 || px > W + 20 || py < -20 || py > H + 20) continue;
+        const px = s.x + offX + driftX;
+        const py = s.y + offY + driftY;
+
+        if (px < -50 || px > W + 50 || py < -50 || py > H + 50) continue;
+
+        const color = mixRgb(s.colorTop, s.colorBottom, colorShift);
 
         if (s.glow) {
-          const gr = s.r * 5.2;
-          ctx.globalAlpha = a * 0.50;
-          ctx.drawImage(glowSprites[s.color], px - gr, py - gr, gr * 2, gr * 2);
+          const gr = s.r * 5.6;
+          ctx.globalAlpha = a * 0.52;
+          const sprite = glowSprites[s.colorTop] || glowSprites[CONFIG.colorsTop[1]];
+          ctx.drawImage(sprite, px - gr, py - gr, gr * 2, gr * 2);
           ctx.globalAlpha = 1;
         }
 
-        // Только круглое ядро. Без лучей, чтобы не было вытянутого вида.
-        ctx.fillStyle = "rgba(" + s.color + "," + a.toFixed(3) + ")";
+        if (s.ray) {
+          drawRay(px, py, s, color, a, tnow);
+        }
+
+        ctx.fillStyle = "rgba(" + color + "," + a.toFixed(3) + ")";
         ctx.beginPath();
         ctx.arc(px, py, s.r, 0, Math.PI * 2);
         ctx.fill();
+
+        if (s.r > 1.6) {
+          ctx.fillStyle = "rgba(255,255,255," + Math.min(0.55, a * 0.7).toFixed(3) + ")";
+          ctx.beginPath();
+          ctx.arc(px, py, Math.max(0.35, s.r * 0.36), 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
     }
 
@@ -417,6 +549,15 @@
     rafId = requestAnimationFrame(frame);
   }
 
+  function stopAndRemove() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    if (canvas.parentNode) {
+      canvas.parentNode.removeChild(canvas);
+    }
+    mounted = false;
+  }
+
   function onVisibility() {
     if (document.hidden) {
       if (rafId) cancelAnimationFrame(rafId);
@@ -424,7 +565,7 @@
       return;
     }
 
-    if (!reduceMotion && !rafId) {
+    if (!reduceMotion && !rafId && mounted) {
       lastT = performance.now();
       rafId = requestAnimationFrame(frame);
     }
@@ -439,6 +580,11 @@
   }
 
   function start() {
+    if (isMobileLike()) {
+      stopAndRemove();
+      return;
+    }
+
     mount();
 
     resize();
@@ -454,6 +600,10 @@
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("mousemove", onMouse, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
+
+    if (media && media.addEventListener) {
+      media.addEventListener("change", debouncedResize);
+    }
 
     if (window.ResizeObserver) {
       const ro = new ResizeObserver(debouncedResize);
