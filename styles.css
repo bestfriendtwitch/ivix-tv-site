@@ -2183,7 +2183,7 @@ html {
 }
 
 
-/* v1.8.38 — clean starfield integration
+/* v1.8.39 — clean starfield integration
    Background is owned by background.js only.
    Removed old pseudo backgrounds, old noise overlay and old constellation layers. */
 html,
@@ -2279,7 +2279,7 @@ main {
 
 
 /* =============================================================
-   v1.8.38 — clean template support panel + smooth fixed starfield
+   v1.8.39 — clean template support panel + smooth fixed starfield
 ============================================================= */
 
 html,
@@ -2551,7 +2551,7 @@ body {
 
 
 /* =============================================================
-   v1.8.38 — fix support card alignment
+   v1.8.39 — fix support card alignment
 ============================================================= */
 
 /* Old base CSS had .support { display:flex }, which pushed the title sideways.
@@ -2623,5 +2623,126 @@ body {
 
   .support-orb-scene {
     display: none !important;
+  }
+}
+
+
+/* =============================================================
+   v1.8.39 — stronger useful-links hover accent
+============================================================= */
+
+@media (hover: hover) and (pointer: fine) {
+  .links .platform-card,
+  #links .platform-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .links .platform-card::before,
+  #links .platform-card::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background:
+      radial-gradient(circle at 22% 50%, rgba(179,92,255,.24), transparent 42%),
+      radial-gradient(circle at 86% 15%, rgba(255,255,255,.10), transparent 34%),
+      linear-gradient(135deg, rgba(179,92,255,.14), rgba(255,255,255,.035));
+    transition: opacity .18s ease;
+  }
+
+  .links .platform-card:hover,
+  #links .platform-card:hover {
+    transform: translateY(-3px) scale(1.012);
+    border-color: rgba(211, 158, 255, .58) !important;
+    background:
+      radial-gradient(circle at 20% 50%, rgba(179,92,255,.22), transparent 48%),
+      linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.030)) !important;
+    box-shadow:
+      0 20px 46px rgba(0,0,0,.32),
+      0 0 0 1px rgba(211,158,255,.16),
+      0 0 30px rgba(179,92,255,.24),
+      0 0 72px rgba(126,45,255,.12),
+      inset 0 1px 0 rgba(255,255,255,.11) !important;
+  }
+
+  .links .platform-card:hover::before,
+  #links .platform-card:hover::before {
+    opacity: 1;
+  }
+
+  .links .platform-card:hover .platform-icon,
+  #links .platform-card:hover .platform-icon {
+    transform: scale(1.08);
+    filter: brightness(1.18) saturate(1.25);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.13),
+      0 0 22px rgba(179,92,255,.26),
+      inset 0 1px 0 rgba(255,255,255,.14) !important;
+  }
+
+  .links .platform-card:hover strong,
+  #links .platform-card:hover strong {
+    color: #ffffff;
+    text-shadow:
+      0 0 12px rgba(255,255,255,.16),
+      0 0 18px rgba(179,92,255,.22);
+  }
+
+  .links .platform-card:hover span,
+  #links .platform-card:hover span {
+    color: rgba(235,225,255,.86);
+  }
+
+  .links .platform-card[href*="t.me"]:hover,
+  #links .platform-card[href*="t.me"]:hover {
+    border-color: rgba(64, 178, 255, .62) !important;
+    box-shadow:
+      0 20px 46px rgba(0,0,0,.32),
+      0 0 30px rgba(64,178,255,.24),
+      0 0 70px rgba(139,61,255,.10),
+      inset 0 1px 0 rgba(255,255,255,.11) !important;
+  }
+
+  .links .platform-card[href*="vk.com"]:hover,
+  #links .platform-card[href*="vk.com"]:hover {
+    border-color: rgba(78, 141, 255, .60) !important;
+    box-shadow:
+      0 20px 46px rgba(0,0,0,.32),
+      0 0 30px rgba(78,141,255,.22),
+      0 0 70px rgba(139,61,255,.10),
+      inset 0 1px 0 rgba(255,255,255,.11) !important;
+  }
+
+  .links .platform-card[href*="youtube.com"]:hover,
+  #links .platform-card[href*="youtube.com"]:hover {
+    border-color: rgba(255, 69, 94, .62) !important;
+    box-shadow:
+      0 20px 46px rgba(0,0,0,.32),
+      0 0 30px rgba(255,69,94,.22),
+      0 0 70px rgba(139,61,255,.10),
+      inset 0 1px 0 rgba(255,255,255,.11) !important;
+  }
+
+  .links .platform-card[href*="twitch.tv"]:hover,
+  #links .platform-card[href*="twitch.tv"]:hover {
+    border-color: rgba(169, 112, 255, .68) !important;
+    box-shadow:
+      0 20px 46px rgba(0,0,0,.32),
+      0 0 32px rgba(169,112,255,.28),
+      0 0 76px rgba(139,61,255,.14),
+      inset 0 1px 0 rgba(255,255,255,.11) !important;
+  }
+
+  .links .platform-card[href*="tiktok.com"]:hover,
+  #links .platform-card[href*="tiktok.com"]:hover {
+    border-color: rgba(255, 65, 142, .62) !important;
+    box-shadow:
+      0 20px 46px rgba(0,0,0,.32),
+      0 0 30px rgba(255,65,142,.22),
+      0 0 70px rgba(51,220,255,.10),
+      inset 0 1px 0 rgba(255,255,255,.11) !important;
   }
 }

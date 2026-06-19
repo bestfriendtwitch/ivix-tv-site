@@ -1,5 +1,5 @@
 /* =============================================================
-   IVIX_TV — smooth fixed galaxy starfield (v15 / site v1.8.38)
+   IVIX_TV — smooth fixed galaxy starfield (v16 / site v1.8.39)
    • mobile: canvas не создается;
    • desktop: 30 FPS;
    • fixed viewport canvas, so no duplicate scrollbar;
@@ -42,11 +42,11 @@
     mouseAmount: 52,
     mouseEase: 0.055,
 
-    galaxyRotation: 0.0121,
+    galaxyRotation: 0.0139,
     trailAlpha: 0.78,
 
     shootingStars: true,
-    shootingEvery: [4.2, 10.5],
+    shootingEvery: [3.1, 7.8],
     maxShootingStars: 4,
     nebulae: true,
 
@@ -609,7 +609,7 @@
     }
 
     resize();
-    nextShoot = performance.now() / 1000 + rand(3, 7);
+    nextShoot = performance.now() / 1000 + rand(2.2, 5.2);
 
     const debouncedResize = debounce(resize, 250);
 
