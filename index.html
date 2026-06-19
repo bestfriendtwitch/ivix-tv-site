@@ -92,9 +92,9 @@
   <main id="home">
     <section class="hero hero-main section-pad">
       <div class="hero-art" aria-hidden="true">
-        <span class="ha-layer ha-back" data-depth="8"></span>
-        <span class="ha-layer ha-portrait" data-depth="-16"></span>
-        <span class="ha-layer ha-front" data-depth="-22"></span>
+        <span class="ha-layer ha-back" data-depth="30"></span>
+        <span class="ha-layer ha-portrait" data-depth="-12"></span>
+        <span class="ha-layer ha-front" data-depth="60"></span>
       </div>
       <div class="hero-copy hero-copy-main reveal">
         <h1>IVIX<span class="hero-underscore" aria-hidden="true">_</span>TV</h1>
@@ -307,65 +307,30 @@
 
   <script src="background.js"></script>
   <script>
-  /* hero art parallax — мягче, фон двигается слабее и в противоположную сторону */
+  /* hero art parallax — движение слоёв за курсором */
   (function () {
     var art = document.querySelector('.hero-art');
-    var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (!art || !finePointer || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
+    if (!art || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var layers = [].slice.call(art.querySelectorAll('.ha-layer'));
     var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
-
-    function getScale(layer) {
-      if (layer.classList.contains('ha-back')) return 1.1;
-      if (layer.classList.contains('ha-front')) return 1.06;
-      return 1.05;
-    }
-
     function loop() {
-      cx += (tx - cx) * 0.08;
-      cy += (ty - cy) * 0.08;
-
+      cx += (tx - cx) * 0.07; cy += (ty - cy) * 0.07;
       for (var i = 0; i < layers.length; i++) {
-        var layer = layers[i];
-        var d = parseFloat(layer.getAttribute('data-depth')) || 0;
-        var scale = getScale(layer);
-        var x = -cx * d;
-        var y = -cy * d * 0.55;
-
-        layer.style.transform =
-          'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,0) scale(' + scale + ')';
+        var d = parseFloat(layers[i].getAttribute('data-depth')) || 0;
+        layers[i].style.transform =
+          'translate3d(' + (-cx * d).toFixed(2) + 'px,' + (-cy * d * 0.6).toFixed(2) + 'px,0) scale(1.05)';
       }
-
-      if (Math.abs(tx - cx) > 0.0008 || Math.abs(ty - cy) > 0.0008) {
-        raf = requestAnimationFrame(loop);
-      } else {
-        raf = null;
-      }
+      if (Math.abs(tx - cx) > 0.0008 || Math.abs(ty - cy) > 0.0008) raf = requestAnimationFrame(loop);
+      else raf = null;
     }
-
-    function kick() {
-      if (!raf) raf = requestAnimationFrame(loop);
-    }
-
-    window.addEventListener('pointermove', function (e) {
+    function kick() { if (!raf) raf = requestAnimationFrame(loop); }
+    window.addEventListener('mousemove', function (e) {
       var r = art.getBoundingClientRect();
-      tx = Math.max(-0.45, Math.min(0.45, (e.clientX - (r.left + r.width / 2)) / r.width));
-      ty = Math.max(-0.45, Math.min(0.45, (e.clientY - (r.top + r.height / 2)) / r.height));
+      tx = Math.max(-0.5, Math.min(0.5, (e.clientX - (r.left + r.width / 2)) / r.width));
+      ty = Math.max(-0.5, Math.min(0.5, (e.clientY - (r.top + r.height / 2)) / r.height));
       kick();
     }, { passive: true });
-
-    document.addEventListener('mouseleave', function () {
-      tx = 0;
-      ty = 0;
-      kick();
-    });
-
-    window.addEventListener('blur', function () {
-      tx = 0;
-      ty = 0;
-      kick();
-    });
+    document.addEventListener('mouseleave', function () { tx = 0; ty = 0; kick(); });
   })();
   </script>
   <script src="script.js"></script>

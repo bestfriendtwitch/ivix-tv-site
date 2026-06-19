@@ -2754,7 +2754,7 @@ h1 .hero-underscore {
   }
 }
 
-/* hero art — мягкая маска + слоистый параллакс без резкого правого квадрата */
+/* hero art — слоистый параллакс, выходит из блоков плеера/чата */
 .hero-main { position: relative; z-index: 1; overflow: visible; }
 .hero-copy-main { position: relative; z-index: 2; }
 .live-section { position: relative; z-index: 3; } /* блоки перекрывают низ арта → эффект выхода */
@@ -2767,48 +2767,29 @@ h1 .hero-underscore {
   aspect-ratio: 1500 / 844;
   z-index: 0;
   pointer-events: none;
-  isolation: isolate;
 }
 .ha-layer {
   position: absolute;
   inset: 0;
   transform: translate3d(0, 0, 0) scale(1.05);
-  transform-origin: 74% 54%;
-  will-change: transform, opacity;
-  background-repeat: no-repeat;
+  transform-origin: right center;
+  will-change: transform;
+  -webkit-mask-image: radial-gradient(ellipse 96% 92% at 64% 48%, #000 0%, #000 58%, rgba(0,0,0,.82) 72%, rgba(0,0,0,.35) 84%, transparent 98%);
+          mask-image: radial-gradient(ellipse 96% 92% at 64% 48%, #000 0%, #000 58%, rgba(0,0,0,.82) 72%, rgba(0,0,0,.35) 84%, transparent 98%);
 }
-.ha-portrait,
-.ha-front {
+.ha-portrait, .ha-front {
+  background-repeat: no-repeat;
   background-position: center right;
   background-size: contain;
 }
-.ha-portrait {
-  background-image: url("assets/hero-art.webp");
-  -webkit-mask-image: radial-gradient(118% 110% at 68% 50%, #000 0%, #000 56%, rgba(0,0,0,.94) 66%, rgba(0,0,0,.76) 76%, rgba(0,0,0,.34) 87%, transparent 100%);
-          mask-image: radial-gradient(118% 110% at 68% 50%, #000 0%, #000 56%, rgba(0,0,0,.94) 66%, rgba(0,0,0,.76) 76%, rgba(0,0,0,.34) 87%, transparent 100%);
-}
-.ha-front {
-  inset: -1% -1.5% -1.5% -1%;
-  background-image: url("assets/hero-art-front.webp");
-  mix-blend-mode: screen;
-  opacity: .92;
-  -webkit-mask-image: radial-gradient(120% 114% at 69% 51%, #000 0%, #000 54%, rgba(0,0,0,.82) 72%, rgba(0,0,0,.24) 88%, transparent 100%);
-          mask-image: radial-gradient(120% 114% at 69% 51%, #000 0%, #000 54%, rgba(0,0,0,.82) 72%, rgba(0,0,0,.24) 88%, transparent 100%);
-}
+.ha-portrait { background-image: url("assets/hero-art.webp"); }
+.ha-front { background-image: url("assets/hero-art-front.webp"); mix-blend-mode: screen; }
 .ha-back {
-  left: -48%;
-  right: -4%;
-  top: -12%;
-  bottom: -8%;
-  opacity: .96;
-  filter: blur(8px);
+  left: -56%; right: 0; top: -14%; bottom: -10%;
   background:
-    radial-gradient(54% 58% at 78% 44%, rgba(109, 34, 204, .18), transparent 74%),
-    radial-gradient(42% 50% at 72% 58%, rgba(139, 61, 255, .24), transparent 68%),
-    radial-gradient(34% 44% at 60% 40%, rgba(120, 46, 210, .18), transparent 70%),
-    radial-gradient(30% 40% at 86% 82%, rgba(160, 84, 240, .16), transparent 70%);
-  -webkit-mask-image: radial-gradient(128% 120% at 70% 49%, #000 0%, #000 54%, rgba(0,0,0,.72) 72%, rgba(0,0,0,.16) 88%, transparent 100%);
-          mask-image: radial-gradient(128% 120% at 70% 49%, #000 0%, #000 54%, rgba(0,0,0,.72) 72%, rgba(0,0,0,.16) 88%, transparent 100%);
+    radial-gradient(42% 50% at 72% 58%, rgba(139, 61, 255, .30), transparent 70%),
+    radial-gradient(34% 44% at 60% 40%, rgba(120, 46, 210, .22), transparent 72%),
+    radial-gradient(30% 40% at 86% 82%, rgba(160, 84, 240, .24), transparent 72%);
 }
 @media (min-width: 1100px) { .hero-main { min-height: 540px; } }
 @media (max-width: 1100px) {
@@ -2818,9 +2799,7 @@ h1 .hero-underscore {
   .hero-art { inset: 0 0 auto 0; width: 100%; aspect-ratio: auto; height: 250px; bottom: auto; opacity: .4; }
   .ha-back, .ha-front { display: none; }
   .ha-portrait {
-    background-position: center top;
-    background-size: cover;
-    transform: none;
+    background-position: center top; background-size: cover; transform: none;
     -webkit-mask-image: linear-gradient(#000 30%, transparent 100%);
             mask-image: linear-gradient(#000 30%, transparent 100%);
   }
