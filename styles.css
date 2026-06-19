@@ -29,32 +29,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
-body::before {
-  content: "IVIX IVIX IVIX IVIX";
-  position: fixed;
-  inset: 70px auto auto -40px;
-  width: 420px;
-  color: rgba(126, 31, 255, .16);
-  font-family: "Russo One", sans-serif;
-  font-size: 48px;
-  line-height: 1.35;
-  transform: rotate(-8deg);
-  pointer-events: none;
-  white-space: pre-wrap;
-  text-shadow: 0 0 35px rgba(129, 49, 255, .3);
-}
-.noise {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: .28;
-  mix-blend-mode: overlay;
-  background-image:
-    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size: 34px 34px;
-  z-index: 50;
-}
+.noise { display: none !important; }
 a { color: inherit; text-decoration: none; }
 .site-header {
   position: sticky;
@@ -2208,375 +2183,96 @@ html {
 }
 
 
-/* v1.8.11 — Step 5: final atmosphere
-   Scope: styles.css only. Subtle background, light accents, neon lines, smoother menu. */
-
-/* Safer smooth anchor feel */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Extra ambient layer without layout changes */
+/* v1.8.28 — clean starfield integration
+   Background is owned by background.js only.
+   Removed old pseudo backgrounds, old noise overlay and old constellation layers. */
+html,
 body {
-  position: relative;
+  min-height: 100%;
   overflow-x: hidden;
+  background: linear-gradient(180deg, #05030b 0%, #080414 52%, #05030b 100%);
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -2;
-  background:
-    radial-gradient(circle at 82% 4%, rgba(179,92,255,.115), transparent 24%),
-    radial-gradient(circle at 7% 22%, rgba(126,45,255,.105), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(93,41,203,.10), transparent 34%),
-    linear-gradient(180deg, rgba(5,4,10,.02), rgba(5,4,10,.34));
+body::before,
+body::after,
+.bg-scene,
+.bg-layer,
+.bg-energy-layer {
+  display: none !important;
+  content: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
-body::after {
-  content: "IVIX IVIX IVIX";
-  position: fixed;
-  left: -28px;
-  top: 82px;
-  width: 360px;
-  height: 240px;
-  pointer-events: none;
-  z-index: -1;
-  color: rgba(139,61,255,.105);
-  font-family: "Russo One", sans-serif;
-  font-size: 38px;
-  line-height: 1.35;
-  letter-spacing: 2px;
-  transform: rotate(-8deg);
-  text-shadow: 0 0 22px rgba(139,61,255,.12);
-  opacity: .9;
-}
-
-/* The original noise layer becomes a little more cinematic */
 .noise {
-  opacity: .42;
+  display: none !important;
 }
 
-/* Thin neon separators inside major cards */
-.panel,
-.stream-card,
-.chat-card,
-.collab-box {
-  position: relative;
+#ivix-bg-canvas {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  display: block !important;
 }
 
-.panel::after,
-.stream-card::after,
-.chat-card::after,
-.collab-box::after {
-  content: "";
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  top: 0;
-  height: 1px;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(190,126,255,.28), transparent);
-  opacity: .65;
-}
-
-/* Calm atmospheric highlights per section */
-.about {
-  background:
-    radial-gradient(circle at 86% 78%, rgba(101,46,195,.10), transparent 30%),
-    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
-}
-
-.support {
-  background:
-    radial-gradient(circle at 78% 70%, rgba(179,92,255,.13), transparent 31%),
-    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
-}
-
-.social-panel {
-  background:
-    radial-gradient(circle at 76% 10%, rgba(179,92,255,.10), transparent 28%),
-    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
-}
-
-.commands {
-  background:
-    radial-gradient(circle at 12% 0%, rgba(179,92,255,.12), transparent 26%),
-    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
-}
-
-.schedule {
-  background:
-    radial-gradient(circle at 92% 72%, rgba(179,92,255,.12), transparent 30%),
-    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
-}
-
-.clips {
-  background:
-    radial-gradient(circle at 14% 0%, rgba(179,92,255,.11), transparent 28%),
-    linear-gradient(180deg, rgba(29,25,48,.86), rgba(11,9,18,.9));
-}
-
-/* Header/menu final polish */
-.site-header {
-  background:
-    linear-gradient(180deg, rgba(8,6,14,.88), rgba(5,4,10,.72));
-  box-shadow: 0 12px 36px rgba(0,0,0,.32);
-}
-
-.logo {
-  text-shadow: 0 0 18px rgba(179,92,255,.22);
-}
-
-.main-nav a {
-  position: relative;
-  transition: color .18s ease, opacity .18s ease, text-shadow .18s ease;
-}
-
-.main-nav a.active {
-  color: #fff;
-  text-shadow: 0 0 14px rgba(179,92,255,.34);
-}
-
-.main-nav a::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -18px;
-  width: 0;
-  height: 1px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, transparent, rgba(179,92,255,.95), transparent);
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: width .22s ease, opacity .22s ease;
-}
-
-.main-nav a.active::before,
-.main-nav a:hover::before {
-  width: 72px;
-  opacity: .8;
-}
-
-/* Existing underline remains, but less aggressive */
-.main-nav a::after {
-  box-shadow: 0 0 18px rgba(179,92,255,.42);
-}
-
-/* Slightly more premium buttons, no size changes */
-.btn-primary {
-  box-shadow:
-    0 14px 30px rgba(126,45,255,.28),
-    inset 0 1px 0 rgba(255,255,255,.24);
-}
-
-.btn-primary:hover {
-  filter: brightness(1.04);
-}
-
-.btn-ghost:hover {
-  background: rgba(139,61,255,.075);
-  border-color: rgba(190,126,255,.24);
-}
-
-/* Reveal animation a bit smoother */
-.reveal {
-  animation-duration: .78s;
-  animation-timing-function: cubic-bezier(.2, .72, .22, 1);
-}
-
-/* Gentle idle glow on a few decorative icons, very subtle */
-.purple-icon {
-  animation: ivixSoftPulse 4.8s ease-in-out infinite;
-}
-
-@keyframes ivixSoftPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 0 rgba(179,92,255,0));
-  }
-  50% {
-    filter: drop-shadow(0 0 8px rgba(179,92,255,.22));
-  }
-}
-
-/* Media cards get a tiny neon line, not a redesign */
-.clip-card::after,
-.command-category::after,
-.social-icons-brand .social-link::after {
-  pointer-events: none;
-}
-
-/* Footer atmosphere */
+.site-header,
+main,
 .site-footer {
-  border-top-color: rgba(190,126,255,.12);
-  background:
-    linear-gradient(90deg, transparent, rgba(139,61,255,.035), transparent);
+  position: relative;
+  z-index: 2;
 }
 
-/* Performance/accessibility */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .purple-icon,
-  .reveal {
-    animation: none !important;
-  }
+.site-header {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1200 !important;
+  height: 78px;
+  background: linear-gradient(180deg, rgba(8, 6, 14, .94), rgba(5, 4, 10, .78));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(190, 126, 255, .13);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .34);
 }
 
-@media (max-width: 760px) {
-  body::after {
-    font-size: 28px;
-    width: 260px;
-    top: 76px;
-    opacity: .62;
-  }
-
-  .main-nav a::before {
-    bottom: -12px;
-  }
-
-  .main-nav a.active::before,
-  .main-nav a:hover::before {
-    width: 52px;
-  }
-
-  .panel::after,
-  .stream-card::after,
-  .chat-card::after,
-  .collab-box::after {
-    left: 14px;
-    right: 14px;
-  }
+main {
+  padding-top: 78px;
 }
 
-
-/* v1.8.22 — real constellation background, not random scratches
-   Uses SVG as BODY BACKGROUND, not as overlay. Two layers for parallax depth. */
-
-body {
-  background-image:
-    url("/assets/constellation-near.svg?v=1822"),
-    url("/assets/constellation-far.svg?v=1822"),
-    radial-gradient(circle at 12% 18%, rgba(138,61,255,.28), transparent 26%),
-    radial-gradient(circle at 86% 18%, rgba(153,76,255,.22), transparent 25%),
-    radial-gradient(circle at 78% 84%, rgba(121,49,236,.13), transparent 28%),
-    linear-gradient(180deg, #08050f 0%, #05040a 48%, #030209 100%) !important;
-  background-repeat: repeat-y, repeat-y, no-repeat, no-repeat, no-repeat, no-repeat;
-  background-size:
-    100% 1800px,
-    100% 1800px,
-    auto,
-    auto,
-    auto,
-    auto;
-  background-position:
-    center 0,
-    center 0,
-    center center,
-    center center,
-    center center,
-    center center;
-  background-attachment:
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed;
-  animation: none !important;
-}
-
-/* Remove failed pseudo geometry layers; keep only a very soft ambience. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -2;
-  background:
-    radial-gradient(circle at 18% 20%, rgba(179,92,255,.055), transparent 20%),
-    radial-gradient(circle at 84% 18%, rgba(179,92,255,.045), transparent 22%),
-    radial-gradient(circle at 50% 90%, rgba(126,45,255,.035), transparent 28%);
-  opacity: .55;
-  transform: none;
-  animation: none !important;
-}
-
-body::after {
-  opacity: .18 !important;
-}
-
-.noise {
-  opacity: .10 !important;
-  mix-blend-mode: overlay !important;
-}
-
-/* Enhanced scroll parallax: near layer moves faster, far layer slower. */
-@keyframes ivixConstellationBackgroundScroll {
-  from {
-    background-position:
-      center -120px,
-      center -40px,
-      center center,
-      center center,
-      center center,
-      center center;
-  }
-  to {
-    background-position:
-      center 520px,
-      center 230px,
-      center center,
-      center center,
-      center center,
-      center center;
-  }
-}
-
-/* Slow cinematic breathing without moving over content. */
-@keyframes ivixConstellationColorBreath {
-  0%, 100% {
-    filter: saturate(1.05) brightness(1);
-  }
-  50% {
-    filter: saturate(1.14) brightness(1.045);
-  }
-}
-
-body {
-  animation: ivixConstellationColorBreath 9s ease-in-out infinite !important;
-}
-
-@supports (animation-timeline: scroll()) {
-  body {
-    animation:
-      ivixConstellationBackgroundScroll linear both,
-      ivixConstellationColorBreath 9s ease-in-out infinite !important;
-    animation-timeline: scroll(root), auto;
-    animation-range: 0 100%, normal;
-    animation-duration: auto, 9s;
-    animation-fill-mode: both, none;
-  }
+#home,
+#about,
+#links,
+#community,
+#schedule,
+#clips,
+#collab {
+  scroll-margin-top: 92px;
 }
 
 @media (max-width: 760px) {
-  body {
-    background-size:
-      170% 1600px,
-      170% 1600px,
-      auto,
-      auto,
-      auto,
-      auto;
+  #ivix-bg-canvas {
+    display: none !important;
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  body {
-    animation: none !important;
+  .site-header {
+    height: 64px;
+  }
+
+  main {
+    padding-top: 64px;
+  }
+
+  #home,
+  #about,
+  #links,
+  #community,
+  #schedule,
+  #clips,
+  #collab {
+    scroll-margin-top: 76px;
   }
 }
