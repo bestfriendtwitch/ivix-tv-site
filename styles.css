@@ -2279,11 +2279,12 @@ main {
 
 
 /* =============================================================
-   v1.8.30 — stronger hover glow + cleaner support card
+   v1.8.31 — selected support card redesign
+   Implements the chosen neon orb/card layout on the real site.
    Scope: styles.css only. Starfield/background.js untouched.
 ============================================================= */
 
-/* Stronger but still controlled glow on main blocks */
+/* keep stronger hover glow, but do not overload performance */
 .panel,
 .content-grid > .panel,
 .collab-box,
@@ -2297,8 +2298,7 @@ main {
     transform .18s ease,
     border-color .18s ease,
     box-shadow .18s ease,
-    background .18s ease,
-    filter .18s ease;
+    background .18s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -2306,93 +2306,94 @@ main {
   .panel:hover,
   .collab-box:hover {
     transform: translateY(-3px);
-    border-color: rgba(202, 156, 255, .52);
+    border-color: rgba(202, 156, 255, .50);
     box-shadow:
-      0 30px 84px rgba(0, 0, 0, .52),
-      0 0 0 1px rgba(190, 126, 255, .16),
-      0 0 34px rgba(139, 61, 255, .18),
-      0 0 88px rgba(139, 61, 255, .10),
+      0 28px 76px rgba(0, 0, 0, .50),
+      0 0 0 1px rgba(190, 126, 255, .14),
+      0 0 34px rgba(139, 61, 255, .16),
+      0 0 82px rgba(139, 61, 255, .09),
       inset 0 1px 0 rgba(255, 255, 255, .10);
-  }
-
-  .content-grid > .panel:hover::before,
-  .collab-box:hover::before,
-  .stream-card:hover::before,
-  .chat-card:hover::before {
-    opacity: 1;
-    background:
-      radial-gradient(circle at 18% 0%, rgba(204, 151, 255, .27), transparent 30%),
-      radial-gradient(circle at 84% 12%, rgba(139, 61, 255, .16), transparent 28%),
-      linear-gradient(135deg, rgba(255,255,255,.078), transparent 34%);
   }
 
   .stream-card:hover,
   .chat-card:hover {
-    border-color: rgba(202, 156, 255, .46);
+    border-color: rgba(202, 156, 255, .44);
     box-shadow:
-      0 28px 80px rgba(0,0,0,.52),
-      0 0 38px rgba(139,61,255,.16),
+      0 26px 72px rgba(0,0,0,.50),
+      0 0 34px rgba(139,61,255,.14),
       inset 0 1px 0 rgba(255,255,255,.09);
   }
 
   .clip-card:hover {
     transform: translateY(-3px) scale(1.006);
-    border-color: rgba(202, 156, 255, .40);
+    border-color: rgba(202, 156, 255, .38);
     box-shadow:
-      0 20px 46px rgba(0,0,0,.30),
-      0 0 28px rgba(139,61,255,.14),
+      0 20px 44px rgba(0,0,0,.28),
+      0 0 26px rgba(139,61,255,.12),
       inset 0 1px 0 rgba(255,255,255,.08);
   }
 
   .social-icons-brand .social-link:hover,
-  .platform-card:hover {
-    transform: translateY(-2px);
-    box-shadow:
-      0 18px 38px rgba(0,0,0,.26),
-      0 0 26px rgba(139,61,255,.14),
-      inset 0 1px 0 rgba(255,255,255,.08);
-  }
-
+  .platform-card:hover,
   .command-category:hover,
   .announce-card:hover {
+    transform: translateY(-2px);
     border-color: rgba(202,156,255,.34);
     box-shadow:
-      0 18px 42px rgba(0,0,0,.26),
-      0 0 26px rgba(139,61,255,.10),
+      0 18px 40px rgba(0,0,0,.24),
+      0 0 24px rgba(139,61,255,.11),
       inset 0 1px 0 rgba(255,255,255,.07);
-  }
-
-  .btn-primary:hover {
-    box-shadow:
-      0 18px 38px rgba(126, 45, 255, .40),
-      0 0 28px rgba(179, 92, 255, .22),
-      inset 0 1px 0 rgba(255,255,255,.34);
   }
 }
 
-/* Cleaner “Поддержать канал” card */
+/* Main support block: closer to the selected mockup */
 .support.support-centered {
   position: relative;
   display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 124px;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 38%);
+  gap: 26px;
   align-items: stretch;
-  gap: 20px;
-  min-height: 100%;
   overflow: hidden;
+  min-height: 344px;
+  padding: clamp(24px, 2.2vw, 34px) !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(197, 135, 255, .36) !important;
+  background:
+    radial-gradient(circle at 77% 48%, rgba(136, 55, 255, .16), transparent 30%),
+    radial-gradient(circle at 16% 18%, rgba(172, 92, 255, .12), transparent 34%),
+    linear-gradient(135deg, rgba(31, 18, 49, .82), rgba(8, 5, 16, .94) 52%, rgba(11, 6, 20, .88)) !important;
+  box-shadow:
+    0 26px 70px rgba(0,0,0,.46),
+    0 0 0 1px rgba(255,255,255,.035),
+    0 0 36px rgba(139,61,255,.13),
+    inset 0 1px 0 rgba(255,255,255,.09) !important;
+}
+
+.support.support-centered::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, transparent 0 7%, rgba(190,126,255,.12) 13%, transparent 31%),
+    radial-gradient(circle at 100% 0%, rgba(207,158,255,.17), transparent 28%);
+  opacity: .82;
 }
 
 .support.support-centered::after {
   content: "";
   position: absolute;
-  right: -42px;
-  bottom: -52px;
-  width: 210px;
-  height: 210px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, rgba(179,92,255,.20), rgba(139,61,255,.07) 42%, transparent 70%);
+  left: 31px;
+  top: 123px;
+  width: min(310px, 36%);
+  height: 2px;
   pointer-events: none;
-  opacity: .86;
+  background:
+    radial-gradient(circle, rgba(194, 126, 255, .92) 0 4px, transparent 5px),
+    linear-gradient(90deg, rgba(194,126,255,.78), rgba(194,126,255,.18) 64%, transparent 100%);
+  box-shadow: 0 0 16px rgba(179,92,255,.34);
+  opacity: .95;
 }
 
 .support-centered .support-copy {
@@ -2401,52 +2402,127 @@ main {
   display: flex !important;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
   min-width: 0;
+  max-width: 520px;
 }
 
 .support-centered .panel-title {
-  margin-bottom: 13px;
+  display: block !important;
+  margin: 0 0 80px !important;
+  font-size: clamp(30px, 4vw, 58px) !important;
+  line-height: .92 !important;
+  letter-spacing: .012em !important;
+  text-transform: uppercase;
+  color: #f5f0ff !important;
+  text-shadow:
+    0 0 18px rgba(255,255,255,.18),
+    0 0 28px rgba(179,92,255,.20);
 }
 
 .support-centered .panel-title .purple-icon {
-  width: 26px;
-  height: 26px;
-  display: inline-grid;
-  place-items: center;
-  border-radius: 9px;
-  background: rgba(179,92,255,.12);
-  border: 1px solid rgba(179,92,255,.18);
-  font-size: 18px;
+  display: none !important;
+}
+
+.support-centered .panel-title::first-line {
+  color: #fff;
+}
+
+.support-centered .panel-title::after {
+  content: "";
+  display: block;
+  width: 100%;
+  max-width: 342px;
+  height: 12px;
+  margin-top: 22px;
+  background:
+    radial-gradient(circle at 0 50%, rgba(190,126,255,.95) 0 5px, transparent 6px),
+    linear-gradient(90deg, rgba(190,126,255,.52), rgba(190,126,255,.12) 72%, transparent 72%),
+    repeating-linear-gradient(90deg, transparent 0 11px, rgba(190,126,255,.45) 11px 17px);
+  background-size: 100% 2px, 82% 2px, 90px 2px;
+  background-position: 0 50%, 22px 50%, right 50%;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 9px rgba(179,92,255,.36));
 }
 
 .support-centered .support-copy p {
-  max-width: 100%;
-  margin: 0;
-  color: #c5bbd4;
+  max-width: 440px;
+  margin: 0 0 22px;
+  color: rgba(226, 216, 242, .84);
+  font-size: clamp(15px, 1.25vw, 18px);
   line-height: 1.58;
 }
 
 .support-pills {
-  margin: 15px 0 17px;
-  gap: 7px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 28px;
 }
 
 .support-pills span {
-  padding: 7px 10px;
-  border-color: rgba(202,156,255,.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 9px 15px;
+  border-radius: 14px;
+  border: 1px solid rgba(188, 111, 255, .34);
   background:
-    linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.026));
-  color: #dccbff;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
+    radial-gradient(circle at 50% 0%, rgba(179,92,255,.18), transparent 70%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+  color: #efe7ff;
+  font-weight: 800;
+  letter-spacing: .015em;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 0 18px rgba(139,61,255,.08);
 }
+
+.support-pills span:nth-child(1)::before { content: "☊"; color: #bd72ff; }
+.support-pills span:nth-child(2)::before { content: "✦"; color: #bd72ff; }
+.support-pills span:nth-child(3)::before { content: "▰"; color: #bd72ff; }
 
 .support-centered .support-copy .btn,
 .support-centered .btn {
-  margin-top: auto;
-  min-height: 48px;
-  padding-inline: 22px;
-  border-radius: 13px;
-  white-space: nowrap;
+  min-width: min(100%, 430px);
+  min-height: 68px;
+  padding: 0 24px;
+  border-radius: 17px;
+  font-size: clamp(15px, 1.5vw, 22px);
+  letter-spacing: .02em;
+  justify-content: space-between;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,.26), transparent 35%),
+    linear-gradient(135deg, #b448ff, #7b22f5 54%, #9b3dff) !important;
+  border: 1px solid rgba(239, 205, 255, .46) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.09),
+    0 18px 42px rgba(126,45,255,.37),
+    0 0 42px rgba(179,92,255,.24),
+    inset 0 1px 0 rgba(255,255,255,.34),
+    inset 0 -16px 28px rgba(77,22,163,.24) !important;
+}
+
+.support-centered .support-copy .btn::before,
+.support-centered .btn::before {
+  content: "♡";
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-right: 10px;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.support-centered .support-copy .btn::after,
+.support-centered .btn::after {
+  content: "→";
+  margin-left: auto;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1;
 }
 
 .support-visual {
@@ -2454,117 +2530,203 @@ main {
   z-index: 2;
   display: grid !important;
   place-items: center;
-  min-height: 0;
-  padding-left: 18px;
-  border-left: 1px solid rgba(255,255,255,.075);
+  min-height: 288px;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 55%, rgba(126,45,255,.20), transparent 48%),
+    linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.008));
+  border: 1px solid rgba(190,126,255,.20);
 }
 
 .support-visual::before {
   content: "";
   position: absolute;
-  inset: 16px 0 16px 12px;
-  border-radius: 22px;
+  inset: 22px;
+  border-radius: 34px;
+  border: 1px solid rgba(190,126,255,.28);
   background:
-    radial-gradient(circle at 50% 36%, rgba(179,92,255,.20), transparent 56%),
-    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
-  border: 1px solid rgba(255,255,255,.065);
+    radial-gradient(circle at 50% 58%, rgba(179,92,255,.13), transparent 44%),
+    radial-gradient(circle at 25% 15%, rgba(255,255,255,.045), transparent 16%);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.055),
-    0 0 28px rgba(139,61,255,.08);
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 0 26px rgba(139,61,255,.10);
+}
+
+.support-visual::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 38px;
+  width: min(280px, 80%);
+  height: 54px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse at center, rgba(255,255,255,.65), rgba(190,126,255,.48) 18%, rgba(139,61,255,.16) 48%, transparent 72%);
+  border: 1px solid rgba(190,126,255,.34);
+  box-shadow:
+    0 0 22px rgba(255,255,255,.18),
+    0 0 54px rgba(179,92,255,.36);
   opacity: .92;
 }
 
+/* Replace the ugly jar with the selected energy orb */
 .jar-glow {
-  width: 96px !important;
-  height: 118px !important;
-  min-width: 96px !important;
-  border-width: 1px !important;
-  border-top-width: 8px !important;
-  border-radius: 18px 18px 28px 28px !important;
+  position: relative !important;
+  z-index: 4;
+  width: clamp(138px, 19vw, 225px) !important;
+  height: clamp(138px, 19vw, 225px) !important;
+  min-width: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
   background:
-    radial-gradient(circle at 50% 75%, rgba(179,92,255,.42), transparent 50%),
-    linear-gradient(180deg, rgba(255,255,255,.15), rgba(139,61,255,.07)) !important;
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.94) 0 8%, rgba(245,225,255,.72) 9% 13%, transparent 14%),
+    radial-gradient(circle at 50% 50%, rgba(105,24,180,.70) 0 30%, transparent 31%),
+    radial-gradient(circle at 50% 50%, transparent 0 48%, rgba(255,255,255,.85) 49%, rgba(214,155,255,.82) 51%, rgba(129,44,255,.26) 54%, transparent 60%),
+    radial-gradient(circle at 40% 30%, rgba(255,255,255,.52), rgba(191,116,255,.24) 24%, rgba(102,30,180,.22) 54%, rgba(26,10,45,.86) 100%) !important;
   box-shadow:
-    0 0 34px rgba(139,61,255,.20),
-    inset 0 1px 0 rgba(255,255,255,.20),
-    inset 0 -24px 38px rgba(139,61,255,.14) !important;
+    0 0 18px rgba(255,255,255,.24),
+    0 0 38px rgba(179,92,255,.62),
+    0 0 96px rgba(126,45,255,.42),
+    inset 0 0 24px rgba(255,255,255,.24),
+    inset 0 0 58px rgba(179,92,255,.32) !important;
+  animation: supportOrbPulse 4.8s ease-in-out infinite;
 }
 
 .jar-glow::before {
-  left: 18px !important;
-  right: 18px !important;
-  top: -17px !important;
-  height: 8px !important;
+  content: "";
+  position: absolute !important;
+  inset: -16px !important;
+  width: auto !important;
+  height: auto !important;
+  left: -16px !important;
+  right: -16px !important;
+  top: -16px !important;
+  bottom: -16px !important;
+  border-radius: 50% !important;
+  background:
+    repeating-conic-gradient(from 0deg, rgba(255,255,255,.34) 0deg 7deg, rgba(179,92,255,.08) 8deg 14deg, transparent 15deg 24deg),
+    radial-gradient(circle, transparent 0 58%, rgba(190,126,255,.34) 59%, transparent 64%);
+  filter: blur(.4px);
+  opacity: .86;
+  animation: supportOrbSpin 13s linear infinite;
+}
+
+.jar-glow::after {
+  content: "";
+  position: absolute;
+  inset: -34px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 0 60%, rgba(190,126,255,.17) 61% 62%, transparent 64%),
+    radial-gradient(circle, transparent 0 70%, rgba(255,255,255,.12) 71% 72%, transparent 74%);
   opacity: .82;
+  animation: supportOrbSpinReverse 18s linear infinite;
 }
 
 .jar-heart {
-  top: 20px !important;
-  width: 38px !important;
-  height: 38px !important;
-  font-size: 22px !important;
-  box-shadow: 0 0 22px rgba(179,92,255,.38) !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  z-index: 5;
+  transform: translate(-50%, -50%) !important;
+  width: clamp(46px, 5.4vw, 72px) !important;
+  height: clamp(46px, 5.4vw, 72px) !important;
+  border-radius: 50% !important;
+  display: grid !important;
+  place-items: center !important;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,255,255,.28), rgba(179,92,255,.36) 48%, rgba(80,20,150,.42));
+  border: 1px solid rgba(255,255,255,.36);
+  color: #fff !important;
+  font-size: clamp(31px, 4vw, 52px) !important;
+  line-height: 1 !important;
+  box-shadow:
+    0 0 24px rgba(255,255,255,.38),
+    0 0 48px rgba(179,92,255,.62),
+    inset 0 1px 0 rgba(255,255,255,.38) !important;
+  text-shadow: 0 0 16px rgba(255,255,255,.58);
 }
 
-.jar-text {
-  left: 8px !important;
-  right: 8px !important;
-  bottom: 18px !important;
-  font-size: 9px !important;
-  line-height: 1.18 !important;
-}
-
+.jar-text,
 .coin {
-  width: 12px !important;
-  height: 12px !important;
-  opacity: .78;
+  display: none !important;
 }
 
-.coin-a { left: 17px !important; top: 66px !important; }
-.coin-b { right: 18px !important; top: 72px !important; width: 10px !important; height: 10px !important; }
-.coin-c { left: 43px !important; top: 92px !important; width: 9px !important; height: 9px !important; }
+.support-visual .jar-glow + *,
+.support-visual .coin {
+  display: none !important;
+}
+
+@keyframes supportOrbPulse {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1) saturate(1.05);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.025);
+    filter: brightness(1.13) saturate(1.18);
+  }
+}
+
+@keyframes supportOrbSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes supportOrbSpinReverse {
+  to { transform: rotate(-360deg); }
+}
 
 @media (hover: hover) and (pointer: fine) {
   .support.support-centered:hover {
-    border-color: rgba(219, 181, 255, .58);
+    transform: translateY(-4px);
+    border-color: rgba(230, 199, 255, .62) !important;
     box-shadow:
-      0 32px 88px rgba(0,0,0,.52),
-      0 0 0 1px rgba(202,156,255,.15),
-      0 0 42px rgba(139,61,255,.20),
-      0 0 105px rgba(139,61,255,.10),
-      inset 0 1px 0 rgba(255,255,255,.10);
+      0 34px 92px rgba(0,0,0,.54),
+      0 0 0 1px rgba(230,199,255,.15),
+      0 0 52px rgba(179,92,255,.26),
+      0 0 118px rgba(126,45,255,.14),
+      inset 0 1px 0 rgba(255,255,255,.11) !important;
   }
 
   .support.support-centered:hover .jar-glow {
-    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.16) saturate(1.20);
     box-shadow:
-      0 0 42px rgba(139,61,255,.28),
-      0 0 70px rgba(179,92,255,.12),
-      inset 0 1px 0 rgba(255,255,255,.22),
-      inset 0 -24px 38px rgba(139,61,255,.18) !important;
+      0 0 24px rgba(255,255,255,.32),
+      0 0 52px rgba(179,92,255,.72),
+      0 0 122px rgba(126,45,255,.48),
+      inset 0 0 26px rgba(255,255,255,.28),
+      inset 0 0 62px rgba(179,92,255,.38) !important;
+  }
+
+  .support-centered .support-copy .btn:hover,
+  .support-centered .btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 20px 46px rgba(126,45,255,.46),
+      0 0 52px rgba(179,92,255,.30),
+      inset 0 1px 0 rgba(255,255,255,.38),
+      inset 0 -16px 28px rgba(77,22,163,.24) !important;
   }
 }
 
 @media (max-width: 1180px) {
   .support.support-centered {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .support-centered .support-copy {
+    max-width: none;
+  }
+
+  .support-centered .panel-title {
+    margin-bottom: 68px !important;
   }
 
   .support-visual {
-    min-height: 118px;
-    padding-left: 0;
-    border-left: 0;
-    border-top: 1px solid rgba(255,255,255,.07);
-    padding-top: 16px;
-  }
-
-  .support-visual::before {
-    inset: 14px 0 0;
-  }
-
-  .support-centered .support-copy .btn,
-  .support-centered .btn {
-    margin-top: 17px;
+    min-height: 260px;
   }
 }
 
@@ -2583,15 +2745,23 @@ main {
   }
 
   .support.support-centered {
-    gap: 14px;
+    padding: 22px !important;
+    gap: 18px;
   }
 
-  .support-visual {
-    display: none !important;
+  .support-centered .panel-title {
+    margin-bottom: 54px !important;
+    font-size: 34px !important;
   }
 
   .support-centered .support-copy .btn,
   .support-centered .btn {
-    width: 100%;
+    min-width: 100%;
+    min-height: 58px;
+    font-size: 15px;
+  }
+
+  .support-visual {
+    display: none !important;
   }
 }
