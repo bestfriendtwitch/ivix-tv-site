@@ -252,7 +252,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала · ivixtv.ru. <span class="site-version">v1.6</span></p>
+    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала · ivixtv.ru. <span class="site-version">v1.6.1</span></p>
     <a href="#home">Наверх ↑</a>
   </footer>
 
