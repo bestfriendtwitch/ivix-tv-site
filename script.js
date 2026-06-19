@@ -12,9 +12,22 @@ navLinks.forEach(link => {
     nav.classList.remove('open');
     burger?.setAttribute('aria-expanded', 'false');
 
+    const href = link.getAttribute('href');
+
     if (link.dataset.scrollTop === 'true') {
       event.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (href === '#about') {
+      const target = document.querySelector('#about');
+      if (target) {
+        event.preventDefault();
+        const headerHeight = document.querySelector('.site-header')?.offsetHeight || 78;
+        const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - 2;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }
     }
   });
 });
@@ -29,7 +42,7 @@ const navTargets = navLinks
 const setActive = () => {
   if (!navTargets.length) return;
 
-  const anchorY = window.scrollY + Math.min(window.innerHeight * 0.30, 260);
+  const anchorY = window.scrollY + Math.min(window.innerHeight * 0.22, 190);
   let current = navTargets[0];
 
   navTargets.forEach(item => {
@@ -64,19 +77,89 @@ const addTwitchParents = params => {
   twitchParents.forEach(parent => params.append('parent', parent));
 };
 
-const player = document.getElementById('twitch-player');
+const playerTarget = document.getElementById('twitch-player');
 const wrap = document.querySelector('.player-wrap');
-if (player && wrap) {
+const statusDot = document.getElementById('stream-status-dot');
+const statusText = document.getElementById('stream-status-text');
+
+const setStreamStatus = state => {
+  if (!statusDot || !statusText) return;
+
+  statusDot.classList.remove('status-online', 'status-offline', 'status-checking');
+
+  if (state === 'online') {
+    statusDot.classList.add('status-online');
+    statusText.textContent = 'Сейчас в эфире';
+    return;
+  }
+
+  if (state === 'checking') {
+    statusDot.classList.add('status-checking');
+    statusText.textContent = 'Проверяем эфир';
+    return;
+  }
+
+  statusDot.classList.add('status-offline');
+  statusText.textContent = 'Сейчас не в эфире';
+};
+
+const loadScript = src => new Promise((resolve, reject) => {
+  const existing = document.querySelector(`script[src="${src}"]`);
+  if (existing) {
+    existing.addEventListener('load', resolve, { once: true });
+    existing.addEventListener('error', reject, { once: true });
+    if (window.Twitch?.Player) resolve();
+    return;
+  }
+
+  const script = document.createElement('script');
+  script.src = src;
+  script.async = true;
+  script.onload = resolve;
+  script.onerror = reject;
+  document.head.appendChild(script);
+});
+
+if (playerTarget && wrap) {
   const channel = wrap.dataset.channel || 'ivix_tv';
+
   if (validHost) {
-    const params = new URLSearchParams();
-    params.set('channel', channel);
-    params.set('muted', 'true');
-    addTwitchParents(params);
-    player.src = `https://player.twitch.tv/?${params.toString()}`;
-    player.addEventListener('load', () => wrap.classList.add('player-ready'), { once: true });
+    setStreamStatus('checking');
+
+    loadScript('https://player.twitch.tv/js/embed/v1.js')
+      .then(() => {
+        const player = new Twitch.Player('twitch-player', {
+          channel,
+          muted: true,
+          width: '100%',
+          height: '100%',
+          parent: twitchParents
+        });
+
+        let statusResolved = false;
+        const resolveStatus = state => {
+          statusResolved = true;
+          setStreamStatus(state);
+        };
+
+        player.addEventListener(Twitch.Player.READY, () => {
+          wrap.classList.add('player-ready');
+          window.setTimeout(() => {
+            if (!statusResolved) setStreamStatus('offline');
+          }, 3500);
+        });
+
+        player.addEventListener(Twitch.Player.ONLINE, () => resolveStatus('online'));
+        player.addEventListener(Twitch.Player.OFFLINE, () => resolveStatus('offline'));
+        player.addEventListener(Twitch.Player.ENDED, () => resolveStatus('offline'));
+      })
+      .catch(() => {
+        setStreamStatus('offline');
+        playerTarget.remove();
+      });
   } else {
-    player.remove();
+    setStreamStatus('offline');
+    playerTarget.remove();
   }
 }
 
