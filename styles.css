@@ -2459,8 +2459,8 @@ body::after {
 
 body {
   background-image:
-    url("/assets/bg/constellation-near.svg?v=1822"),
-    url("/assets/bg/constellation-far.svg?v=1822"),
+    url("/assets/constellation-near.svg?v=1822"),
+    url("/assets/constellation-far.svg?v=1822"),
     radial-gradient(circle at 12% 18%, rgba(138,61,255,.28), transparent 26%),
     radial-gradient(circle at 86% 18%, rgba(153,76,255,.22), transparent 25%),
     radial-gradient(circle at 78% 84%, rgba(121,49,236,.13), transparent 28%),
@@ -2591,9 +2591,9 @@ body {
 
 body {
   background-image:
-    url("/assets/bg/constellation-near.svg?v=1823"),
-    url("/assets/bg/constellation-mid.svg?v=1823"),
-    url("/assets/bg/constellation-far.svg?v=1823"),
+    url("/assets/constellation-near.svg?v=1823"),
+    url("/assets/constellation-mid.svg?v=1823"),
+    url("/assets/constellation-far.svg?v=1823"),
     radial-gradient(circle at 12% 18%, rgba(138,61,255,.28), transparent 26%),
     radial-gradient(circle at 86% 18%, rgba(153,76,255,.22), transparent 25%),
     radial-gradient(circle at 78% 84%, rgba(121,49,236,.13), transparent 28%),
@@ -2750,26 +2750,26 @@ body {
 }
 
 .bg-layer-far {
-  background-image: url("/assets/bg/constellation-far.svg?v=18241");
+  background-image: url("/assets/bg/constellation-far.svg?v=1824");
   opacity: .34;
   filter: blur(.2px) saturate(1.05);
 }
 
 .bg-layer-mid {
-  background-image: url("/assets/bg/constellation-mid.svg?v=18241");
+  background-image: url("/assets/bg/constellation-mid.svg?v=1824");
   opacity: .47;
   filter: saturate(1.08);
   animation: ivixBgLayerBreathA 13s ease-in-out infinite;
 }
 
 .bg-layer-near {
-  background-image: url("/assets/bg/constellation-near.svg?v=18241");
+  background-image: url("/assets/bg/constellation-near.svg?v=1824");
   opacity: .52;
   filter: saturate(1.10) brightness(1.02);
 }
 
 .bg-layer-shards {
-  background-image: url("/assets/bg/constellation-shards.svg?v=18241");
+  background-image: url("/assets/bg/constellation-shards.svg?v=1824");
   opacity: .50;
   mix-blend-mode: screen;
   filter: saturate(1.12) brightness(1.06);
