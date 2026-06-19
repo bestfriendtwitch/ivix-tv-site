@@ -1757,333 +1757,231 @@ html {
 }
 
 
-/* v1.8.7 — Step 1: safer visual polish for cards and sections only
-   Scope: styles.css only. No HTML/JS/DNS changes. */
+/* v1.8.8 — softer visual polish + Step 2 clip cards
+   Scope: styles.css only. Glow rolled back to calm values. */
 
-/* Global depth */
-:root {
-  --panel-glow: 0 24px 80px rgba(0, 0, 0, .52), 0 0 38px rgba(139, 61, 255, .10);
-  --panel-glow-hover: 0 32px 96px rgba(0, 0, 0, .62), 0 0 54px rgba(179, 92, 255, .18);
-  --violet-line: rgba(190, 126, 255, .34);
-  --violet-soft: rgba(179, 92, 255, .13);
-}
-
-/* More glass, less flatness */
+/* Calm global cards back down */
 .glass,
 .panel,
 .stream-card,
 .chat-card,
 .collab-box {
-  border-color: rgba(190, 126, 255, .24);
-  box-shadow: var(--panel-glow), inset 0 1px 0 rgba(255, 255, 255, .075);
-}
-
-.glass {
-  background:
-    radial-gradient(circle at 18% 0%, rgba(179, 92, 255, .14), transparent 32%),
-    linear-gradient(180deg, rgba(34, 29, 55, .84), rgba(10, 8, 18, .92));
-}
-
-/* Softer neon edge */
-.panel::after,
-.stream-card::after,
-.chat-card::after,
-.collab-box::after {
-  content: "";
-  position: absolute;
-  inset: 1px;
-  border-radius: inherit;
-  pointer-events: none;
-  background:
-    linear-gradient(135deg, rgba(255,255,255,.105), transparent 30%),
-    linear-gradient(315deg, rgba(179, 92, 255, .14), transparent 34%);
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  padding: 1px;
-  opacity: .62;
-}
-
-/* Main cards: cleaner hover */
-.content-grid > .panel,
-.collab-box,
-.live-zone .stream-card,
-.live-zone .chat-card {
-  transition:
-    transform .22s ease,
-    border-color .22s ease,
-    box-shadow .22s ease,
-    background .22s ease;
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.05);
+  border-color: rgba(179, 92, 255, .22);
 }
 
 .content-grid > .panel:hover,
-.collab-box:hover {
-  transform: translateY(-4px);
-  border-color: rgba(210, 174, 255, .42);
-  box-shadow: var(--panel-glow-hover), inset 0 1px 0 rgba(255,255,255,.1);
+.collab-box:hover,
+.panel:hover {
+  transform: translateY(-2px);
+  border-color: rgba(190, 126, 255, .30);
+  box-shadow: 0 26px 74px rgba(0,0,0,.48), 0 0 24px rgba(139,61,255,.06), inset 0 1px 0 rgba(255,255,255,.065);
 }
 
-/* More expressive section headings */
-.panel-title {
-  margin-bottom: 20px;
-}
-
+/* Keep headings a little cleaner, but not overlit */
 .panel-title h2 {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  font-size: 20px;
-  letter-spacing: .055em;
-  text-shadow: 0 0 18px rgba(179, 92, 255, .14);
-}
-
-.panel-title h2::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -9px;
-  width: 46px;
-  height: 2px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(179,92,255,.95), rgba(255,255,255,.12));
-  box-shadow: 0 0 14px rgba(179,92,255,.36);
+  letter-spacing: .04em;
+  text-shadow: none;
 }
 
 .purple-icon {
-  min-width: 34px;
-  width: 34px;
-  height: 34px;
-  display: inline-grid;
-  place-items: center;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(139,61,255,.23), rgba(255,255,255,.045));
-  border: 1px solid rgba(190,126,255,.20);
-  color: #d9c5ff;
-  font-size: 22px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 0 20px rgba(139,61,255,.16);
+  text-shadow: 0 0 12px rgba(172,82,255,.35);
 }
 
-/* Better vertical rhythm */
-.content-grid {
-  gap: 20px;
-  padding-top: 34px;
-}
-
-.content-grid > .panel {
-  padding: 28px;
-}
-
-.about p,
-.support p,
-.collab p,
-.announce-card p,
-.panel-copy,
-.panel-hint,
-.micro-note {
-  color: #bfb4cf;
-}
-
-/* About block list */
-.about .feature-list {
-  gap: 11px;
-  margin-top: 18px;
-}
-
-.feature-list li {
-  border: 1px solid rgba(255,255,255,.07);
-  background: rgba(255,255,255,.025);
-  border-radius: 12px;
-  padding: 10px 12px 10px 38px;
-}
-
-.feature-list li::before {
-  left: 13px;
-  top: 10px;
-  color: #c69aff;
-  text-shadow: 0 0 12px rgba(179,92,255,.5);
-}
-
-/* Schedule card */
-.announce-card {
-  border-color: rgba(190, 126, 255, .26);
-  background:
-    radial-gradient(circle at 12% 0%, rgba(179,92,255,.14), transparent 26%),
-    rgba(255,255,255,.035);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-}
-
-.announce-card h3 {
-  letter-spacing: -.02em;
-}
-
-.announce-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.announce-tags span {
-  border: 1px solid rgba(190,126,255,.18);
-  background: rgba(139,61,255,.075);
-  color: #dbcaff;
-  border-radius: 999px;
-  padding: 8px 11px;
-  font-size: 12px;
-  font-weight: 900;
-}
-
-/* Commands: more premium but no HTML changes */
-.command-grid div {
-  border-radius: 14px;
-  background:
-    radial-gradient(circle at 12% 0%, rgba(179,92,255,.12), transparent 32%),
-    rgba(255,255,255,.026);
-  border-color: rgba(255,255,255,.085);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
-}
-
+/* Softer command hover */
 .command-grid div:hover {
-  transform: translateY(-3px);
-  border-color: rgba(190,126,255,.36);
-  background:
-    radial-gradient(circle at 16% 0%, rgba(179,92,255,.18), transparent 34%),
-    rgba(255,255,255,.04);
-  box-shadow: 0 14px 28px rgba(0,0,0,.22), 0 0 26px rgba(139,61,255,.10);
+  transform: translateY(-1px);
+  border-color: rgba(179, 92, 255, .30);
 }
 
-.command-grid b {
-  color: #dec8ff;
-}
-
-.command-grid span {
-  color: #a99dbd;
-}
-
-/* Social / links cards: tighter and more alive */
-.social-icons-brand .social-link {
-  border-color: rgba(255,255,255,.09);
-  background:
-    radial-gradient(circle at 20% 0%, rgba(179,92,255,.13), transparent 34%),
-    rgba(255,255,255,.045);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
-}
-
+/* Softer social hover */
 .social-icons-brand .social-link:hover {
-  transform: translateY(-4px);
-  border-color: rgba(190,126,255,.35);
-  box-shadow: 0 18px 34px rgba(0,0,0,.26), 0 0 28px rgba(139,61,255,.10);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(0,0,0,.18), 0 0 18px rgba(139,61,255,.07);
 }
 
-.social-icons-brand .social-link::after {
-  content: "↗";
-  position: absolute;
-  right: 12px;
-  top: 10px;
-  color: rgba(255,255,255,.36);
-  font-size: 12px;
-  transition: transform .2s ease, color .2s ease;
+/* Step 2 — clip cards: clearer media cards, not overly glowing */
+.clip-grid {
+  gap: 18px;
 }
 
-.social-icons-brand .social-link:hover::after {
-  transform: translate(2px, -2px);
-  color: rgba(255,255,255,.8);
-}
-
-/* Support card: richer, but keeps existing layout */
-.support {
-  background:
-    radial-gradient(circle at 84% 78%, rgba(179,92,255,.18), transparent 34%),
-    linear-gradient(180deg, rgba(34, 29, 55, .84), rgba(10, 8, 18, .92));
-}
-
-.jar,
-.jar-glow {
-  box-shadow:
-    0 0 52px rgba(139,61,255,.26),
-    inset 0 1px 0 rgba(255,255,255,.14),
-    inset 0 -24px 46px rgba(139,61,255,.18);
-}
-
-/* Clips cards: only card shell polish, not thumbnail redesign */
 .clip-card {
-  border-color: rgba(255,255,255,.09);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.08);
   background:
-    radial-gradient(circle at 18% 0%, rgba(179,92,255,.12), transparent 35%),
-    rgba(255,255,255,.034);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
 
 .clip-card:hover {
-  border-color: rgba(190,126,255,.36);
-  box-shadow: 0 20px 42px rgba(0,0,0,.28), 0 0 32px rgba(139,61,255,.12);
-}
-
-.clip-meta {
-  border-top: 1px solid rgba(255,255,255,.055);
-  padding-top: 10px;
-}
-
-/* Collaboration block */
-.collab-box {
-  background:
-    radial-gradient(circle at 84% 20%, rgba(179,92,255,.18), transparent 34%),
-    radial-gradient(circle at 12% 100%, rgba(93,41,203,.13), transparent 32%),
-    linear-gradient(180deg, rgba(34, 29, 55, .84), rgba(10, 8, 18, .92));
-}
-
-.collab h2 {
-  text-shadow: 0 0 26px rgba(179,92,255,.18);
-}
-
-.contact-list a {
-  border-color: rgba(190,126,255,.18);
-  background: rgba(255,255,255,.04);
-  transition: transform .2s ease, border-color .2s ease, background .2s ease;
-}
-
-.contact-list a:hover {
   transform: translateY(-2px);
-  border-color: rgba(190,126,255,.36);
-  background: rgba(139,61,255,.12);
+  border-color: rgba(190, 126, 255, .28);
+  box-shadow: 0 16px 34px rgba(0,0,0,.24), 0 0 18px rgba(139,61,255,.07);
 }
 
-/* Header a bit cleaner without changing nav logic */
-.site-header {
-  box-shadow: 0 10px 34px rgba(0,0,0,.28);
+.clip-card::before {
+  opacity: 0;
 }
 
-.main-nav a {
-  transition: color .2s ease, opacity .2s ease;
+.clip-thumb,
+.clip-thumb-simple,
+.clip-thumb-modern {
+  height: 176px;
+  border-radius: 15px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
 }
 
-.main-nav a.active {
-  color: #fff;
-  text-shadow: 0 0 18px rgba(179,92,255,.38);
+/* Works with current simple thumbnails */
+.clip-thumb-simple {
+  position: relative;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(179,92,255,.26), transparent 32%),
+    linear-gradient(145deg, #171126, #05040a 78%);
 }
 
-/* Mobile: keep it calmer */
+.clip-thumb-simple::before {
+  content: "TWITCH";
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  z-index: 4;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(10, 8, 18, .68);
+  border: 1px solid rgba(255,255,255,.10);
+  color: #d9c5ff;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.clip-thumb-simple::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.22) 48%, rgba(0,0,0,.62)),
+    radial-gradient(circle at 80% 18%, rgba(255,255,255,.08), transparent 12%);
+}
+
+.clip-thumb-simple .clip-glyph {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  color: rgba(255,255,255,.92);
+  font-family: "Russo One", Inter, sans-serif;
+  font-size: 48px;
+  letter-spacing: .02em;
+  text-shadow: 0 0 22px rgba(179,92,255,.38);
+}
+
+.clip-thumb-simple .clip-record > span {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff3355, #b35cff);
+  box-shadow: 0 0 22px rgba(255,48,77,.26), 0 0 24px rgba(179,92,255,.16);
+}
+
+.clip-thumb-simple i,
+.clip-thumb i {
+  width: 42px;
+  height: 42px;
+  right: 14px;
+  bottom: 14px;
+  z-index: 5;
+  border: 1px solid rgba(255,255,255,.16);
+  background: linear-gradient(135deg, #8b3dff, #a955ff);
+  box-shadow: 0 0 18px rgba(139,61,255,.28);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.clip-card:hover .clip-thumb-simple i,
+.clip-card:hover .clip-thumb i {
+  transform: scale(1.04);
+  box-shadow: 0 0 22px rgba(139,61,255,.34);
+}
+
+/* Also supports older modern thumbnails without changing HTML */
+.clip-thumb-modern {
+  padding: 14px;
+  justify-content: flex-end;
+}
+
+.clip-thumb-modern span {
+  background: rgba(10, 8, 18, .68);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.clip-thumb-modern strong {
+  font-size: 20px;
+  line-height: 1.05;
+}
+
+.clip-thumb-modern small {
+  color: #d4c9ee;
+}
+
+/* Clip text area */
+.clip-meta {
+  margin: 2px 0 9px;
+  color: #afa3c5;
+}
+
+.clip-meta em {
+  color: #c59fff;
+}
+
+.clip-card h3 {
+  font-size: 16px;
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+.clip-card p {
+  color: #aaa0bc;
+}
+
+.clip-action {
+  margin-top: auto;
+  padding-top: 12px;
+  color: #d9c5ff;
+}
+
+.clip-action::after {
+  content: "";
+  display: block;
+  width: 42px;
+  height: 2px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(179,92,255,.8), transparent);
+  opacity: .65;
+}
+
 @media (max-width: 760px) {
-  .content-grid {
-    gap: 16px;
-    padding-top: 24px;
+  .clip-thumb,
+  .clip-thumb-simple,
+  .clip-thumb-modern {
+    height: 174px;
   }
 
-  .content-grid > .panel {
-    padding: 22px;
-  }
-
-  .panel-title h2 {
-    font-size: 18px;
-  }
-
-  .purple-icon {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-  }
-
-  .feature-list li {
-    padding-top: 9px;
-    padding-bottom: 9px;
+  .clip-card:hover,
+  .content-grid > .panel:hover,
+  .collab-box:hover,
+  .panel:hover {
+    transform: none;
   }
 }
