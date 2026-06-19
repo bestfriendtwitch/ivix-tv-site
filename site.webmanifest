@@ -1,13 +1,14 @@
 {
   "name": "IVIX_TV",
   "short_name": "IVIX_TV",
+  "description": "Фан-хаб Twitch-канала IVIX_TV",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#05040a",
+  "background_color": "#090612",
   "theme_color": "#7c35ff",
   "icons": [
     {
-      "src": "assets/favicon.svg",
+      "src": "/assets/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml"
     }

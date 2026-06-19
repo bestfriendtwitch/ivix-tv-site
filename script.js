@@ -1,179 +1,248 @@
-const burger = document.querySelector('.burger');
-const nav = document.querySelector('.main-nav');
-const navLinks = [...document.querySelectorAll('.main-nav a')];
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IVIX_TV — стримы, клипы и комьюнити Twitch-канала</title>
+  <meta name="description" content="Фан-хаб IVIX_TV: Twitch-стримы, клипы, анонсы, команды чата, соцсети и поддержка канала." />
+  <meta name="keywords" content="IVIX_TV, ivix_tv, Twitch, стример, стримы, клипы, Just Chatting, хорроры, фильмы" />
+  <meta name="author" content="IVIX_TV" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ivixtv.ru/" />
 
-burger?.addEventListener('click', () => {
-  const open = nav.classList.toggle('open');
-  burger.setAttribute('aria-expanded', String(open));
-});
+  <meta property="og:locale" content="ru_RU" />
+  <meta property="og:title" content="IVIX_TV — стримы, клипы и комьюнити" />
+  <meta property="og:description" content="Живое общение, фильмы, хорроры и чат, который часто становится главным героем." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="IVIX_TV" />
+  <meta property="og:url" content="https://ivixtv.ru/" />
+  <meta property="og:image" content="https://ivixtv.ru/assets/og-preview.png?v=186" />
+  <meta property="og:image:secure_url" content="https://ivixtv.ru/assets/og-preview.png?v=186" />
+  <meta property="og:image:alt" content="Превью сайта IVIX_TV" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
 
-navLinks.forEach(link => {
-  link.addEventListener('click', event => {
-    nav.classList.remove('open');
-    burger?.setAttribute('aria-expanded', 'false');
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="IVIX_TV — стримы, клипы и комьюнити" />
+  <meta name="twitter:description" content="Живое общение, фильмы, хорроры и твой любимый чат." />
+  <meta name="twitter:image" content="https://ivixtv.ru/assets/og-preview.png?v=186" />
+  <meta name="twitter:image:alt" content="Превью сайта IVIX_TV" />
+  <meta name="theme-color" content="#7c35ff" />
+  <meta name="application-name" content="IVIX_TV" />
 
-    const href = link.getAttribute('href');
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="site.webmanifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Russo+One&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
 
-    if (link.dataset.scrollTop === 'true') {
-      event.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
+  <header class="site-header">
+    <a class="logo" href="#home" aria-label="IVIX_TV главная"><span>IVIX</span><em>tv</em></a>
 
-    if (href === '#about') {
-      const target = document.querySelector('#about');
-      if (target) {
-        event.preventDefault();
-        const headerHeight = document.querySelector('.site-header')?.offsetHeight || 78;
-        const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - 2;
-        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-      }
-    }
-  });
-});
+    <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
 
-const navTargets = navLinks
-  .map(link => {
-    const selector = link.getAttribute('href');
-    return { link, target: selector ? document.querySelector(selector) : null };
-  })
-  .filter(item => item.target);
+    <nav class="main-nav" aria-label="Основная навигация">
+      <a class="active" href="#home" data-scroll-top="true">Эфир</a>
+      <a href="#about">О канале</a>
+    </nav>
 
-const setActive = () => {
-  if (!navTargets.length) return;
+    <div class="header-actions">
+      <a class="icon-link" href="https://t.me/ivixitsme" target="_blank" rel="noreferrer" aria-label="Telegram"><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.8 4.2 18.6 19c-.25 1.1-.9 1.36-1.82.85l-5.03-3.71-2.43 2.34c-.27.27-.5.5-1.02.5l.36-5.13 9.34-8.43c.4-.36-.09-.57-.63-.21L5.84 12.48.86 10.92c-1.08-.34-1.1-1.08.23-1.6L20.54 1.8c.9-.34 1.68.2 1.26 2.4Z"/></svg></a>
+      <a class="icon-link" href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer" aria-label="Twitch"><svg class="brand-icon twitch-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.286 1.714 2 6.286v14.857h5.143V24l4.286-2.857h3.428L22 14V1.714H4.286Zm15.428 11.143-4 4h-4l-3.428 2.286v-2.286H4.857V4.286h14.857v8.571Z"/><path d="M10.857 7.143h1.714v5.143h-1.714zM15.429 7.143h1.714v5.143h-1.714z"/></svg></a>
+      <a class="btn btn-primary" href="https://www.donationalerts.com/r/ivix_tv" target="_blank" rel="noreferrer">Поддержать</a>
+    </div>
+  </header>
 
-  const anchorY = window.scrollY + Math.min(window.innerHeight * 0.22, 190);
-  let current = navTargets[0];
+  <main id="home">
+    <section class="hero hero-main section-pad">
+      <div class="hero-copy hero-copy-main reveal">
+        <h1>IVIX_TV</h1>
+        <p class="tagline">Живое общение, фильмы, хорроры и твой любимый чат</p>
+        <p class="description">Уютные стримы, ламповая атмосфера и чат, который часто становится главным героем эфира.</p>
 
-  navTargets.forEach(item => {
-    const top = item.target.getBoundingClientRect().top + window.scrollY;
-    if (top <= anchorY) current = item;
-  });
+        <div class="hero-buttons">
+          <a class="btn btn-primary btn-lg" href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer"><span class="btn-icon"><svg class="brand-icon twitch-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.286 1.714 2 6.286v14.857h5.143V24l4.286-2.857h3.428L22 14V1.714H4.286Zm15.428 11.143-4 4h-4l-3.428 2.286v-2.286H4.857V4.286h14.857v8.571Z"/><path d="M10.857 7.143h1.714v5.143h-1.714zM15.429 7.143h1.714v5.143h-1.714z"/></svg></span> Смотреть на Twitch</a>
+          <a class="btn btn-ghost btn-lg" href="https://www.donationalerts.com/r/ivix_tv" target="_blank" rel="noreferrer">Поддержать <span aria-hidden="true">♡</span></a>
+        </div>
 
-  navLinks.forEach(link => link.classList.remove('active'));
-  current.link.classList.add('active');
-};
-window.addEventListener('scroll', setActive, { passive: true });
-window.addEventListener('resize', setActive);
-setActive();
+        <div class="social-row" id="socials">
+          <a href="https://t.me/ivixitsme" target="_blank" rel="noreferrer"><span><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.8 4.2 18.6 19c-.25 1.1-.9 1.36-1.82.85l-5.03-3.71-2.43 2.34c-.27.27-.5.5-1.02.5l.36-5.13 9.34-8.43c.4-.36-.09-.57-.63-.21L5.84 12.48.86 10.92c-1.08-.34-1.1-1.08.23-1.6L20.54 1.8c.9-.34 1.68.2 1.26 2.4Z"/></svg></span> Telegram</a>
+          <a href="https://vk.com/ivixitsme" target="_blank" rel="noreferrer"><span><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 7.25c.13 6.2 3.2 9.9 8.58 9.9h.32v-3.55c2.08.22 3.65 1.72 4.28 3.55h3.12c-.82-2.72-2.78-4.35-4.02-4.98 1.24-.78 2.98-2.65 3.4-4.92h-2.85c-.58 1.9-2.3 3.75-3.93 3.92V7.25H9.25v6.9C7.55 13.75 5.42 11.72 5.33 7.25H3.2Z"/></svg></span> ВКонтакте</a>
+          <a href="https://www.youtube.com/@ivixitsme" target="_blank" rel="noreferrer"><span><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22.2 7.1a3 3 0 0 0-2.1-2.13C18.25 4.5 12 4.5 12 4.5s-6.25 0-8.1.47A3 3 0 0 0 1.8 7.1 31.2 31.2 0 0 0 1.33 12c0 1.7.15 3.35.47 4.9a3 3 0 0 0 2.1 2.13c1.85.47 8.1.47 8.1.47s6.25 0 8.1-.47a3 3 0 0 0 2.1-2.13c.32-1.55.47-3.2.47-4.9s-.15-3.35-.47-4.9ZM9.85 15.35v-6.7L15.65 12l-5.8 3.35Z"/></svg></span> YouTube</a>
+          <a href="https://www.tiktok.com/@ivixitsme" target="_blank" rel="noreferrer"><span><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.25 2.2c.35 2.8 1.95 4.48 4.55 4.65v3.15a8.4 8.4 0 0 1-4.5-1.42v6.55c0 3.28-2.1 6.15-5.75 6.15-3.28 0-5.35-2.28-5.35-5.02 0-3.3 2.9-5.48 6.05-4.9v3.22c-1.36-.45-2.72.45-2.72 1.68 0 1.05.8 1.85 1.95 1.85 1.42 0 2.25-.9 2.25-2.68V2.2h3.52Z"/></svg></span> TikTok</a>
+        </div>
+      </div>
+    </section>
 
-document.getElementById('year').textContent = new Date().getFullYear();
+    <section class="live-section section-pad" id="live">
+      <div class="stream-zone live-zone reveal delay-1">
+        <article class="stream-card glass">
+          <div class="card-top"><strong><span class="live-dot status-offline" id="stream-status-dot"></span> <span id="stream-status-text">Проверяем эфир</span></strong></div>
+          <div class="player-frame">
+            <div class="player-wrap" data-channel="ivix_tv">
+              <div id="twitch-player" class="twitch-player-shell" role="region" aria-label="Twitch stream ivix_tv"></div>
+              <div class="offline-placeholder">
+                <div class="room-art"><span class="chair">IVIX</span></div>
+                <a class="btn btn-primary" href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer">Открыть стрим</a>
+              </div>
+            </div>
+          </div>
+        </article>
 
-const host = window.location.hostname;
-const validHost = Boolean(host && host !== '');
+        <aside class="chat-card glass">
+          <div class="chat-head"><strong>Чат трансляции</strong><span class="chat-live">Twitch</span></div>
+          <div class="chat-embed-wrap" data-channel="ivix_tv">
+            <iframe id="twitch-chat" title="Twitch chat ivix_tv" loading="lazy"></iframe>
+            <div class="chat-placeholder">
+              <strong>Чат Twitch загружается</strong>
+              <span>Если чат не появился, открой его на Twitch.</span>
+            </div>
+          </div>
 
-const twitchParents = [
-  host,
-  'ivixtv.ru',
-  'www.ivixtv.ru',
-  'ivix-tv-site.pages.dev',
-  'localhost',
-  '127.0.0.1'
-]
-  .filter(Boolean)
-  .filter((value, index, list) => list.indexOf(value) === index);
+        </aside>
+      </div>
+    </section>
 
-const addTwitchParents = params => {
-  twitchParents.forEach(parent => params.append('parent', parent));
-};
+    <section class="dashboard section-pad content-grid">
+      <article class="panel about glass reveal" id="about">
+        <div class="panel-title"><span class="purple-icon">●</span><h2>О канале</h2></div>
+        <p>IVIX_TV — Twitch-канал для тех, кто любит живое общение, реакции, фильмы, хорроры, мемы и вечерние посиделки в чате.</p>
+        <p>Здесь можно обсудить кино, испугаться вместе на хоррорах, предложить тему для стрима или просто залететь на ламповый эфир после долгого дня.</p>
+        <ul class="feature-list">
+          <li>Живое общение и Just Chatting</li>
+          <li>Фильмы, реакции и обсуждения</li>
+          <li>Хорроры, игры и вечерний вайб</li>
+          <li>Мемы, чат и ламповая атмосфера</li>
+        </ul>
+        <a class="text-link" href="#community">Команды чата →</a>
+      </article>
 
-const playerTarget = document.getElementById('twitch-player');
-const wrap = document.querySelector('.player-wrap');
-const statusDot = document.getElementById('stream-status-dot');
-const statusText = document.getElementById('stream-status-text');
+      <article class="panel support support-centered glass reveal delay-1" id="support">
+        <div class="support-copy">
+          <div class="panel-title"><span class="purple-icon">♡</span><h2>Поддержать канал</h2></div>
+          <p>Поддержка помогает делать больше уютных эфиров, клипов и вечерних стримов для чата.</p>
+          <div class="support-pills" aria-label="На что идет поддержка">
+            <span>Эфиры</span>
+            <span>Контент</span>
+            <span>Развитие</span>
+          </div>
+          <a class="btn btn-primary" href="https://www.donationalerts.com/r/ivix_tv" target="_blank" rel="noreferrer">Поддержать канал</a>
+        </div>
+        <div class="support-visual" aria-hidden="true">
+          <div class="jar jar-glow">
+            <span class="jar-heart">♡</span>
+            <span class="jar-text">Спасибо<br>за поддержку!</span>
+            <i class="coin coin-a"></i>
+            <i class="coin coin-b"></i>
+            <i class="coin coin-c"></i>
+          </div>
+        </div>
+      </article>
 
-const setStreamStatus = state => {
-  if (!statusDot || !statusText) return;
+      <article class="panel social-panel glass reveal delay-2" id="links">
+        <div class="panel-title"><span class="purple-icon">↗</span><h2>Полезные ссылки</h2></div>
+        <p class="panel-copy">Соцсети, донат, клипы и все актуальные переходы в одном месте.</p>
+        <div class="social-icons social-icons-rich social-icons-brand">
+          <a class="social-link tg" href="https://t.me/ivixitsme" target="_blank" rel="noreferrer" aria-label="Telegram"><span><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.8 4.2 18.6 19c-.25 1.1-.9 1.36-1.82.85l-5.03-3.71-2.43 2.34c-.27.27-.5.5-1.02.5l.36-5.13 9.34-8.43c.4-.36-.09-.57-.63-.21L5.84 12.48.86 10.92c-1.08-.34-1.1-1.08.23-1.6L20.54 1.8c.9-.34 1.68.2 1.26 2.4Z"/></svg></span><b>Telegram</b><small>Анонсы и новости</small></a>
+          <a class="social-link vk" href="https://vk.com/ivixitsme" target="_blank" rel="noreferrer" aria-label="VK"><span><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 7.25c.13 6.2 3.2 9.9 8.58 9.9h.32v-3.55c2.08.22 3.65 1.72 4.28 3.55h3.12c-.82-2.72-2.78-4.35-4.02-4.98 1.24-.78 2.98-2.65 3.4-4.92h-2.85c-.58 1.9-2.3 3.75-3.93 3.92V7.25H9.25v6.9C7.55 13.75 5.42 11.72 5.33 7.25H3.2Z"/></svg></span><b>ВКонтакте</b><small>Сообщество</small></a>
+          <a class="social-link yt" href="https://www.youtube.com/@ivixitsme" target="_blank" rel="noreferrer" aria-label="YouTube"><span><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22.2 7.1a3 3 0 0 0-2.1-2.13C18.25 4.5 12 4.5 12 4.5s-6.25 0-8.1.47A3 3 0 0 0 1.8 7.1 31.2 31.2 0 0 0 1.33 12c0 1.7.15 3.35.47 4.9a3 3 0 0 0 2.1 2.13c1.85.47 8.1.47 8.1.47s6.25 0 8.1-.47a3 3 0 0 0 2.1-2.13c.32-1.55.47-3.2.47-4.9s-.15-3.35-.47-4.9ZM9.85 15.35v-6.7L15.65 12l-5.8 3.35Z"/></svg></span><b>YouTube</b><small>Видео и записи</small></a>
+          <a class="social-link tw" href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer" aria-label="Twitch"><span><svg class="brand-icon twitch-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.286 1.714 2 6.286v14.857h5.143V24l4.286-2.857h3.428L22 14V1.714H4.286Zm15.428 11.143-4 4h-4l-3.428 2.286v-2.286H4.857V4.286h14.857v8.571Z"/><path d="M10.857 7.143h1.714v5.143h-1.714zM15.429 7.143h1.714v5.143h-1.714z"/></svg></span><b>Twitch</b><small>Смотреть стрим</small></a>
+          <a class="social-link tt" href="https://www.tiktok.com/@ivixitsme" target="_blank" rel="noreferrer" aria-label="TikTok"><span><svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.25 2.2c.35 2.8 1.95 4.48 4.55 4.65v3.15a8.4 8.4 0 0 1-4.5-1.42v6.55c0 3.28-2.1 6.15-5.75 6.15-3.28 0-5.35-2.28-5.35-5.02 0-3.3 2.9-5.48 6.05-4.9v3.22c-1.36-.45-2.72.45-2.72 1.68 0 1.05.8 1.85 1.95 1.85 1.42 0 2.25-.9 2.25-2.68V2.2h3.52Z"/></svg></span><b>TikTok</b><small>Короткие моменты</small></a>
+        </div>
+        <a class="btn btn-ghost full" href="https://dalink.to/ivix_tv" target="_blank" rel="noreferrer">Посмотреть все ссылки</a>
+      </article>
 
-  statusDot.classList.remove('status-online', 'status-offline', 'status-checking');
+      <article class="panel commands glass reveal" id="community">
+        <div class="panel-title"><span class="purple-icon">›_</span><h2>Команды чата</h2></div>
+        <div class="command-grid command-grid-wide">
+          <div><b>!клип / !clip</b><span>Сделать клип</span></div>
+          <div><b>!размер</b><span>Команда с КД 10 мин</span></div>
+          <div><b>!фильм / !movie</b><span>Фильм на стриме</span></div>
+          <div><b>!трек / !shazam</b><span>Узнать трек</span></div>
+          <div><b>!топдня / !топ</b><span>Топ поддержки</span></div>
+          <div><b>!сколько / !followage</b><span>Сколько ты с каналом</span></div>
+          <div><b>!тг / !tg</b><span>Telegram</span></div>
+          <div><b>!вк / !vk</b><span>ВКонтакте</span></div>
+          <div><b>!бусти / !boosty</b><span>Boosty</span></div>
+          <div><b>!крипта / !crypto</b><span>Крипта</span></div>
+          <div><b>!донат / !donate</b><span>Поддержать стримера</span></div>
+          <div><b>!мемы / !meme</b><span>Мемы канала</span></div>
+          <div><b>!ссылки / !links</b><span>Все соцсети</span></div>
+          <div><b>!вишлист / !followish</b><span>Вишлист</span></div>
+        </div>
+      </article>
 
-  if (state === 'online') {
-    statusDot.classList.add('status-online');
-    statusText.textContent = 'Сейчас в эфире';
-    return;
-  }
+      <article class="panel schedule glass reveal" id="schedule">
+        <div class="panel-title"><span class="purple-icon">!</span><h2>Анонсы стримов</h2></div>
+        <div class="announce-card">
+          <h3>Стримы проходят по вечерам</h3>
+          <p>Стримы проходят по вечерам, без жесткого расписания. Точные анонсы, изменения и новости появляются в Telegram.</p>
+          <div class="announce-tags" aria-label="Форматы стримов">
+            <span>Just Chatting</span><span>Фильмы</span><span>Хорроры</span><span>Игры</span>
+          </div>
+          <div class="announce-actions">
+            <a class="btn btn-primary" href="https://t.me/ivixitsme" target="_blank" rel="noreferrer">Анонсы в Telegram</a>
+            <a class="btn btn-ghost" href="https://www.twitch.tv/ivix_tv" target="_blank" rel="noreferrer">Открыть Twitch</a>
+          </div>
+        </div>
+        <div class="micro-note">Подпишись на Telegram и включи уведомления Twitch, чтобы не пропустить вечерний эфир.</div>
+      </article>
 
-  if (state === 'checking') {
-    statusDot.classList.add('status-checking');
-    statusText.textContent = 'Проверяем эфир';
-    return;
-  }
+      <article class="panel clips glass reveal delay-1" id="clips">
+        <div class="panel-title between"><div><span class="purple-icon">★</span><h2>Лучшие моменты</h2></div><a href="https://www.twitch.tv/ivix_tv/clips?range=all" target="_blank" rel="noreferrer">Все клипы →</a></div>
+        <div class="clip-grid">
+          <a class="clip-card" href="https://www.twitch.tv/ivix_tv/clips?range=all" target="_blank" rel="noreferrer">
+            <div class="clip-thumb clip-thumb-simple clip-thumb-all" aria-hidden="true"><span class="clip-glyph clip-word">NEW</span><i>▶</i></div>
+            <div class="clip-meta"><em>Twitch</em><span>Все время</span></div>
+            <h3>Новые клипы на Twitch</h3>
+            <p>Открыть подборку моментов</p>
+            <strong class="clip-action">Смотреть →</strong>
+          </a>
+          <a class="clip-card" href="https://www.twitch.tv/ivix_tv/videos?filter=clips&range=30d" target="_blank" rel="noreferrer">
+            <div class="clip-thumb clip-thumb-simple clip-thumb-month" aria-hidden="true"><span class="clip-glyph clip-word">30D</span><i>▶</i></div>
+            <div class="clip-meta"><em>Клипы</em><span>30 дней</span></div>
+            <h3>Клипы за месяц</h3>
+            <p>Свежие реакции, мемы и моменты с эфиров</p>
+            <strong class="clip-action">Открыть →</strong>
+          </a>
+          <a class="clip-card" href="https://www.twitch.tv/ivix_tv/videos" target="_blank" rel="noreferrer">
+            <div class="clip-thumb clip-thumb-simple clip-thumb-vod" aria-hidden="true"><span class="clip-glyph clip-record"><span></span></span><i>▶</i></div>
+            <div class="clip-meta"><em>Записи</em><span>VOD</span></div>
+            <h3>Записи трансляций</h3>
+            <p>Полные эфиры, фильмы, хорроры и общение</p>
+            <strong class="clip-action">Смотреть →</strong>
+          </a>
+        </div>
+      </article>
+    </section>
 
-  statusDot.classList.add('status-offline');
-  statusText.textContent = 'Сейчас не в эфире';
-};
+    <section class="collab section-pad" id="collab">
+      <div class="glass collab-box reveal">
+        <div>
+          <div class="eyebrow">Для брендов и проектов</div>
+          <h2>Сотрудничество</h2>
+          <p>По вопросам сотрудничества, интеграций и совместных проектов можно написать на почту или в Telegram. Рассматриваются форматы, которые подходят атмосфере канала и аудитории.</p>
+          <div class="contact-list">
+            <a href="mailto:ivix.tv.business@gmail.com">ivix.tv.business@gmail.com</a>
+            <a href="https://t.me/trk_get" target="_blank" rel="noreferrer">@trk_get</a>
+          </div>
+        </div>
+        <a class="btn btn-ghost" href="mailto:ivix.tv.business@gmail.com">Написать по рекламе</a>
+      </div>
+    </section>
+  </main>
 
-const loadScript = src => new Promise((resolve, reject) => {
-  const existing = document.querySelector(`script[src="${src}"]`);
-  if (existing) {
-    existing.addEventListener('load', resolve, { once: true });
-    existing.addEventListener('error', reject, { once: true });
-    if (window.Twitch?.Player) resolve();
-    return;
-  }
+  <footer class="site-footer">
+    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала · ivixtv.ru. <span class="site-version">v1.8.6</span></p>
+    <a href="#home">Наверх ↑</a>
+  </footer>
 
-  const script = document.createElement('script');
-  script.src = src;
-  script.async = true;
-  script.onload = resolve;
-  script.onerror = reject;
-  document.head.appendChild(script);
-});
-
-if (playerTarget && wrap) {
-  const channel = wrap.dataset.channel || 'ivix_tv';
-
-  if (validHost) {
-    setStreamStatus('checking');
-
-    loadScript('https://player.twitch.tv/js/embed/v1.js')
-      .then(() => {
-        const player = new Twitch.Player('twitch-player', {
-          channel,
-          muted: true,
-          width: '100%',
-          height: '100%',
-          parent: twitchParents
-        });
-
-        let statusResolved = false;
-        const resolveStatus = state => {
-          statusResolved = true;
-          setStreamStatus(state);
-        };
-
-        player.addEventListener(Twitch.Player.READY, () => {
-          wrap.classList.add('player-ready');
-          window.setTimeout(() => {
-            if (!statusResolved) setStreamStatus('offline');
-          }, 3500);
-        });
-
-        player.addEventListener(Twitch.Player.ONLINE, () => resolveStatus('online'));
-        player.addEventListener(Twitch.Player.OFFLINE, () => resolveStatus('offline'));
-        player.addEventListener(Twitch.Player.ENDED, () => resolveStatus('offline'));
-      })
-      .catch(() => {
-        setStreamStatus('offline');
-        playerTarget.remove();
-      });
-  } else {
-    setStreamStatus('offline');
-    playerTarget.remove();
-  }
-}
-
-const chat = document.getElementById('twitch-chat');
-const chatWrap = document.querySelector('.chat-embed-wrap');
-if (chat && chatWrap) {
-  const channel = chatWrap.dataset.channel || 'ivix_tv';
-  if (validHost) {
-    const params = new URLSearchParams();
-    addTwitchParents(params);
-    params.set('darkpopout', '');
-    chat.src = `https://www.twitch.tv/embed/${encodeURIComponent(channel)}/chat?${params.toString()}`;
-    chat.addEventListener('load', () => chatWrap.classList.add('chat-ready'), { once: true });
-  } else {
-    chat.remove();
-  }
-}
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1214,7 +1214,7 @@ h1 {
 }
 
 
-/* v1.8.5 clip preview cleanup + stable nav anchors */
+/* v1.8.6 clip preview cleanup + stable nav anchors */
 .clip-thumb-modern {
   min-height: 170px;
   padding: 16px;
@@ -1342,7 +1342,7 @@ h1 {
 
 
 
-/* v1.8.5 simplified clips, two-item nav, centered support */
+/* v1.8.6 simplified clips, two-item nav, centered support */
 html {
   scroll-padding-top: 88px;
 }
@@ -1568,7 +1568,7 @@ html {
 }
 
 
-/* v1.8.5 requested fixes: exact about scroll, larger player, mobile chat, live status, support layout */
+/* v1.8.6 requested fixes: exact about scroll, larger player, mobile chat, live status, support layout */
 #about {
   scroll-margin-top: 80px;
 }
@@ -1754,4 +1754,21 @@ html {
     width: 54px;
     height: 54px;
   }
+}
+
+
+/* v1.8.6 Timeweb hotfix: stable iframe player on mobile */
+.twitch-player-shell {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.twitch-player-shell iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #05040a;
 }
