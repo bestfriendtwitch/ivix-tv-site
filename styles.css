@@ -2183,7 +2183,7 @@ html {
 }
 
 
-/* v1.8.48 — clean starfield integration
+/* v1.8.49 — clean starfield integration
    Background is owned by background.js only.
    Removed old pseudo backgrounds, old noise overlay and old constellation layers. */
 html,
@@ -2279,7 +2279,7 @@ main {
 
 
 /* =============================================================
-   v1.8.48 — clean template support panel + smooth fixed starfield
+   v1.8.49 — clean template support panel + smooth fixed starfield
 ============================================================= */
 
 html,
@@ -2551,7 +2551,7 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — fix support card alignment
+   v1.8.49 — fix support card alignment
 ============================================================= */
 
 /* Old base CSS had .support { display:flex }, which pushed the title sideways.
@@ -2628,7 +2628,7 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — stronger useful-links hover accent
+   v1.8.49 — stronger useful-links hover accent
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -2749,7 +2749,7 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — scroll-world background safety
+   v1.8.49 — scroll-world background safety
 ============================================================= */
 
 html,
@@ -2770,7 +2770,7 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — scrollbar watchdog safety layer
+   v1.8.49 — scrollbar watchdog safety layer
    Keep only the browser page scrollbar. Prevent bg canvas/body
    from creating accidental duplicate scrollbars.
 ============================================================= */
@@ -2803,7 +2803,7 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — page-canvas background, no scroll lag
+   v1.8.49 — page-canvas background, no scroll lag
    Old principle restored: the background canvas is an absolute
    page-sized layer and scrolls naturally with the document.
 ============================================================= */
@@ -2842,7 +2842,7 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — hard reload scrollbar race fix
+   v1.8.49 — hard reload scrollbar race fix
    Prevent the page-sized canvas from being counted as the source
    of document height during Ctrl+F5 / cold loads.
 ============================================================= */
@@ -2870,7 +2870,7 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — fixed wrapper + page canvas
+   v1.8.49 — fixed wrapper + page canvas
    Background scrolls with content through compositor transform,
    but the canvas cannot create a second page scrollbar.
 ============================================================= */
@@ -2916,7 +2916,7 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — stronger useful-links hover + glow
+   v1.8.49 — stronger useful-links hover + glow
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -3019,7 +3019,7 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — stronger global block glow + useful links glow
+   v1.8.49 — stronger global block glow + useful links glow
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -3141,7 +3141,7 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — hero title spacing and cleaner underline
+   v1.8.49 — hero title spacing and cleaner underline
 ============================================================= */
 
 /* Slightly separate IVIX_TV from the subtitle below */
@@ -3178,13 +3178,13 @@ body {
 
 
 /* =============================================================
-   v1.8.48 — precise hero underscore centering
+   v1.8.49 — precise hero underscore centering
 ============================================================= */
 .hero-copy-main h1 .hero-underscore,
 h1 .hero-underscore {
   display: inline-block;
   margin-left: 0.02em;
   margin-right: 0.06em;
-  transform: translate(0.07em, 0.05em) scaleX(1.03);
+  transform: translate(0.11em, -0.01em) scaleX(1.03);
   transform-origin: center bottom;
 }
