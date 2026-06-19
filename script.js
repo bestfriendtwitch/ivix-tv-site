@@ -36,16 +36,30 @@ document.getElementById('year').textContent = new Date().getFullYear();
 const host = window.location.hostname;
 const validHost = Boolean(host && host !== '');
 
+const twitchParents = [
+  host,
+  'ivixtv.ru',
+  'www.ivixtv.ru',
+  'ivix-tv-site.pages.dev',
+  'localhost',
+  '127.0.0.1'
+]
+  .filter(Boolean)
+  .filter((value, index, list) => list.indexOf(value) === index);
+
+const addTwitchParents = params => {
+  twitchParents.forEach(parent => params.append('parent', parent));
+};
+
 const player = document.getElementById('twitch-player');
 const wrap = document.querySelector('.player-wrap');
 if (player && wrap) {
   const channel = wrap.dataset.channel || 'ivix_tv';
   if (validHost) {
-    const params = new URLSearchParams({
-      channel,
-      parent: host,
-      muted: 'true'
-    });
+    const params = new URLSearchParams();
+    params.set('channel', channel);
+    params.set('muted', 'true');
+    addTwitchParents(params);
     player.src = `https://player.twitch.tv/?${params.toString()}`;
     player.addEventListener('load', () => wrap.classList.add('player-ready'), { once: true });
   } else {
@@ -58,7 +72,10 @@ const chatWrap = document.querySelector('.chat-embed-wrap');
 if (chat && chatWrap) {
   const channel = chatWrap.dataset.channel || 'ivix_tv';
   if (validHost) {
-    chat.src = `https://www.twitch.tv/embed/${encodeURIComponent(channel)}/chat?parent=${encodeURIComponent(host)}&darkpopout`;
+    const params = new URLSearchParams();
+    addTwitchParents(params);
+    params.set('darkpopout', '');
+    chat.src = `https://www.twitch.tv/embed/${encodeURIComponent(channel)}/chat?${params.toString()}`;
     chat.addEventListener('load', () => chatWrap.classList.add('chat-ready'), { once: true });
   } else {
     chat.remove();
