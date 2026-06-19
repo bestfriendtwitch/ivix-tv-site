@@ -2183,7 +2183,7 @@ html {
 }
 
 
-/* v1.8.37 — clean starfield integration
+/* v1.8.38 — clean starfield integration
    Background is owned by background.js only.
    Removed old pseudo backgrounds, old noise overlay and old constellation layers. */
 html,
@@ -2279,7 +2279,7 @@ main {
 
 
 /* =============================================================
-   v1.8.37 — clean template support panel + smooth fixed starfield
+   v1.8.38 — clean template support panel + smooth fixed starfield
 ============================================================= */
 
 html,
@@ -2546,5 +2546,82 @@ body {
 
   .support-orb-scene {
     display: none;
+  }
+}
+
+
+/* =============================================================
+   v1.8.38 — fix support card alignment
+============================================================= */
+
+/* Old base CSS had .support { display:flex }, which pushed the title sideways.
+   Force the support card back into the same normal card flow as neighbors. */
+.support {
+  display: block !important;
+}
+
+.support .panel-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 0 18px !important;
+}
+
+.support-template {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 230px) !important;
+  gap: 18px !important;
+  align-items: center !important;
+  min-height: 225px !important;
+}
+
+.support-copy {
+  align-self: center !important;
+  justify-content: center !important;
+  gap: 16px !important;
+}
+
+.support .panel-copy,
+.support-copy .panel-copy {
+  max-width: 380px !important;
+}
+
+.support-button {
+  max-width: 285px !important;
+}
+
+.support-orb-scene {
+  min-height: 225px !important;
+  align-self: center !important;
+}
+
+.support-orb {
+  width: clamp(168px, 14.6vw, 224px) !important;
+  height: clamp(168px, 14.6vw, 224px) !important;
+}
+
+.support-heart {
+  width: clamp(76px, 6.6vw, 104px) !important;
+  height: clamp(76px, 6.6vw, 104px) !important;
+  font-size: clamp(60px, 5.8vw, 82px) !important;
+}
+
+@media (max-width: 1180px) {
+  .support-template {
+    grid-template-columns: 1fr !important;
+  }
+
+  .support-orb-scene {
+    min-height: 230px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .support-template {
+    display: block !important;
+  }
+
+  .support-orb-scene {
+    display: none !important;
   }
 }

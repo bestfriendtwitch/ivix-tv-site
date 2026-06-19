@@ -1,5 +1,5 @@
 /* =============================================================
-   IVIX_TV — smooth fixed galaxy starfield (v14 / site v1.8.37)
+   IVIX_TV — smooth fixed galaxy starfield (v15 / site v1.8.38)
    • mobile: canvas не создается;
    • desktop: 30 FPS;
    • fixed viewport canvas, so no duplicate scrollbar;
@@ -42,7 +42,7 @@
     mouseAmount: 52,
     mouseEase: 0.055,
 
-    galaxyRotation: 0.0105,
+    galaxyRotation: 0.0121,
     trailAlpha: 0.78,
 
     shootingStars: true,
