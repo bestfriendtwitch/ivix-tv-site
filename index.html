@@ -48,11 +48,11 @@
 
     <nav class="main-nav" aria-label="Основная навигация">
       <a class="active" href="#home">Главная</a>
+      <a href="#live">Эфир</a>
       <a href="#about">О канале</a>
-      <a href="#links">Ссылки</a>
       <a href="#community">Команды</a>
-      <a href="#schedule">Анонсы</a>
       <a href="#clips">Клипы</a>
+      <a href="#collab">Контакты</a>
     </nav>
 
     <div class="header-actions">
@@ -83,7 +83,7 @@
       </div>
     </section>
 
-    <section class="live-section section-pad">
+    <section class="live-section section-pad" id="live">
       <div class="stream-zone live-zone reveal delay-1">
         <article class="stream-card glass">
           <div class="card-top"><strong><span class="live-dot"></span> Сейчас в эфире</strong></div>
@@ -192,28 +192,27 @@
         <div class="panel-title between"><div><span class="purple-icon">★</span><h2>Лучшие моменты</h2></div><a href="https://www.twitch.tv/ivix_tv/clips?range=all" target="_blank" rel="noreferrer">Все клипы →</a></div>
         <div class="clip-grid">
           <a class="clip-card" href="https://www.twitch.tv/ivix_tv/clips?range=all" target="_blank" rel="noreferrer">
-            <div class="clip-thumb clip-thumb-modern clip-thumb-all"><span>Clip</span><strong>Все клипы</strong><small>Лучшие моменты IVIX_TV</small><i aria-hidden="true">▶</i></div>
+            <div class="clip-thumb clip-thumb-modern clip-thumb-all"><span>Clip</span><b class="clip-art">✦</b><strong>Все клипы</strong><small>Лучшие моменты со стримов</small><i aria-hidden="true">▶</i></div>
             <div class="clip-meta"><em>Twitch</em><span>Все время</span></div>
             <h3>Новые клипы на Twitch</h3>
             <p>Открыть подборку моментов</p>
             <strong class="clip-action">Смотреть →</strong>
           </a>
           <a class="clip-card" href="https://www.twitch.tv/ivix_tv/videos?filter=clips&range=30d" target="_blank" rel="noreferrer">
-            <div class="clip-thumb clip-thumb-modern clip-thumb-month"><span>30d</span><strong>Свежие моменты</strong><small>Клипы за последние 30 дней</small><i aria-hidden="true">▶</i></div>
+            <div class="clip-thumb clip-thumb-modern clip-thumb-month"><span>30d</span><b class="clip-art">◌</b><strong>Свежие моменты</strong><small>Клипы за последние 30 дней</small><i aria-hidden="true">▶</i></div>
             <div class="clip-meta"><em>Клипы</em><span>30 дней</span></div>
             <h3>Клипы за месяц</h3>
             <p>Свежие реакции, мемы и моменты с эфиров</p>
             <strong class="clip-action">Открыть →</strong>
           </a>
           <a class="clip-card" href="https://www.twitch.tv/ivix_tv/videos" target="_blank" rel="noreferrer">
-            <div class="clip-thumb clip-thumb-modern clip-thumb-vod"><span>VOD</span><strong>Записи эфиров</strong><small>Полные трансляции и VOD</small><i aria-hidden="true">▶</i></div>
+            <div class="clip-thumb clip-thumb-modern clip-thumb-vod"><span>VOD</span><b class="clip-art">▣</b><strong>Записи эфиров</strong><small>Полные трансляции и VOD</small><i aria-hidden="true">▶</i></div>
             <div class="clip-meta"><em>Записи</em><span>VOD</span></div>
             <h3>Записи трансляций</h3>
             <p>Полные эфиры, фильмы, хорроры и общение</p>
             <strong class="clip-action">Смотреть →</strong>
           </a>
         </div>
-        <div class="panel-hint">Автоподгрузку клипов подключим позже через Twitch API, когда будет доступ к Developer App.</div>
       </article>
     </section>
 
@@ -234,7 +233,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала · ivixtv.ru. <span class="site-version">v1.8.2</span></p>
+    <p>© <span id="year"></span> IVIX_TV. Фан-хаб Twitch-канала · ivixtv.ru. <span class="site-version">v1.8.3</span></p>
     <a href="#home">Наверх ↑</a>
   </footer>
 

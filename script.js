@@ -14,21 +14,29 @@ navLinks.forEach(link => {
   });
 });
 
-const sections = navLinks
-  .map(link => document.querySelector(link.getAttribute('href')))
-  .filter(Boolean);
+const navTargets = navLinks
+  .map(link => {
+    const selector = link.getAttribute('href');
+    return { link, target: selector ? document.querySelector(selector) : null };
+  })
+  .filter(item => item.target);
 
 const setActive = () => {
-  const y = window.scrollY + 130;
-  let current = sections[0]?.id;
-  sections.forEach(section => {
-    if (section.offsetTop <= y) current = section.id;
+  if (!navTargets.length) return;
+
+  const anchorY = window.scrollY + Math.min(window.innerHeight * 0.42, 360);
+  let current = navTargets[0];
+
+  navTargets.forEach(item => {
+    const top = item.target.getBoundingClientRect().top + window.scrollY;
+    if (top <= anchorY) current = item;
   });
-  navLinks.forEach(link => {
-    link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
-  });
+
+  navLinks.forEach(link => link.classList.remove('active'));
+  current.link.classList.add('active');
 };
 window.addEventListener('scroll', setActive, { passive: true });
+window.addEventListener('resize', setActive);
 setActive();
 
 document.getElementById('year').textContent = new Date().getFullYear();
