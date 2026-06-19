@@ -2754,34 +2754,49 @@ h1 .hero-underscore {
   }
 }
 
-/* hero art — декоративный звёздный портрет, сливается с фоном */
-.hero-main { position: relative; z-index: 1; }
+/* hero art — слоистый параллакс, выходит из блоков плеера/чата */
+.hero-main { position: relative; z-index: 1; overflow: visible; }
 .hero-copy-main { position: relative; z-index: 2; }
+.live-section { position: relative; z-index: 3; } /* блоки перекрывают низ арта → эффект выхода */
+
 .hero-art {
   position: absolute;
-  top: 50%;
   right: -2%;
-  transform: translateY(-50%);
-  width: min(60%, 880px);
+  bottom: -120px;
+  width: min(62%, 940px);
   aspect-ratio: 1500 / 844;
-  background: url("assets/hero-art.webp") center right / contain no-repeat;
   z-index: 0;
   pointer-events: none;
-  opacity: .96;
-  -webkit-mask-image: radial-gradient(125% 135% at 72% 46%, #000 58%, transparent 88%);
-          mask-image: radial-gradient(125% 135% at 72% 46%, #000 58%, transparent 88%);
+}
+.ha-layer {
+  position: absolute;
+  inset: 0;
+  transform: translate3d(0, 0, 0) scale(1.05);
+  will-change: transform;
+}
+.ha-portrait, .ha-front {
+  background-repeat: no-repeat;
+  background-position: center right;
+  background-size: contain;
+}
+.ha-portrait { background-image: url("assets/hero-art.webp"); }
+.ha-front { background-image: url("assets/hero-art-front.webp"); mix-blend-mode: screen; }
+.ha-back {
+  left: -60%; right: -6%; top: -12%; bottom: -12%;
+  background:
+    radial-gradient(42% 50% at 72% 58%, rgba(139, 61, 255, .30), transparent 70%),
+    radial-gradient(34% 44% at 60% 40%, rgba(120, 46, 210, .22), transparent 72%),
+    radial-gradient(30% 40% at 86% 82%, rgba(160, 84, 240, .24), transparent 72%);
 }
 @media (min-width: 1100px) { .hero-main { min-height: 540px; } }
 @media (max-width: 1100px) {
-  .hero-art { opacity: .7; width: min(64%, 620px); right: -6%; }
+  .hero-art { width: min(66%, 640px); right: -6%; bottom: -90px; opacity: .92; }
 }
 @media (max-width: 760px) {
-  .hero-art {
-    inset: 0 0 auto 0;
-    width: 100%; height: 260px;
-    transform: none; aspect-ratio: auto;
-    background-position: center top; background-size: cover;
-    opacity: .4;
+  .hero-art { inset: 0 0 auto 0; width: 100%; aspect-ratio: auto; height: 250px; bottom: auto; opacity: .4; }
+  .ha-back, .ha-front { display: none; }
+  .ha-portrait {
+    background-position: center top; background-size: cover; transform: none;
     -webkit-mask-image: linear-gradient(#000 30%, transparent 100%);
             mask-image: linear-gradient(#000 30%, transparent 100%);
   }
