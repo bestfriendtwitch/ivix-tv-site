@@ -2120,3 +2120,89 @@ html {
     transform: none;
   }
 }
+
+
+/* v1.8.10 — micro polish for existing “Полезные ссылки” buttons only
+   Keeps the current compact 2-column layout. No HTML/JS changes. */
+
+.social-icons-rich.social-icons-brand {
+  gap: 12px;
+}
+
+.social-icons-brand .social-link {
+  position: relative;
+  min-height: 84px;
+  border-radius: 15px;
+  border-color: rgba(255,255,255,.10);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.052), rgba(255,255,255,.022));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055);
+  transition:
+    transform .16s ease,
+    border-color .16s ease,
+    background .16s ease;
+}
+
+.social-icons-brand .social-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(190,126,255,.24);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.064), rgba(139,61,255,.045));
+}
+
+.social-icons-brand .social-link span {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.10), rgba(139,61,255,.11));
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+.social-icons-brand .brand-icon {
+  width: 27px;
+  height: 27px;
+}
+
+.social-icons-brand .social-link b {
+  font-size: 13px;
+}
+
+.social-icons-brand .social-link small {
+  color: #afa4c1;
+}
+
+/* very soft platform hints */
+.social-icons-brand .tg:hover { border-color: rgba(54,174,226,.24); }
+.social-icons-brand .vk:hover { border-color: rgba(82,136,193,.24); }
+.social-icons-brand .yt:hover { border-color: rgba(255,59,59,.22); }
+.social-icons-brand .tw:hover { border-color: rgba(169,112,255,.28); }
+.social-icons-brand .tt:hover { border-color: rgba(255,59,157,.22); }
+
+.social-icons-brand .tg span { color: #36aee2; }
+.social-icons-brand .vk span { color: #5288c1; }
+.social-icons-brand .yt span { color: #ff3b3b; }
+.social-icons-brand .tw span { color: #a970ff; }
+.social-icons-brand .tt span { color: #fff; }
+
+.social-panel .btn.full {
+  border-radius: 13px;
+  border-color: rgba(255,255,255,.15);
+  background: rgba(255,255,255,.035);
+  transition: transform .16s ease, border-color .16s ease, background .16s ease;
+}
+
+.social-panel .btn.full:hover {
+  transform: translateY(-1px);
+  border-color: rgba(190,126,255,.24);
+  background: rgba(139,61,255,.065);
+}
+
+@media (max-width: 760px) {
+  .social-icons-brand .social-link:hover,
+  .social-panel .btn.full:hover {
+    transform: none;
+  }
+}
