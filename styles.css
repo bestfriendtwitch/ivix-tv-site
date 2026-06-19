@@ -2960,3 +2960,138 @@ body {
     animation: none !important;
   }
 }
+
+
+/* v1.8.19 — constellation/glass network closer to visual mockup
+   CSS only. Replaces random scratch lines with connected node geometry and stronger parallax. */
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 10% 22%, rgba(136,57,255,.26), transparent 26%),
+    radial-gradient(circle at 88% 18%, rgba(136,57,255,.22), transparent 24%),
+    radial-gradient(circle at 76% 84%, rgba(100,43,215,.14), transparent 26%),
+    linear-gradient(180deg, #07040d 0%, #05040a 48%, #04030a 100%) !important;
+  animation: none !important;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  opacity: .98;
+  background-image:
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201600%201900%22%20fill%3D%22none%22%3E%0A%20%20%3Crect%20width%3D%221600%22%20height%3D%221900%22%20fill%3D%22transparent%22/%3E%0A%20%20%3Cg%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Cg%20stroke%3D%22rgba%28173%2C96%2C255%2C0.18%29%22%20stroke-width%3D%224.8%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M40%20120%20L180%2040%20L310%20150%20L520%2080%20L690%20210%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M70%20520%20L210%20420%20L330%20570%20L510%20470%20L630%20610%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1020%2090%20L1160%2030%20L1310%20140%20L1490%2070%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M980%20590%20L1150%20470%20L1310%20640%20L1500%20540%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M420%20240%20L660%20340%20L870%20250%20L1060%20380%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M470%20620%20L690%20520%20L920%20650%20L1120%20560%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M380%20990%20L640%20890%20L850%201020%20L1080%20930%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M450%201360%20L700%201260%20L900%201390%20L1160%201300%22/%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%20%20%3Cg%20fill%3D%22rgba%28216%2C188%2C255%2C0.16%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22520%22%20cy%3D%2280%22%20r%3D%2226%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221160%22%20cy%3D%2230%22%20r%3D%2234%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22920%22%20cy%3D%22650%22%20r%3D%2224%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221290%22%20cy%3D%221610%22%20r%3D%2228%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22470%22%20cy%3D%221580%22%20r%3D%2224%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22850%22%20cy%3D%221020%22%20r%3D%2220%22/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201600%201900%22%20fill%3D%22none%22%3E%0A%20%20%3Crect%20width%3D%221600%22%20height%3D%221900%22%20fill%3D%22transparent%22/%3E%0A%20%20%3Cg%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Cg%20stroke%3D%22rgba%28192%2C140%2C255%2C0.34%29%22%20stroke-width%3D%221.7%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M40%20120%20L180%2040%20L310%20150%20L520%2080%20L690%20210%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M110%20290%20L260%20210%20L370%20330%20L560%20260%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M70%20520%20L210%20420%20L330%20570%20L510%20470%20L630%20610%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M120%20830%20L300%20710%20L460%20880%20L610%20760%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M80%201170%20L260%201040%20L430%201210%20L620%201090%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M110%201540%20L280%201410%20L470%201580%20L650%201460%22/%3E%0A%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1020%2090%20L1160%2030%20L1310%20140%20L1490%2070%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M950%20310%20L1100%20210%20L1250%20350%20L1450%20260%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M980%20590%20L1150%20470%20L1310%20640%20L1500%20540%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M930%20910%20L1110%20790%20L1270%20960%20L1470%20840%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M960%201230%20L1140%201100%20L1320%201270%20L1510%201140%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M940%201570%20L1120%201450%20L1290%201610%20L1480%201490%22/%3E%0A%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M420%20240%20L660%20340%20L870%20250%20L1060%20380%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M470%20620%20L690%20520%20L920%20650%20L1120%20560%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M380%20990%20L640%20890%20L850%201020%20L1080%20930%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M450%201360%20L700%201260%20L900%201390%20L1160%201300%22/%3E%0A%20%20%20%20%3C/g%3E%0A%0A%20%20%20%20%3Cg%20stroke%3D%22rgba%28250%2C241%2C255%2C0.22%29%22%20stroke-width%3D%222.2%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M180%2040%20L260%20210%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M260%20210%20L210%20420%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M210%20420%20L300%20710%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M300%20710%20L260%201040%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M260%201040%20L280%201410%22/%3E%0A%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1160%2030%20L1100%20210%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1100%20210%20L1150%20470%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1150%20470%20L1110%20790%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1110%20790%20L1140%201100%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M1140%201100%20L1120%201450%22/%3E%0A%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M520%2080%20L660%20340%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M870%20250%20L920%20650%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M640%20890%20L700%201260%22/%3E%0A%20%20%20%20%3C/g%3E%0A%0A%20%20%20%20%3Cg%20stroke%3D%22rgba%28223%2C196%2C255%2C0.46%29%22%20stroke-width%3D%221.3%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M690%20210%20L870%20250%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M630%20610%20L920%20650%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M610%20760%20L850%201020%22/%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M620%201090%20L900%201390%22/%3E%0A%20%20%20%20%3C/g%3E%0A%20%20%3C/g%3E%0A%0A%20%20%3Cg%20fill%3D%22rgba%28215%2C190%2C255%2C0.92%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22180%22%20cy%3D%2240%22%20r%3D%222.7%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22310%22%20cy%3D%22150%22%20r%3D%222.1%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22520%22%20cy%3D%2280%22%20r%3D%223.5%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22260%22%20cy%3D%22210%22%20r%3D%222.8%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22330%22%20cy%3D%22570%22%20r%3D%222.1%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22460%22%20cy%3D%22880%22%20r%3D%222.7%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22430%22%20cy%3D%221210%22%20r%3D%222.2%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22470%22%20cy%3D%221580%22%20r%3D%222.9%22/%3E%0A%0A%20%20%20%20%3Ccircle%20cx%3D%221160%22%20cy%3D%2230%22%20r%3D%223.6%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221310%22%20cy%3D%22140%22%20r%3D%222.4%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221100%22%20cy%3D%22210%22%20r%3D%222.9%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221250%22%20cy%3D%22350%22%20r%3D%222.4%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221150%22%20cy%3D%22470%22%20r%3D%223.0%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221270%22%20cy%3D%22960%22%20r%3D%222.2%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221320%22%20cy%3D%221270%22%20r%3D%222.7%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221290%22%20cy%3D%221610%22%20r%3D%223.2%22/%3E%0A%0A%20%20%20%20%3Ccircle%20cx%3D%22660%22%20cy%3D%22340%22%20r%3D%222.2%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22870%22%20cy%3D%22250%22%20r%3D%223.0%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22690%22%20cy%3D%22520%22%20r%3D%222.0%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22920%22%20cy%3D%22650%22%20r%3D%223.1%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22640%22%20cy%3D%22890%22%20r%3D%222.0%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22850%22%20cy%3D%221020%22%20r%3D%222.4%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22700%22%20cy%3D%221260%22%20r%3D%222.0%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22900%22%20cy%3D%221390%22%20r%3D%223.0%22/%3E%0A%20%20%3C/g%3E%0A%0A%20%20%3Cg%20fill%3D%22rgba%28184%2C92%2C255%2C0.22%29%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22520%22%20cy%3D%2280%22%20r%3D%2214%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221160%22%20cy%3D%2230%22%20r%3D%2218%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22920%22%20cy%3D%22650%22%20r%3D%2212%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%221290%22%20cy%3D%221610%22%20r%3D%2214%22/%3E%0A%20%20%20%20%3Ccircle%20cx%3D%22470%22%20cy%3D%221580%22%20r%3D%2212%22/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E"),
+    radial-gradient(circle at 18% 22%, rgba(168,92,255,.10), transparent 28%),
+    radial-gradient(circle at 84% 16%, rgba(168,92,255,.08), transparent 24%),
+    radial-gradient(circle at 60% 70%, rgba(120,55,255,.05), transparent 28%);
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 108% auto, 108% auto, 100% 100%, 100% 100%, 100% 100%;
+  background-position: center -40px, center -40px, center center, center center, center center;
+  filter: saturate(1.12) brightness(1.04);
+  will-change: background-position, transform, opacity;
+}
+
+/* keep IVIX text but quieter */
+body::after {
+  opacity: .32 !important;
+}
+
+/* Calm the grid/noise so the constellation layer is visible */
+.noise {
+  opacity: .11 !important;
+}
+
+.site-header,
+main,
+.site-footer {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes ivixConstellationFloat {
+  0%, 100% {
+    opacity: .95;
+    filter: saturate(1.08) brightness(1.02);
+  }
+  50% {
+    opacity: 1;
+    filter: saturate(1.18) brightness(1.08);
+  }
+}
+
+@keyframes ivixConstellationScroll {
+  from {
+    background-position:
+      center -220px,
+      center -120px,
+      center center,
+      center center,
+      center center;
+    transform: translate3d(0, -20px, 0) scale(1.03);
+  }
+  to {
+    background-position:
+      center 520px,
+      center 260px,
+      center center,
+      center center,
+      center center;
+    transform: translate3d(0, 80px, 0) scale(1.08);
+  }
+}
+
+/* fallback gentle motion if scroll-driven animation unsupported */
+@keyframes ivixConstellationDrift {
+  0% {
+    background-position: center -40px, center -40px, center center, center center, center center;
+    transform: translate3d(0, 0, 0) scale(1.02);
+  }
+  50% {
+    background-position: center -22px, center -10px, center center, center center, center center;
+    transform: translate3d(0, 8px, 0) scale(1.03);
+  }
+  100% {
+    background-position: center -40px, center -40px, center center, center center, center center;
+    transform: translate3d(0, 0, 0) scale(1.02);
+  }
+}
+
+body::before {
+  animation: ivixConstellationDrift 12s ease-in-out infinite, ivixConstellationFloat 8s ease-in-out infinite;
+}
+
+@supports (animation-timeline: scroll()) {
+  body::before {
+    animation:
+      ivixConstellationScroll linear both,
+      ivixConstellationFloat 8s ease-in-out infinite;
+    animation-timeline: scroll(root), auto;
+    animation-range: 0 100%, normal;
+    animation-duration: auto, 8s;
+    animation-fill-mode: both, none;
+  }
+}
+
+@media (max-width: 760px) {
+  body::before {
+    background-size: 165% auto, 165% auto, 100% 100%, 100% 100%, 100% 100%;
+    background-position: center -30px, center -30px, center center, center center, center center;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    body::before {
+      animation-range: 0 100%, normal;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none !important;
+  }
+}
