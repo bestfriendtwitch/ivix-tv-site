@@ -1,5 +1,5 @@
 /* =============================================================
-   IVIX_TV — page-canvas galaxy with scrollbar watchdog (v19 / site v1.8.42)
+   IVIX_TV — page-canvas galaxy with hard-reload scrollbar fix (v20 / site v1.8.43)
    • mobile: canvas не создается;
    • desktop: 30 FPS;
    • old smooth-scroll principle restored:
@@ -276,11 +276,54 @@
   }
 
   function getNaturalPageHeight() {
-    return Math.max(
+    // Ctrl+F5 race fix:
+    // if the absolute page-sized canvas is already in DOM, some browsers may
+    // count it into body/html scrollHeight while we are measuring page height.
+    // Temporarily remove only the canvas from scroll-height calculation.
+    const html = document.documentElement;
+    const body = document.body;
+    const prev = {
+      position: canvas.style.position,
+      left: canvas.style.left,
+      top: canvas.style.top,
+      width: canvas.style.width,
+      height: canvas.style.height,
+      maxHeight: canvas.style.maxHeight,
+      visibility: canvas.style.visibility,
+      pointerEvents: canvas.style.pointerEvents,
+    };
+
+    canvas.style.position = "fixed";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.width = "0px";
+    canvas.style.height = "0px";
+    canvas.style.maxHeight = "0px";
+    canvas.style.visibility = "hidden";
+    canvas.style.pointerEvents = "none";
+
+    // Force style application before reading scrollHeight.
+    // eslint-disable-next-line no-unused-expressions
+    canvas.offsetHeight;
+
+    const measured = Math.max(
       window.innerHeight || 1,
-      document.documentElement.scrollHeight || 0,
-      document.body.scrollHeight || 0
+      html ? html.scrollHeight || 0 : 0,
+      body ? body.scrollHeight || 0 : 0,
+      html ? html.offsetHeight || 0 : 0,
+      body ? body.offsetHeight || 0 : 0
     );
+
+    canvas.style.position = prev.position;
+    canvas.style.left = prev.left;
+    canvas.style.top = prev.top;
+    canvas.style.width = prev.width;
+    canvas.style.height = prev.height;
+    canvas.style.maxHeight = prev.maxHeight;
+    canvas.style.visibility = prev.visibility;
+    canvas.style.pointerEvents = prev.pointerEvents;
+
+    return measured;
   }
 
   function resize() {
@@ -301,9 +344,10 @@
 
     dpr = nextDpr;
 
-    canvas.style.setProperty("--ivix-page-bg-height", pageH + "px");
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(pageH * dpr);
+    canvas.style.setProperty("--ivix-page-bg-height", pageH + "px");
+    canvas.style.visibility = "visible";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     margin = Math.max(W, window.innerHeight || 900) * 0.24 + CONFIG.mouseAmount;
@@ -650,6 +694,8 @@
     canvas.style.bottom = "auto";
     canvas.style.width = "100%";
     canvas.style.height = pageH + "px";
+    canvas.style.setProperty("--ivix-page-bg-height", pageH + "px");
+    canvas.style.visibility = "visible";
     canvas.style.maxWidth = "100%";
     canvas.style.maxHeight = "none";
     canvas.style.overflow = "hidden";
@@ -663,6 +709,22 @@
       el.style.maxWidth = "100vw";
       el.style.maxHeight = "100vh";
     });
+  }
+
+  function forceLayoutRecalibration() {
+    lastResizeKey = "";
+    resize();
+    applyScrollbarGuard();
+    firstFrame = true;
+  }
+
+  function scheduleColdLoadRecalibration() {
+    // A few delayed passes catch hard reloads where fonts/images/iframes
+    // settle after DOMContentLoaded and otherwise change page height.
+    requestAnimationFrame(() => requestAnimationFrame(forceLayoutRecalibration));
+    setTimeout(forceLayoutRecalibration, 180);
+    setTimeout(forceLayoutRecalibration, 650);
+    setTimeout(forceLayoutRecalibration, 1400);
   }
 
   function start() {
@@ -680,6 +742,7 @@
 
     resize();
     applyScrollbarGuard();
+    scheduleColdLoadRecalibration();
     nextShoot = performance.now() / 1000 + rand(2.2, 5.2);
 
     const debouncedResize = debounce(() => {
@@ -700,6 +763,7 @@
     window.addEventListener("orientationchange", debouncedResize, { passive: true });
     window.addEventListener("mousemove", onMouse, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("load", scheduleColdLoadRecalibration, { once: true, passive: true });
 
     // Guard only, not animation projection. This does not redraw on scroll.
     window.addEventListener("scroll", () => {

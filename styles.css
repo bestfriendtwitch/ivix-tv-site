@@ -2183,7 +2183,7 @@ html {
 }
 
 
-/* v1.8.42 — clean starfield integration
+/* v1.8.43 — clean starfield integration
    Background is owned by background.js only.
    Removed old pseudo backgrounds, old noise overlay and old constellation layers. */
 html,
@@ -2279,7 +2279,7 @@ main {
 
 
 /* =============================================================
-   v1.8.42 — clean template support panel + smooth fixed starfield
+   v1.8.43 — clean template support panel + smooth fixed starfield
 ============================================================= */
 
 html,
@@ -2551,7 +2551,7 @@ body {
 
 
 /* =============================================================
-   v1.8.42 — fix support card alignment
+   v1.8.43 — fix support card alignment
 ============================================================= */
 
 /* Old base CSS had .support { display:flex }, which pushed the title sideways.
@@ -2628,7 +2628,7 @@ body {
 
 
 /* =============================================================
-   v1.8.42 — stronger useful-links hover accent
+   v1.8.43 — stronger useful-links hover accent
 ============================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -2749,7 +2749,7 @@ body {
 
 
 /* =============================================================
-   v1.8.42 — scroll-world background safety
+   v1.8.43 — scroll-world background safety
 ============================================================= */
 
 html,
@@ -2770,7 +2770,7 @@ body {
 
 
 /* =============================================================
-   v1.8.42 — scrollbar watchdog safety layer
+   v1.8.43 — scrollbar watchdog safety layer
    Keep only the browser page scrollbar. Prevent bg canvas/body
    from creating accidental duplicate scrollbars.
 ============================================================= */
@@ -2803,7 +2803,7 @@ body {
 
 
 /* =============================================================
-   v1.8.42 — page-canvas background, no scroll lag
+   v1.8.43 — page-canvas background, no scroll lag
    Old principle restored: the background canvas is an absolute
    page-sized layer and scrolls naturally with the document.
 ============================================================= */
@@ -2838,4 +2838,32 @@ body {
   contain: layout paint size style !important;
   pointer-events: none !important;
   z-index: 0 !important;
+}
+
+
+/* =============================================================
+   v1.8.43 — hard reload scrollbar race fix
+   Prevent the page-sized canvas from being counted as the source
+   of document height during Ctrl+F5 / cold loads.
+============================================================= */
+
+html {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  min-height: 100%;
+  scrollbar-gutter: stable;
+}
+
+body {
+  position: relative !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  min-height: 100%;
+  max-width: 100vw !important;
+}
+
+#ivix-bg-canvas {
+  box-sizing: border-box !important;
+  overflow: clip !important;
+  contain: layout paint size style !important;
 }
