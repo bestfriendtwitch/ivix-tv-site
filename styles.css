@@ -2276,3 +2276,322 @@ main {
     scroll-margin-top: 76px;
   }
 }
+
+
+/* =============================================================
+   v1.8.30 — stronger hover glow + cleaner support card
+   Scope: styles.css only. Starfield/background.js untouched.
+============================================================= */
+
+/* Stronger but still controlled glow on main blocks */
+.panel,
+.content-grid > .panel,
+.collab-box,
+.stream-card,
+.chat-card,
+.clip-card,
+.command-category,
+.social-icons-brand .social-link,
+.announce-card {
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease,
+    filter .18s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .content-grid > .panel:hover,
+  .panel:hover,
+  .collab-box:hover {
+    transform: translateY(-3px);
+    border-color: rgba(202, 156, 255, .52);
+    box-shadow:
+      0 30px 84px rgba(0, 0, 0, .52),
+      0 0 0 1px rgba(190, 126, 255, .16),
+      0 0 34px rgba(139, 61, 255, .18),
+      0 0 88px rgba(139, 61, 255, .10),
+      inset 0 1px 0 rgba(255, 255, 255, .10);
+  }
+
+  .content-grid > .panel:hover::before,
+  .collab-box:hover::before,
+  .stream-card:hover::before,
+  .chat-card:hover::before {
+    opacity: 1;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(204, 151, 255, .27), transparent 30%),
+      radial-gradient(circle at 84% 12%, rgba(139, 61, 255, .16), transparent 28%),
+      linear-gradient(135deg, rgba(255,255,255,.078), transparent 34%);
+  }
+
+  .stream-card:hover,
+  .chat-card:hover {
+    border-color: rgba(202, 156, 255, .46);
+    box-shadow:
+      0 28px 80px rgba(0,0,0,.52),
+      0 0 38px rgba(139,61,255,.16),
+      inset 0 1px 0 rgba(255,255,255,.09);
+  }
+
+  .clip-card:hover {
+    transform: translateY(-3px) scale(1.006);
+    border-color: rgba(202, 156, 255, .40);
+    box-shadow:
+      0 20px 46px rgba(0,0,0,.30),
+      0 0 28px rgba(139,61,255,.14),
+      inset 0 1px 0 rgba(255,255,255,.08);
+  }
+
+  .social-icons-brand .social-link:hover,
+  .platform-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 18px 38px rgba(0,0,0,.26),
+      0 0 26px rgba(139,61,255,.14),
+      inset 0 1px 0 rgba(255,255,255,.08);
+  }
+
+  .command-category:hover,
+  .announce-card:hover {
+    border-color: rgba(202,156,255,.34);
+    box-shadow:
+      0 18px 42px rgba(0,0,0,.26),
+      0 0 26px rgba(139,61,255,.10),
+      inset 0 1px 0 rgba(255,255,255,.07);
+  }
+
+  .btn-primary:hover {
+    box-shadow:
+      0 18px 38px rgba(126, 45, 255, .40),
+      0 0 28px rgba(179, 92, 255, .22),
+      inset 0 1px 0 rgba(255,255,255,.34);
+  }
+}
+
+/* Cleaner “Поддержать канал” card */
+.support.support-centered {
+  position: relative;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 124px;
+  align-items: stretch;
+  gap: 20px;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.support.support-centered::after {
+  content: "";
+  position: absolute;
+  right: -42px;
+  bottom: -52px;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(179,92,255,.20), rgba(139,61,255,.07) 42%, transparent 70%);
+  pointer-events: none;
+  opacity: .86;
+}
+
+.support-centered .support-copy {
+  position: relative;
+  z-index: 2;
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.support-centered .panel-title {
+  margin-bottom: 13px;
+}
+
+.support-centered .panel-title .purple-icon {
+  width: 26px;
+  height: 26px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(179,92,255,.12);
+  border: 1px solid rgba(179,92,255,.18);
+  font-size: 18px;
+}
+
+.support-centered .support-copy p {
+  max-width: 100%;
+  margin: 0;
+  color: #c5bbd4;
+  line-height: 1.58;
+}
+
+.support-pills {
+  margin: 15px 0 17px;
+  gap: 7px;
+}
+
+.support-pills span {
+  padding: 7px 10px;
+  border-color: rgba(202,156,255,.15);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.026));
+  color: #dccbff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.support-centered .support-copy .btn,
+.support-centered .btn {
+  margin-top: auto;
+  min-height: 48px;
+  padding-inline: 22px;
+  border-radius: 13px;
+  white-space: nowrap;
+}
+
+.support-visual {
+  position: relative;
+  z-index: 2;
+  display: grid !important;
+  place-items: center;
+  min-height: 0;
+  padding-left: 18px;
+  border-left: 1px solid rgba(255,255,255,.075);
+}
+
+.support-visual::before {
+  content: "";
+  position: absolute;
+  inset: 16px 0 16px 12px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 36%, rgba(179,92,255,.20), transparent 56%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
+  border: 1px solid rgba(255,255,255,.065);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 0 28px rgba(139,61,255,.08);
+  opacity: .92;
+}
+
+.jar-glow {
+  width: 96px !important;
+  height: 118px !important;
+  min-width: 96px !important;
+  border-width: 1px !important;
+  border-top-width: 8px !important;
+  border-radius: 18px 18px 28px 28px !important;
+  background:
+    radial-gradient(circle at 50% 75%, rgba(179,92,255,.42), transparent 50%),
+    linear-gradient(180deg, rgba(255,255,255,.15), rgba(139,61,255,.07)) !important;
+  box-shadow:
+    0 0 34px rgba(139,61,255,.20),
+    inset 0 1px 0 rgba(255,255,255,.20),
+    inset 0 -24px 38px rgba(139,61,255,.14) !important;
+}
+
+.jar-glow::before {
+  left: 18px !important;
+  right: 18px !important;
+  top: -17px !important;
+  height: 8px !important;
+  opacity: .82;
+}
+
+.jar-heart {
+  top: 20px !important;
+  width: 38px !important;
+  height: 38px !important;
+  font-size: 22px !important;
+  box-shadow: 0 0 22px rgba(179,92,255,.38) !important;
+}
+
+.jar-text {
+  left: 8px !important;
+  right: 8px !important;
+  bottom: 18px !important;
+  font-size: 9px !important;
+  line-height: 1.18 !important;
+}
+
+.coin {
+  width: 12px !important;
+  height: 12px !important;
+  opacity: .78;
+}
+
+.coin-a { left: 17px !important; top: 66px !important; }
+.coin-b { right: 18px !important; top: 72px !important; width: 10px !important; height: 10px !important; }
+.coin-c { left: 43px !important; top: 92px !important; width: 9px !important; height: 9px !important; }
+
+@media (hover: hover) and (pointer: fine) {
+  .support.support-centered:hover {
+    border-color: rgba(219, 181, 255, .58);
+    box-shadow:
+      0 32px 88px rgba(0,0,0,.52),
+      0 0 0 1px rgba(202,156,255,.15),
+      0 0 42px rgba(139,61,255,.20),
+      0 0 105px rgba(139,61,255,.10),
+      inset 0 1px 0 rgba(255,255,255,.10);
+  }
+
+  .support.support-centered:hover .jar-glow {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+      0 0 42px rgba(139,61,255,.28),
+      0 0 70px rgba(179,92,255,.12),
+      inset 0 1px 0 rgba(255,255,255,.22),
+      inset 0 -24px 38px rgba(139,61,255,.18) !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  .support.support-centered {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .support-visual {
+    min-height: 118px;
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid rgba(255,255,255,.07);
+    padding-top: 16px;
+  }
+
+  .support-visual::before {
+    inset: 14px 0 0;
+  }
+
+  .support-centered .support-copy .btn,
+  .support-centered .btn {
+    margin-top: 17px;
+  }
+}
+
+@media (max-width: 760px) {
+  .content-grid > .panel:hover,
+  .panel:hover,
+  .collab-box:hover,
+  .stream-card:hover,
+  .chat-card:hover,
+  .clip-card:hover,
+  .social-icons-brand .social-link:hover,
+  .platform-card:hover,
+  .command-category:hover,
+  .announce-card:hover {
+    transform: none;
+  }
+
+  .support.support-centered {
+    gap: 14px;
+  }
+
+  .support-visual {
+    display: none !important;
+  }
+
+  .support-centered .support-copy .btn,
+  .support-centered .btn {
+    width: 100%;
+  }
+}
