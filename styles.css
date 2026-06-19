@@ -2452,3 +2452,87 @@ body::after {
     right: 14px;
   }
 }
+
+
+/* v1.8.12 — larger but softer geometric background grid
+   Scope: styles.css only. Scroll animation where supported. */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -12vh -10vw;
+  pointer-events: none;
+  z-index: -2;
+  opacity: .72;
+  background:
+    radial-gradient(circle at 82% 4%, rgba(179,92,255,.085), transparent 24%),
+    radial-gradient(circle at 7% 22%, rgba(126,45,255,.075), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(93,41,203,.072), transparent 34%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1200'%3E%0A  %3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%0A    %3Cpath d='M-80 290 L160 430 L430 130 L700 310 L940 100 L1220 270 L1680 60' stroke='#a855ff' stroke-opacity='.22' stroke-width='2'/%3E%0A    %3Cpath d='M-60 760 L180 660 L420 850 L650 620 L910 745 L1180 520 L1600 700' stroke='#b35cff' stroke-opacity='.18' stroke-width='2'/%3E%0A    %3Cpath d='M20 1020 L260 860 L540 1010 L790 880 L1060 1060 L1350 850 L1650 980' stroke='#7c35ff' stroke-opacity='.16' stroke-width='1.5'/%3E%0A    %3Cpath d='M80 110 L250 330 L120 620 L360 720 L500 480 L760 560 L900 350 L1160 455 L1360 250 L1530 400' stroke='#caa6ff' stroke-opacity='.15' stroke-width='1.5'/%3E%0A    %3Cpath d='M1430 80 L1300 330 L1510 560 L1310 760 L1480 1020' stroke='#a855ff' stroke-opacity='.17' stroke-width='1.5'/%3E%0A    %3Cpath d='M260 430 L420 850 M700 310 L650 620 M940 100 L910 745 M1220 270 L1180 520 M1360 250 L1310 760' stroke='#a855ff' stroke-opacity='.11' stroke-width='1'/%3E%0A    %3Cpath d='M160 430 L180 660 M430 130 L500 480 M760 560 L790 880 M1060 1060 L1180 520' stroke='#ffffff' stroke-opacity='.06' stroke-width='1'/%3E%0A    %3Cpath d='M-120 560 L120 620 L180 660 L360 720 L650 620 L760 560 L910 745 L1310 760 L1680 620' stroke='#b35cff' stroke-opacity='.10' stroke-width='1'/%3E%0A    %3Cpath d='M-90 390 L160 430 L250 330 L430 130' stroke='#ffffff' stroke-opacity='.16' stroke-width='2.2'/%3E%0A    %3Cpath d='M1180 520 L1310 760 L1480 1020' stroke='#ffffff' stroke-opacity='.12' stroke-width='2'/%3E%0A  %3C/g%3E%0A  %3Cg fill='#caa6ff' fill-opacity='.42'%3E%0A    %3Ccircle cx='160' cy='430' r='3.2'/%3E%0A    %3Ccircle cx='430' cy='130' r='3.4'/%3E%0A    %3Ccircle cx='700' cy='310' r='2.6'/%3E%0A    %3Ccircle cx='940' cy='100' r='3.1'/%3E%0A    %3Ccircle cx='1220' cy='270' r='2.8'/%3E%0A    %3Ccircle cx='180' cy='660' r='2.6'/%3E%0A    %3Ccircle cx='420' cy='850' r='3.2'/%3E%0A    %3Ccircle cx='650' cy='620' r='2.5'/%3E%0A    %3Ccircle cx='910' cy='745' r='3.1'/%3E%0A    %3Ccircle cx='1180' cy='520' r='3.3'/%3E%0A    %3Ccircle cx='1310' cy='760' r='2.7'/%3E%0A    %3Ccircle cx='1480' cy='1020' r='3'/%3E%0A  %3C/g%3E%0A  %3Cg fill='#a855ff' fill-opacity='.26'%3E%0A    %3Ccircle cx='80' cy='110' r='2'/%3E%0A    %3Ccircle cx='250' cy='330' r='2'/%3E%0A    %3Ccircle cx='500' cy='480' r='2'/%3E%0A    %3Ccircle cx='760' cy='560' r='2'/%3E%0A    %3Ccircle cx='1360' cy='250' r='2'/%3E%0A    %3Ccircle cx='1530' cy='400' r='2'/%3E%0A    %3Ccircle cx='260' cy='860' r='2'/%3E%0A    %3Ccircle cx='790' cy='880' r='2'/%3E%0A    %3Ccircle cx='1060' cy='1060' r='2'/%3E%0A  %3C/g%3E%0A%3C/svg%3E") center top / 1750px 1320px repeat-y,
+    linear-gradient(180deg, rgba(5,4,10,.02), rgba(5,4,10,.34));
+  filter: drop-shadow(0 0 10px rgba(179,92,255,.12));
+  transform: translate3d(0, 0, 0) scale(1.02);
+  will-change: transform, background-position;
+}
+
+body::after {
+  opacity: .54;
+}
+
+/* Keep the thin base grid quieter so the geometry is the main background detail */
+.noise {
+  opacity: .22;
+}
+
+@keyframes ivixGeoScroll {
+  from {
+    transform: translate3d(0, -3vh, 0) scale(1.02);
+    background-position:
+      center center,
+      center center,
+      center center,
+      center -80px,
+      center center;
+  }
+  to {
+    transform: translate3d(0, 7vh, 0) scale(1.055);
+    background-position:
+      center center,
+      center center,
+      center center,
+      center 220px,
+      center center;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  body::before {
+    animation: ivixGeoScroll linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  body::before {
+    inset: -8vh -34vw;
+    opacity: .58;
+    background-size:
+      auto,
+      auto,
+      auto,
+      1250px 980px,
+      auto;
+  }
+
+  .noise {
+    opacity: .18;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none !important;
+    transform: none;
+  }
+}
