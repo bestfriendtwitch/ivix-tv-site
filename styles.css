@@ -2454,217 +2454,229 @@ body::after {
 }
 
 
-/* v1.8.16 — CSS-only geometric background, fixed correctly
-   Removes the asset/SVG approach. Geometry stays under content, not over it. */
+/* v1.8.17 — visible CSS-only geometric network in body background
+   This replaces failed overlay/SVG attempts. No pseudo overlay over content. */
 
 body {
-  isolation: isolate;
-}
-
-/* Keep the old grain grid very quiet */
-.noise {
-  opacity: .18 !important;
-  mix-blend-mode: overlay !important;
-  z-index: 1 !important;
   background-image:
-    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px) !important;
-  background-size: 34px 34px !important;
-}
+    /* nodes */
+    radial-gradient(circle at 12% 24%, rgba(216,188,255,.30) 0 1.5px, transparent 2.7px),
+    radial-gradient(circle at 28% 36%, rgba(179,92,255,.25) 0 1.8px, transparent 3.1px),
+    radial-gradient(circle at 44% 18%, rgba(216,188,255,.25) 0 1.5px, transparent 2.8px),
+    radial-gradient(circle at 62% 34%, rgba(179,92,255,.25) 0 1.7px, transparent 3px),
+    radial-gradient(circle at 83% 24%, rgba(216,188,255,.24) 0 1.6px, transparent 3px),
+    radial-gradient(circle at 18% 66%, rgba(179,92,255,.23) 0 1.7px, transparent 3px),
+    radial-gradient(circle at 38% 74%, rgba(216,188,255,.21) 0 1.6px, transparent 3px),
+    radial-gradient(circle at 58% 62%, rgba(179,92,255,.22) 0 1.7px, transparent 3px),
+    radial-gradient(circle at 78% 76%, rgba(216,188,255,.20) 0 1.5px, transparent 2.8px),
 
-/* This layer is the actual geometric network.
-   It is above the page background, below all real content. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: -18vh -14vw;
-  z-index: 0;
-  pointer-events: none;
-  opacity: .46;
-  background:
-    /* soft light blobs */
-    radial-gradient(circle at 12% 28%, rgba(179,92,255,.11), transparent 19%),
-    radial-gradient(circle at 86% 20%, rgba(179,92,255,.09), transparent 22%),
-    radial-gradient(circle at 82% 78%, rgba(126,45,255,.075), transparent 25%),
+    /* geometric line network */
+    linear-gradient(28deg, transparent 0 17.8%, rgba(190,126,255,.18) 17.95%, rgba(190,126,255,.18) 18.20%, transparent 18.35% 100%),
+    linear-gradient(147deg, transparent 0 23.8%, rgba(179,92,255,.15) 23.94%, rgba(179,92,255,.15) 24.15%, transparent 24.30% 100%),
+    linear-gradient(64deg, transparent 0 33.8%, rgba(216,188,255,.12) 33.92%, rgba(216,188,255,.12) 34.10%, transparent 34.25% 100%),
+    linear-gradient(118deg, transparent 0 41.8%, rgba(179,92,255,.14) 41.95%, rgba(179,92,255,.14) 42.16%, transparent 42.30% 100%),
+    linear-gradient(22deg, transparent 0 56.8%, rgba(190,126,255,.13) 56.92%, rgba(190,126,255,.13) 57.12%, transparent 57.25% 100%),
+    linear-gradient(154deg, transparent 0 65.8%, rgba(179,92,255,.13) 65.94%, rgba(179,92,255,.13) 66.16%, transparent 66.30% 100%),
+    linear-gradient(76deg, transparent 0 73.8%, rgba(216,188,255,.10) 73.92%, rgba(216,188,255,.10) 74.10%, transparent 74.25% 100%),
 
-    /* long random network lines */
-    linear-gradient(28deg, transparent 0 18%, rgba(190,126,255,.20) 18.08%, rgba(190,126,255,.20) 18.24%, transparent 18.32% 100%),
-    linear-gradient(147deg, transparent 0 24%, rgba(179,92,255,.16) 24.08%, rgba(179,92,255,.16) 24.22%, transparent 24.30% 100%),
-    linear-gradient(64deg, transparent 0 34%, rgba(216,188,255,.12) 34.06%, rgba(216,188,255,.12) 34.18%, transparent 34.26% 100%),
-    linear-gradient(118deg, transparent 0 42%, rgba(179,92,255,.14) 42.06%, rgba(179,92,255,.14) 42.20%, transparent 42.28% 100%),
-    linear-gradient(22deg, transparent 0 57%, rgba(190,126,255,.13) 57.06%, rgba(190,126,255,.13) 57.18%, transparent 57.26% 100%),
-    linear-gradient(154deg, transparent 0 66%, rgba(179,92,255,.14) 66.08%, rgba(179,92,255,.14) 66.22%, transparent 66.30% 100%),
-    linear-gradient(76deg, transparent 0 74%, rgba(216,188,255,.10) 74.06%, rgba(216,188,255,.10) 74.18%, transparent 74.26% 100%),
-
-    /* a few shorter brighter segments */
-    linear-gradient(33deg, transparent 0 47%, rgba(255,255,255,.13) 47.04%, rgba(255,255,255,.13) 47.16%, transparent 47.24% 100%),
-    linear-gradient(132deg, transparent 0 53%, rgba(255,255,255,.10) 53.04%, rgba(255,255,255,.10) 53.15%, transparent 53.23% 100%);
+    /* main atmosphere */
+    radial-gradient(circle at 12% 18%, rgba(132, 48, 255, .32), transparent 25%),
+    radial-gradient(circle at 84% 8%, rgba(70, 23, 145, .25), transparent 24%),
+    radial-gradient(circle at 76% 84%, rgba(115, 30, 255, .18), transparent 26%),
+    linear-gradient(180deg, #080511 0%, #05040a 48%, #080511 100%);
 
   background-size:
-    auto,
-    auto,
-    auto,
-    780px 520px,
-    860px 560px,
-    920px 620px,
+    100vw 1280px,
+    100vw 1280px,
+    100vw 1280px,
+    100vw 1280px,
+    100vw 1280px,
+    100vw 1280px,
+    100vw 1280px,
+    100vw 1280px,
+    100vw 1280px,
+    720px 520px,
+    820px 560px,
+    900px 620px,
     840px 600px,
     760px 540px,
     980px 640px,
     880px 580px,
-    640px 460px,
-    700px 500px;
+    auto,
+    auto,
+    auto,
+    auto;
 
   background-position:
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    -80px 70px,
+    260px -50px,
+    20px 300px,
+    500px 170px,
+    -240px 500px,
+    600px 600px,
+    -150px 780px,
     center center,
     center center,
     center center,
-    -120px 80px,
-    280px -60px,
-    40px 320px,
-    520px 180px,
-    -260px 520px,
-    620px 620px,
-    -180px 780px,
-    100px 180px,
-    720px 420px;
+    center center;
 
-  filter:
-    drop-shadow(0 0 5px rgba(179,92,255,.18))
-    drop-shadow(0 0 14px rgba(126,45,255,.08));
-
-  transform: translate3d(0, 0, 0) scale(1.02);
-  will-change: transform, background-position;
+  background-attachment:
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed,
+    fixed;
 }
 
-/* Small glowing nodes made with box-shadow on one pseudo layer.
-   These are under content too. */
+/* Remove failed geometry pseudo-layers from earlier attempts if browser still cached them */
+body::before {
+  background:
+    radial-gradient(circle at 82% 4%, rgba(179,92,255,.075), transparent 24%),
+    radial-gradient(circle at 7% 22%, rgba(126,45,255,.060), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(93,41,203,.055), transparent 34%),
+    linear-gradient(180deg, rgba(5,4,10,.02), rgba(5,4,10,.28));
+  opacity: .70;
+  z-index: -2;
+}
+
 body::after {
-  content: "";
+  content: "IVIX IVIX IVIX";
   position: fixed;
-  inset: 0;
-  z-index: 0;
+  left: -28px;
+  top: 82px;
+  width: 360px;
+  height: 240px;
   pointer-events: none;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  left: 12vw;
-  top: 22vh;
-  opacity: .50;
-  background: rgba(216,188,255,.62);
-  box-shadow:
-    18vw 10vh 0 rgba(216,188,255,.35),
-    38vw -6vh 0 rgba(179,92,255,.38),
-    62vw 8vh 0 rgba(216,188,255,.32),
-    82vw 20vh 0 rgba(179,92,255,.34),
-    10vw 44vh 0 rgba(179,92,255,.33),
-    34vw 34vh 0 rgba(216,188,255,.28),
-    56vw 48vh 0 rgba(179,92,255,.30),
-    78vw 58vh 0 rgba(216,188,255,.28),
-    20vw 78vh 0 rgba(179,92,255,.30),
-    52vw 84vh 0 rgba(216,188,255,.27),
-    88vw 82vh 0 rgba(179,92,255,.27);
-  filter: drop-shadow(0 0 8px rgba(179,92,255,.45));
+  z-index: -1;
+  color: rgba(139,61,255,.085);
+  font-family: "Russo One", sans-serif;
+  font-size: 38px;
+  line-height: 1.35;
+  letter-spacing: 2px;
+  transform: rotate(-8deg);
+  opacity: .60;
 }
 
-/* Put real content above the background geometry */
-.site-header,
-main,
-.site-footer {
-  position: relative;
-  z-index: 2;
+/* Keep noise subtle */
+.noise {
+  opacity: .16 !important;
+  mix-blend-mode: overlay !important;
 }
 
-@keyframes ivixCssGeoScroll {
+@keyframes ivixBodyGeoScroll {
   from {
-    transform: translate3d(0, -5vh, 0) scale(1.015);
     background-position:
+      0 -60px,
+      0 -60px,
+      0 -60px,
+      0 -60px,
+      0 -60px,
+      0 -60px,
+      0 -60px,
+      0 -60px,
+      0 -60px,
+      -80px 30px,
+      260px -90px,
+      20px 240px,
+      500px 120px,
+      -240px 450px,
+      600px 530px,
+      -150px 720px,
       center center,
       center center,
       center center,
-      -120px 40px,
-      280px -90px,
-      40px 260px,
-      520px 140px,
-      -260px 470px,
-      620px 560px,
-      -180px 720px,
-      100px 140px,
-      720px 360px;
+      center center;
   }
 
   to {
-    transform: translate3d(0, 9vh, 0) scale(1.05);
     background-position:
+      0 220px,
+      0 220px,
+      0 220px,
+      0 220px,
+      0 220px,
+      0 220px,
+      0 220px,
+      0 220px,
+      0 220px,
+      -80px 260px,
+      260px 170px,
+      20px 560px,
+      500px 430px,
+      -240px 780px,
+      600px 920px,
+      -150px 1060px,
       center center,
       center center,
       center center,
-      -120px 260px,
-      280px 160px,
-      40px 540px,
-      520px 420px,
-      -260px 760px,
-      620px 900px,
-      -180px 1020px,
-      100px 360px,
-      720px 680px;
-  }
-}
-
-@keyframes ivixCssNodeScroll {
-  from {
-    transform: translate3d(0, -4vh, 0);
-  }
-  to {
-    transform: translate3d(0, 7vh, 0);
+      center center;
   }
 }
 
 @supports (animation-timeline: scroll()) {
-  body::before {
-    animation: ivixCssGeoScroll linear both;
-    animation-timeline: scroll(root);
-    animation-range: 0 100%;
-  }
-
-  body::after {
-    animation: ivixCssNodeScroll linear both;
+  body {
+    animation: ivixBodyGeoScroll linear both;
     animation-timeline: scroll(root);
     animation-range: 0 100%;
   }
 }
 
 @media (max-width: 760px) {
-  body::before {
-    inset: -10vh -42vw;
-    opacity: .30;
+  body {
     background-size:
-      auto,
-      auto,
-      auto,
-      640px 460px,
-      720px 500px,
-      760px 540px,
-      700px 520px,
+      100vw 980px,
+      100vw 980px,
+      100vw 980px,
+      100vw 980px,
+      100vw 980px,
+      100vw 980px,
+      100vw 980px,
+      100vw 980px,
+      100vw 980px,
       620px 460px,
-      760px 560px,
-      720px 520px,
-      540px 420px,
-      600px 440px;
-  }
-
-  body::after {
-    opacity: .30;
+      700px 500px,
+      740px 520px,
+      680px 500px,
+      620px 460px,
+      740px 540px,
+      700px 500px,
+      auto,
+      auto,
+      auto,
+      auto;
   }
 
   .noise {
-    opacity: .12 !important;
+    opacity: .11 !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body::before,
-  body::after {
+  body {
     animation: none !important;
-    transform: none;
   }
 }
