@@ -2454,654 +2454,60 @@ body::after {
 }
 
 
-/* v1.8.17 — visible CSS-only geometric network in body background
-   This replaces failed overlay/SVG attempts. No pseudo overlay over content. */
+/* v1.8.22 — real constellation background, not random scratches
+   Uses SVG as BODY BACKGROUND, not as overlay. Two layers for parallax depth. */
 
 body {
   background-image:
-    /* nodes */
-    radial-gradient(circle at 12% 24%, rgba(216,188,255,.30) 0 1.5px, transparent 2.7px),
-    radial-gradient(circle at 28% 36%, rgba(179,92,255,.25) 0 1.8px, transparent 3.1px),
-    radial-gradient(circle at 44% 18%, rgba(216,188,255,.25) 0 1.5px, transparent 2.8px),
-    radial-gradient(circle at 62% 34%, rgba(179,92,255,.25) 0 1.7px, transparent 3px),
-    radial-gradient(circle at 83% 24%, rgba(216,188,255,.24) 0 1.6px, transparent 3px),
-    radial-gradient(circle at 18% 66%, rgba(179,92,255,.23) 0 1.7px, transparent 3px),
-    radial-gradient(circle at 38% 74%, rgba(216,188,255,.21) 0 1.6px, transparent 3px),
-    radial-gradient(circle at 58% 62%, rgba(179,92,255,.22) 0 1.7px, transparent 3px),
-    radial-gradient(circle at 78% 76%, rgba(216,188,255,.20) 0 1.5px, transparent 2.8px),
-
-    /* geometric line network */
-    linear-gradient(28deg, transparent 0 17.8%, rgba(190,126,255,.18) 17.95%, rgba(190,126,255,.18) 18.20%, transparent 18.35% 100%),
-    linear-gradient(147deg, transparent 0 23.8%, rgba(179,92,255,.15) 23.94%, rgba(179,92,255,.15) 24.15%, transparent 24.30% 100%),
-    linear-gradient(64deg, transparent 0 33.8%, rgba(216,188,255,.12) 33.92%, rgba(216,188,255,.12) 34.10%, transparent 34.25% 100%),
-    linear-gradient(118deg, transparent 0 41.8%, rgba(179,92,255,.14) 41.95%, rgba(179,92,255,.14) 42.16%, transparent 42.30% 100%),
-    linear-gradient(22deg, transparent 0 56.8%, rgba(190,126,255,.13) 56.92%, rgba(190,126,255,.13) 57.12%, transparent 57.25% 100%),
-    linear-gradient(154deg, transparent 0 65.8%, rgba(179,92,255,.13) 65.94%, rgba(179,92,255,.13) 66.16%, transparent 66.30% 100%),
-    linear-gradient(76deg, transparent 0 73.8%, rgba(216,188,255,.10) 73.92%, rgba(216,188,255,.10) 74.10%, transparent 74.25% 100%),
-
-    /* main atmosphere */
-    radial-gradient(circle at 12% 18%, rgba(132, 48, 255, .32), transparent 25%),
-    radial-gradient(circle at 84% 8%, rgba(70, 23, 145, .25), transparent 24%),
-    radial-gradient(circle at 76% 84%, rgba(115, 30, 255, .18), transparent 26%),
-    linear-gradient(180deg, #080511 0%, #05040a 48%, #080511 100%);
-
+    url("/assets/constellation-near.svg?v=1822"),
+    url("/assets/constellation-far.svg?v=1822"),
+    radial-gradient(circle at 12% 18%, rgba(138,61,255,.28), transparent 26%),
+    radial-gradient(circle at 86% 18%, rgba(153,76,255,.22), transparent 25%),
+    radial-gradient(circle at 78% 84%, rgba(121,49,236,.13), transparent 28%),
+    linear-gradient(180deg, #08050f 0%, #05040a 48%, #030209 100%) !important;
+  background-repeat: repeat-y, repeat-y, no-repeat, no-repeat, no-repeat, no-repeat;
   background-size:
-    100vw 1280px,
-    100vw 1280px,
-    100vw 1280px,
-    100vw 1280px,
-    100vw 1280px,
-    100vw 1280px,
-    100vw 1280px,
-    100vw 1280px,
-    100vw 1280px,
-    720px 520px,
-    820px 560px,
-    900px 620px,
-    840px 600px,
-    760px 540px,
-    980px 640px,
-    880px 580px,
+    100% 1800px,
+    100% 1800px,
     auto,
     auto,
     auto,
     auto;
-
   background-position:
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    -80px 70px,
-    260px -50px,
-    20px 300px,
-    500px 170px,
-    -240px 500px,
-    600px 600px,
-    -150px 780px,
+    center 0,
+    center 0,
     center center,
     center center,
     center center,
     center center;
-
   background-attachment:
     fixed,
     fixed,
     fixed,
     fixed,
     fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
-    fixed,
     fixed;
+  animation: none !important;
 }
 
-/* Remove failed geometry pseudo-layers from earlier attempts if browser still cached them */
+/* Remove failed pseudo geometry layers; keep only a very soft ambience. */
 body::before {
-  background:
-    radial-gradient(circle at 82% 4%, rgba(179,92,255,.075), transparent 24%),
-    radial-gradient(circle at 7% 22%, rgba(126,45,255,.060), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(93,41,203,.055), transparent 34%),
-    linear-gradient(180deg, rgba(5,4,10,.02), rgba(5,4,10,.28));
-  opacity: .70;
-  z-index: -2;
-}
-
-body::after {
-  content: "IVIX IVIX IVIX";
+  content: "";
   position: fixed;
-  left: -28px;
-  top: 82px;
-  width: 360px;
-  height: 240px;
+  inset: 0;
   pointer-events: none;
-  z-index: -1;
-  color: rgba(139,61,255,.085);
-  font-family: "Russo One", sans-serif;
-  font-size: 38px;
-  line-height: 1.35;
-  letter-spacing: 2px;
-  transform: rotate(-8deg);
-  opacity: .60;
-}
-
-/* Keep noise subtle */
-.noise {
-  opacity: .16 !important;
-  mix-blend-mode: overlay !important;
-}
-
-@keyframes ivixBodyGeoScroll {
-  from {
-    background-position:
-      0 -60px,
-      0 -60px,
-      0 -60px,
-      0 -60px,
-      0 -60px,
-      0 -60px,
-      0 -60px,
-      0 -60px,
-      0 -60px,
-      -80px 30px,
-      260px -90px,
-      20px 240px,
-      500px 120px,
-      -240px 450px,
-      600px 530px,
-      -150px 720px,
-      center center,
-      center center,
-      center center,
-      center center;
-  }
-
-  to {
-    background-position:
-      0 220px,
-      0 220px,
-      0 220px,
-      0 220px,
-      0 220px,
-      0 220px,
-      0 220px,
-      0 220px,
-      0 220px,
-      -80px 260px,
-      260px 170px,
-      20px 560px,
-      500px 430px,
-      -240px 780px,
-      600px 920px,
-      -150px 1060px,
-      center center,
-      center center,
-      center center,
-      center center;
-  }
-}
-
-@supports (animation-timeline: scroll()) {
-  body {
-    animation: ivixBodyGeoScroll linear both;
-    animation-timeline: scroll(root);
-    animation-range: 0 100%;
-  }
-}
-
-@media (max-width: 760px) {
-  body {
-    background-size:
-      100vw 980px,
-      100vw 980px,
-      100vw 980px,
-      100vw 980px,
-      100vw 980px,
-      100vw 980px,
-      100vw 980px,
-      100vw 980px,
-      100vw 980px,
-      620px 460px,
-      700px 500px,
-      740px 520px,
-      680px 500px,
-      620px 460px,
-      740px 540px,
-      700px 500px,
-      auto,
-      auto,
-      auto,
-      auto;
-  }
-
-  .noise {
-    opacity: .11 !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body {
-    animation: none !important;
-  }
-}
-
-
-/* v1.8.18 — deeper geometric background
-   Based on working v1.8.17. CSS-only. More like the visualization:
-   larger diagonal side geometry, calmer center, parallax-like scroll movement. */
-
-body {
-  background-image:
-    /* tiny nodes */
-    radial-gradient(circle at 5% 18%, rgba(216,188,255,.44) 0 1.7px, transparent 3px),
-    radial-gradient(circle at 14% 48%, rgba(179,92,255,.36) 0 1.9px, transparent 3.3px),
-    radial-gradient(circle at 8% 82%, rgba(216,188,255,.34) 0 1.7px, transparent 3px),
-    radial-gradient(circle at 27% 9%, rgba(216,188,255,.34) 0 1.6px, transparent 3px),
-    radial-gradient(circle at 86% 20%, rgba(179,92,255,.38) 0 1.8px, transparent 3.2px),
-    radial-gradient(circle at 94% 48%, rgba(216,188,255,.32) 0 1.7px, transparent 3px),
-    radial-gradient(circle at 88% 82%, rgba(179,92,255,.34) 0 1.8px, transparent 3.2px),
-    radial-gradient(circle at 62% 14%, rgba(216,188,255,.18) 0 1.2px, transparent 2.4px),
-    radial-gradient(circle at 64% 78%, rgba(179,92,255,.17) 0 1.2px, transparent 2.4px),
-
-    /* left-side angular network */
-    linear-gradient(32deg, transparent 0 10.6%, rgba(216,188,255,.24) 10.76%, rgba(216,188,255,.24) 11.02%, transparent 11.18% 100%),
-    linear-gradient(128deg, transparent 0 18.8%, rgba(179,92,255,.21) 18.96%, rgba(179,92,255,.21) 19.20%, transparent 19.36% 100%),
-    linear-gradient(61deg, transparent 0 28.8%, rgba(179,92,255,.18) 28.96%, rgba(179,92,255,.18) 29.16%, transparent 29.32% 100%),
-    linear-gradient(151deg, transparent 0 42.7%, rgba(216,188,255,.15) 42.84%, rgba(216,188,255,.15) 43.02%, transparent 43.18% 100%),
-
-    /* right-side angular network */
-    linear-gradient(148deg, transparent 0 11.8%, rgba(216,188,255,.23) 11.96%, rgba(216,188,255,.23) 12.20%, transparent 12.36% 100%),
-    linear-gradient(27deg, transparent 0 23.5%, rgba(179,92,255,.20) 23.66%, rgba(179,92,255,.20) 23.88%, transparent 24.04% 100%),
-    linear-gradient(118deg, transparent 0 38.6%, rgba(179,92,255,.18) 38.76%, rgba(179,92,255,.18) 38.98%, transparent 39.14% 100%),
-    linear-gradient(69deg, transparent 0 54.4%, rgba(216,188,255,.14) 54.54%, rgba(216,188,255,.14) 54.72%, transparent 54.88% 100%),
-
-    /* long “hero” diagonal strokes */
-    linear-gradient(31deg, transparent 0 48.2%, rgba(255,255,255,.16) 48.32%, rgba(255,255,255,.16) 48.48%, transparent 48.62% 100%),
-    linear-gradient(149deg, transparent 0 51.6%, rgba(216,188,255,.13) 51.72%, rgba(216,188,255,.13) 51.90%, transparent 52.05% 100%),
-
-    /* quieter center structure */
-    linear-gradient(75deg, transparent 0 58.8%, rgba(179,92,255,.10) 58.92%, rgba(179,92,255,.10) 59.06%, transparent 59.20% 100%),
-    linear-gradient(112deg, transparent 0 68.6%, rgba(216,188,255,.085) 68.72%, rgba(216,188,255,.085) 68.84%, transparent 69.00% 100%),
-
-    /* atmosphere */
-    radial-gradient(circle at 8% 36%, rgba(132, 48, 255, .34), transparent 25%),
-    radial-gradient(circle at 92% 30%, rgba(132, 48, 255, .26), transparent 25%),
-    radial-gradient(circle at 50% 0%, rgba(115, 30, 255, .13), transparent 34%),
-    radial-gradient(circle at 76% 84%, rgba(115, 30, 255, .16), transparent 28%),
-    linear-gradient(180deg, #080511 0%, #05040a 48%, #080511 100%);
-
-  background-size:
-    100vw 1420px,
-    100vw 1420px,
-    100vw 1420px,
-    100vw 1420px,
-    100vw 1420px,
-    100vw 1420px,
-    100vw 1420px,
-    100vw 1420px,
-    100vw 1420px,
-
-    760px 620px,
-    820px 680px,
-    680px 560px,
-    900px 760px,
-
-    820px 640px,
-    760px 600px,
-    920px 720px,
-    700px 560px,
-
-    1080px 760px,
-    1200px 820px,
-
-    920px 700px,
-    980px 760px,
-
-    auto,
-    auto,
-    auto,
-    auto,
-    auto;
-
-  background-position:
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-
-    -420px 60px,
-    -340px 360px,
-    -260px 720px,
-    -520px 950px,
-
-    calc(100% + 280px) 40px,
-    calc(100% + 380px) 350px,
-    calc(100% + 320px) 700px,
-    calc(100% + 260px) 980px,
-
-    -140px 260px,
-    calc(100% + 60px) 220px,
-
-    240px 360px,
-    680px 620px,
-
-    center center,
-    center center,
-    center center,
-    center center,
-    center center;
-
-  background-attachment: fixed;
-}
-
-/* Make old IVIX text less distracting so geometry wins */
-body::after {
-  opacity: .42;
-}
-
-/* Keep content safely above background */
-.site-header,
-main,
-.site-footer {
-  position: relative;
-  z-index: 2;
-}
-
-/* More depth: different layers travel different distances on scroll */
-@keyframes ivixBodyGeoScroll {
-  from {
-    background-position:
-      0 -120px,
-      0 -80px,
-      0 -40px,
-      0 -130px,
-      0 -90px,
-      0 -50px,
-      0 -110px,
-      0 -60px,
-      0 -30px,
-
-      -420px -20px,
-      -340px 260px,
-      -260px 600px,
-      -520px 800px,
-
-      calc(100% + 280px) -40px,
-      calc(100% + 380px) 260px,
-      calc(100% + 320px) 580px,
-      calc(100% + 260px) 830px,
-
-      -140px 160px,
-      calc(100% + 60px) 100px,
-
-      240px 300px,
-      680px 560px,
-
-      center center,
-      center center,
-      center center,
-      center center,
-      center center;
-  }
-
-  to {
-    background-position:
-      0 300px,
-      0 250px,
-      0 210px,
-      0 340px,
-      0 270px,
-      0 230px,
-      0 320px,
-      0 260px,
-      0 220px,
-
-      -420px 360px,
-      -340px 680px,
-      -260px 1040px,
-      -520px 1260px,
-
-      calc(100% + 280px) 380px,
-      calc(100% + 380px) 710px,
-      calc(100% + 320px) 1060px,
-      calc(100% + 260px) 1320px,
-
-      -140px 520px,
-      calc(100% + 60px) 560px,
-
-      240px 640px,
-      680px 980px,
-
-      center center,
-      center center,
-      center center,
-      center center,
-      center center;
-  }
-}
-
-@supports (animation-timeline: scroll()) {
-  body {
-    animation: ivixBodyGeoScroll linear both;
-    animation-timeline: scroll(root);
-    animation-range: 0 100%;
-  }
-}
-
-/* Add a subtle pulsing glow to the geometric feeling without moving over content */
-@keyframes ivixAmbientBreath {
-  0%, 100% {
-    filter: none;
-  }
-  50% {
-    filter: brightness(1.05);
-  }
-}
-
-body {
-  animation-name: ivixAmbientBreath;
-  animation-duration: 7s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-
-@supports (animation-timeline: scroll()) {
-  body {
-    animation-name: ivixBodyGeoScroll, ivixAmbientBreath;
-    animation-duration: auto, 7s;
-    animation-timing-function: linear, ease-in-out;
-    animation-iteration-count: 1, infinite;
-    animation-fill-mode: both, none;
-    animation-timeline: scroll(root), auto;
-    animation-range: 0 100%, normal;
-  }
-}
-
-@media (max-width: 760px) {
-  body {
-    background-size:
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-
-      620px 520px,
-      690px 560px,
-      560px 480px,
-      760px 620px,
-
-      680px 540px,
-      620px 500px,
-      760px 600px,
-      600px 500px,
-
-      900px 660px,
-      960px 700px,
-
-      720px 560px,
-      760px 620px,
-
-      auto,
-      auto,
-      auto,
-      auto,
-      auto;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body {
-    animation: none !important;
-  }
-}
-
-
-/* v1.8.21 — safe constellation correction
-   Rollback from crooked v1.8.20. CSS only, no SVG/data-url.
-   Goal: distributed constellation-like geometry, not a left-side vertical strip. */
-
-body {
-  background-image:
-    /* constellation nodes — distributed across viewport */
-    radial-gradient(circle at 7% 18%, rgba(230,210,255,.36) 0 1.6px, transparent 3px),
-    radial-gradient(circle at 16% 34%, rgba(178,92,255,.34) 0 2px, transparent 3.5px),
-    radial-gradient(circle at 10% 60%, rgba(230,210,255,.28) 0 1.5px, transparent 3px),
-    radial-gradient(circle at 22% 78%, rgba(178,92,255,.31) 0 1.8px, transparent 3.4px),
-
-    radial-gradient(circle at 34% 14%, rgba(230,210,255,.25) 0 1.4px, transparent 3px),
-    radial-gradient(circle at 44% 31%, rgba(178,92,255,.26) 0 1.7px, transparent 3.3px),
-    radial-gradient(circle at 38% 58%, rgba(230,210,255,.23) 0 1.5px, transparent 3px),
-    radial-gradient(circle at 49% 82%, rgba(178,92,255,.26) 0 1.7px, transparent 3.3px),
-
-    radial-gradient(circle at 63% 18%, rgba(230,210,255,.25) 0 1.5px, transparent 3px),
-    radial-gradient(circle at 72% 38%, rgba(178,92,255,.30) 0 1.9px, transparent 3.5px),
-    radial-gradient(circle at 66% 66%, rgba(230,210,255,.23) 0 1.5px, transparent 3px),
-    radial-gradient(circle at 77% 86%, rgba(178,92,255,.28) 0 1.7px, transparent 3.3px),
-
-    radial-gradient(circle at 88% 14%, rgba(230,210,255,.31) 0 1.7px, transparent 3.3px),
-    radial-gradient(circle at 94% 42%, rgba(178,92,255,.34) 0 2px, transparent 3.6px),
-    radial-gradient(circle at 87% 70%, rgba(230,210,255,.25) 0 1.5px, transparent 3px),
-
-    /* connected glass-like lines, grouped by regions */
-    linear-gradient(34deg, transparent 0 10.9%, rgba(230,210,255,.17) 11.02%, rgba(230,210,255,.17) 11.20%, transparent 11.34% 100%),
-    linear-gradient(126deg, transparent 0 18.8%, rgba(178,92,255,.18) 18.94%, rgba(178,92,255,.18) 19.15%, transparent 19.30% 100%),
-    linear-gradient(58deg, transparent 0 27.9%, rgba(178,92,255,.13) 28.04%, rgba(178,92,255,.13) 28.20%, transparent 28.34% 100%),
-
-    linear-gradient(143deg, transparent 0 34.9%, rgba(230,210,255,.13) 35.04%, rgba(230,210,255,.13) 35.20%, transparent 35.34% 100%),
-    linear-gradient(27deg, transparent 0 42.8%, rgba(178,92,255,.15) 42.94%, rgba(178,92,255,.15) 43.12%, transparent 43.26% 100%),
-    linear-gradient(102deg, transparent 0 50.7%, rgba(230,210,255,.11) 50.82%, rgba(230,210,255,.11) 50.98%, transparent 51.12% 100%),
-
-    linear-gradient(150deg, transparent 0 58.9%, rgba(178,92,255,.16) 59.04%, rgba(178,92,255,.16) 59.22%, transparent 59.36% 100%),
-    linear-gradient(61deg, transparent 0 66.8%, rgba(230,210,255,.12) 66.94%, rgba(230,210,255,.12) 67.10%, transparent 67.24% 100%),
-    linear-gradient(116deg, transparent 0 74.8%, rgba(178,92,255,.14) 74.94%, rgba(178,92,255,.14) 75.10%, transparent 75.24% 100%),
-
-    /* a few brighter cinematic shards */
-    linear-gradient(31deg, transparent 0 47.2%, rgba(255,255,255,.16) 47.30%, rgba(255,255,255,.16) 47.42%, transparent 47.54% 100%),
-    linear-gradient(149deg, transparent 0 52.6%, rgba(216,188,255,.13) 52.70%, rgba(216,188,255,.13) 52.84%, transparent 52.98% 100%),
-    linear-gradient(83deg, transparent 0 37.8%, rgba(255,255,255,.08) 37.88%, rgba(255,255,255,.08) 38.00%, transparent 38.14% 100%),
-
-    /* atmosphere */
-    radial-gradient(circle at 10% 28%, rgba(132,48,255,.30), transparent 26%),
-    radial-gradient(circle at 90% 25%, rgba(132,48,255,.24), transparent 25%),
-    radial-gradient(circle at 52% 4%, rgba(115,30,255,.13), transparent 34%),
-    radial-gradient(circle at 76% 84%, rgba(115,30,255,.15), transparent 28%),
-    linear-gradient(180deg, #080511 0%, #05040a 48%, #080511 100%);
-
-  background-size:
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-    100vw 1400px,
-
-    760px 620px,
-    840px 680px,
-    700px 560px,
-    860px 660px,
-    780px 620px,
-    940px 700px,
-    900px 720px,
-    760px 580px,
-    840px 640px,
-    1080px 760px,
-    1180px 820px,
-    880px 620px,
-
-    auto,
-    auto,
-    auto,
-    auto,
-    auto;
-
-  background-position:
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-
-    -180px 80px,
-    120px 20px,
-    -120px 470px,
-    330px 300px,
-    600px 80px,
-    520px 520px,
-    calc(100% - 140px) 80px,
-    calc(100% + 80px) 380px,
-    calc(100% - 240px) 760px,
-    120px 220px,
-    calc(100% - 140px) 250px,
-    520px 780px,
-
-    center center,
-    center center,
-    center center,
-    center center,
-    center center;
-
-  background-attachment: fixed;
-}
-
-/* Clean up the crooked SVG/pseudo approach completely */
-body::before {
-  background:
-    radial-gradient(circle at 12% 24%, rgba(179,92,255,.07), transparent 22%),
-    radial-gradient(circle at 86% 18%, rgba(179,92,255,.06), transparent 20%),
-    radial-gradient(circle at 58% 80%, rgba(126,45,255,.045), transparent 24%);
-  opacity: .75;
   z-index: -2;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(179,92,255,.055), transparent 20%),
+    radial-gradient(circle at 84% 18%, rgba(179,92,255,.045), transparent 22%),
+    radial-gradient(circle at 50% 90%, rgba(126,45,255,.035), transparent 28%);
+  opacity: .55;
   transform: none;
   animation: none !important;
 }
 
 body::after {
-  opacity: .24 !important;
+  opacity: .18 !important;
 }
 
 .noise {
@@ -3109,77 +2515,21 @@ body::after {
   mix-blend-mode: overlay !important;
 }
 
-@keyframes ivixSafeConstellationScroll {
+/* Enhanced scroll parallax: near layer moves faster, far layer slower. */
+@keyframes ivixConstellationBackgroundScroll {
   from {
     background-position:
-      0 -90px,
-      0 -70px,
-      0 -50px,
-      0 -80px,
-      0 -60px,
-      0 -40px,
-      0 -70px,
-      0 -50px,
-      0 -80px,
-      0 -60px,
-      0 -45px,
-      0 -65px,
-      0 -85px,
-      0 -60px,
-      0 -40px,
-
-      -180px 20px,
-      120px -40px,
-      -120px 390px,
-      330px 220px,
-      600px 20px,
-      520px 440px,
-      calc(100% - 140px) 20px,
-      calc(100% + 80px) 300px,
-      calc(100% - 240px) 680px,
-      120px 140px,
-      calc(100% - 140px) 160px,
-      520px 700px,
-
-      center center,
+      center -120px,
+      center -40px,
       center center,
       center center,
       center center,
       center center;
   }
-
   to {
     background-position:
-      0 300px,
-      0 250px,
-      0 220px,
-      0 280px,
-      0 240px,
-      0 210px,
-      0 270px,
-      0 220px,
-      0 300px,
-      0 250px,
-      0 220px,
-      0 260px,
-      0 290px,
-      0 250px,
-      0 220px,
-
-      -180px 420px,
-      120px 350px,
-      -120px 820px,
-      330px 690px,
-      600px 420px,
-      520px 910px,
-      calc(100% - 140px) 460px,
-      calc(100% + 80px) 780px,
-      calc(100% - 240px) 1180px,
-      120px 610px,
-      calc(100% - 140px) 650px,
-      520px 1220px,
-
-      center center,
+      center 520px,
+      center 230px,
       center center,
       center center,
       center center,
@@ -3187,47 +2537,37 @@ body::after {
   }
 }
 
+/* Slow cinematic breathing without moving over content. */
+@keyframes ivixConstellationColorBreath {
+  0%, 100% {
+    filter: saturate(1.05) brightness(1);
+  }
+  50% {
+    filter: saturate(1.14) brightness(1.045);
+  }
+}
+
+body {
+  animation: ivixConstellationColorBreath 9s ease-in-out infinite !important;
+}
+
 @supports (animation-timeline: scroll()) {
   body {
-    animation: ivixSafeConstellationScroll linear both !important;
-    animation-timeline: scroll(root);
-    animation-range: 0 100%;
+    animation:
+      ivixConstellationBackgroundScroll linear both,
+      ivixConstellationColorBreath 9s ease-in-out infinite !important;
+    animation-timeline: scroll(root), auto;
+    animation-range: 0 100%, normal;
+    animation-duration: auto, 9s;
+    animation-fill-mode: both, none;
   }
 }
 
 @media (max-width: 760px) {
   body {
     background-size:
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-      100vw 1080px,
-
-      620px 500px,
-      690px 540px,
-      600px 480px,
-      700px 540px,
-      640px 500px,
-      740px 560px,
-      720px 560px,
-      640px 500px,
-      700px 540px,
-      880px 620px,
-      940px 660px,
-      720px 520px,
-
-      auto,
+      170% 1600px,
+      170% 1600px,
       auto,
       auto,
       auto,
