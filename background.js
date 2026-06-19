@@ -1,13 +1,12 @@
 /* =============================================================
-   IVIX_TV — smooth fixed galaxy starfield (v16 / site v1.8.39)
+   IVIX_TV — page-canvas galaxy with scrollbar watchdog (v19 / site v1.8.42)
    • mobile: canvas не создается;
    • desktop: 30 FPS;
-   • fixed viewport canvas, so no duplicate scrollbar;
-   • no scrollY-based star projection, so no scroll jitter;
-   • more stars, brighter stars;
-   • faster clockwise rotation around viewport center;
-   • more random shooting stars;
-   • short trail / low blur.
+   • old smooth-scroll principle restored:
+     canvas is absolute and page-sized, so browser scrolls it naturally;
+   • no scrollY projection during animation, so no scroll lag/jitter;
+   • watchdog prevents accidental duplicate scrollbars without forcing fixed mode;
+   • faster clockwise rotation and frequent random shooting stars preserved.
 ============================================================= */
 (function () {
   "use strict";
@@ -21,7 +20,8 @@
 
   const CONFIG = {
     targetFps: 30,
-    dprCap: 1.25,
+    dprCap: 1.12,
+    maxCanvasHeight: 8200,
 
     colorsTop: [
       "205, 218, 255",
@@ -39,7 +39,7 @@
     ],
 
     warmChance: 0.08,
-    mouseAmount: 52,
+    mouseAmount: 44,
     mouseEase: 0.055,
 
     galaxyRotation: 0.0139,
@@ -51,11 +51,11 @@
     nebulae: true,
 
     layers: [
-      { density: 1900,  r: [0.24, 0.62], a: [0.04, 0.17], tw: [0.10, 0.42], twDepth: 0.34, pMouse: 0.05, rotation: 0.42, glow: 0.00, drift: [0.6, 1.5], rayChance: 0.00 },
-      { density: 4200,  r: [0.34, 0.95], a: [0.08, 0.32], tw: [0.14, 0.62], twDepth: 0.46, pMouse: 0.15, rotation: 0.70, glow: 0.035, drift: [0.9, 2.4], rayChance: 0.008 },
-      { density: 9000,  r: [0.50, 1.42], a: [0.16, 0.56], tw: [0.18, 0.82], twDepth: 0.54, pMouse: 0.28, rotation: 0.98, glow: 0.12, drift: [1.4, 3.5], rayChance: 0.022 },
-      { density: 24500, r: [0.80, 2.18], a: [0.26, 0.78], tw: [0.20, 0.98], twDepth: 0.60, pMouse: 0.44, rotation: 1.26, glow: 0.26, drift: [1.8, 4.8], rayChance: 0.052 },
-      { density: 66000, r: [1.20, 2.95], a: [0.38, 0.86], tw: [0.16, 0.72], twDepth: 0.48, pMouse: 0.58, rotation: 1.54, glow: 0.36, drift: [2.2, 5.6], rayChance: 0.18 },
+      { density: 2050,  r: [0.24, 0.62], a: [0.04, 0.17], tw: [0.10, 0.42], twDepth: 0.34, pMouse: 0.04, rotation: 0.42, glow: 0.00, drift: [0.6, 1.5], rayChance: 0.00 },
+      { density: 4550,  r: [0.34, 0.95], a: [0.08, 0.32], tw: [0.14, 0.62], twDepth: 0.46, pMouse: 0.12, rotation: 0.70, glow: 0.035, drift: [0.9, 2.4], rayChance: 0.008 },
+      { density: 9800,  r: [0.50, 1.42], a: [0.16, 0.56], tw: [0.18, 0.82], twDepth: 0.54, pMouse: 0.22, rotation: 0.98, glow: 0.12, drift: [1.4, 3.5], rayChance: 0.022 },
+      { density: 26000, r: [0.80, 2.18], a: [0.26, 0.78], tw: [0.20, 0.98], twDepth: 0.60, pMouse: 0.34, rotation: 1.26, glow: 0.26, drift: [1.8, 4.8], rayChance: 0.052 },
+      { density: 70000, r: [1.20, 2.95], a: [0.38, 0.86], tw: [0.16, 0.72], twDepth: 0.48, pMouse: 0.46, rotation: 1.54, glow: 0.36, drift: [2.2, 5.6], rayChance: 0.18 },
     ],
   };
 
@@ -66,7 +66,7 @@
   const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
 
   let W = 0;
-  let H = 0;
+  let pageH = 0;
   let dpr = 1;
   let quality = 1;
   let frameInterval = 1000 / CONFIG.targetFps;
@@ -92,26 +92,46 @@
   const lerp = (a, b, t) => a + (b - a) * t;
 
   function injectCss() {
-    if (document.getElementById("ivix-bg-smooth-fixed-style")) return;
+    if (document.getElementById("ivix-bg-page-canvas-watchdog-style")) return;
 
     const style = document.createElement("style");
-    style.id = "ivix-bg-smooth-fixed-style";
+    style.id = "ivix-bg-page-canvas-watchdog-style";
     style.textContent = `
+      html {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        scrollbar-gutter: stable;
+      }
+
       html,
       body {
         background-color: #05030b;
+      }
+
+      body {
+        position: relative !important;
         overflow-x: hidden !important;
+        overflow-y: visible !important;
+        max-width: 100vw !important;
       }
 
       #ivix-bg-canvas {
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        max-width: 100vw !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 100% !important;
+        height: var(--ivix-page-bg-height, 100vh) !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
         z-index: 0 !important;
         pointer-events: none !important;
         display: block !important;
+        overflow: hidden !important;
+        contain: layout paint size style !important;
       }
 
       body > :not(#ivix-bg-canvas):not(style):not(script) {
@@ -180,22 +200,21 @@
   }
 
   function calcQuality() {
-    const area = W * H;
+    const area = W * Math.min(pageH, window.innerHeight || 900);
     const cores = navigator.hardwareConcurrency || 4;
 
     let q = 1;
-    if (area > 2400000) q *= 0.70;
-    else if (area > 1700000) q *= 0.82;
+    if (area > 2400000) q *= 0.68;
+    else if (area > 1700000) q *= 0.80;
     if (cores <= 4) q *= 0.82;
     if (cores <= 2) q *= 0.68;
 
-    return clamp(q, 0.46, 1);
+    return clamp(q, 0.44, 1);
   }
 
   function buildLayer(cfg, layerIndex) {
-    const radiusMax = Math.hypot(W, H) / 2 + margin;
-    const fieldArea = Math.PI * radiusMax * radiusMax;
-    const n = Math.max(10, Math.round((fieldArea * quality) / cfg.density));
+    const worldArea = W * (pageH + margin * 2);
+    const n = Math.max(10, Math.round((worldArea * quality) / cfg.density));
     const stars = [];
 
     for (let i = 0; i < n; i += 1) {
@@ -204,8 +223,8 @@
       const isBright = Math.random() < cfg.rayChance || r > 2.28;
 
       stars.push({
-        orbitRadius: Math.sqrt(Math.random()) * radiusMax,
-        angle: rand(0, Math.PI * 2),
+        x: rand(-margin, W + margin),
+        y: rand(-margin, pageH + margin),
         r,
         a: rand(cfg.a[0], cfg.a[1]),
         sp: rand(cfg.tw[0], cfg.tw[1]),
@@ -232,12 +251,13 @@
   function buildNebulae() {
     if (!CONFIG.nebulae) return [];
 
-    const scale = clamp(Math.min(W, H) / 900, 0.72, 1.15);
+    const viewportH = window.innerHeight || 900;
+    const scale = clamp(Math.min(W, viewportH) / 900, 0.72, 1.15);
 
     return [
-      { x: W * 0.12, y: H * 0.22, w: W * 0.72 * scale, h: H * 0.58 * scale, rot: -0.12, colorA: "132, 70, 255", colorB: "80, 38, 160", alpha: 0.035, speed: 0.018, phase: rand(0, Math.PI * 2) },
-      { x: W * 0.86, y: H * 0.34, w: W * 0.74 * scale, h: H * 0.54 * scale, rot: 0.18, colorA: "180, 104, 255", colorB: "68, 26, 140", alpha: 0.028, speed: 0.016, phase: rand(0, Math.PI * 2) },
-      { x: W * 0.48, y: H * 0.66, w: W * 0.82 * scale, h: H * 0.50 * scale, rot: -0.06, colorA: "116, 74, 255", colorB: "44, 22, 92", alpha: 0.024, speed: 0.014, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.12, y: pageH * 0.18, w: W * 0.72 * scale, h: viewportH * 0.58 * scale, rot: -0.12, colorA: "132, 70, 255", colorB: "80, 38, 160", alpha: 0.035, speed: 0.018, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.86, y: pageH * 0.34, w: W * 0.74 * scale, h: viewportH * 0.54 * scale, rot: 0.18, colorA: "180, 104, 255", colorB: "68, 26, 140", alpha: 0.028, speed: 0.016, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.48, y: pageH * 0.66, w: W * 0.82 * scale, h: viewportH * 0.50 * scale, rot: -0.06, colorA: "116, 74, 255", colorB: "44, 22, 92", alpha: 0.024, speed: 0.014, phase: rand(0, Math.PI * 2) },
     ];
   }
 
@@ -255,6 +275,14 @@
     firstFrame = true;
   }
 
+  function getNaturalPageHeight() {
+    return Math.max(
+      window.innerHeight || 1,
+      document.documentElement.scrollHeight || 0,
+      document.body.scrollHeight || 0
+    );
+  }
+
   function resize() {
     if (media && media.matches) {
       stopAndRemove();
@@ -262,27 +290,30 @@
     }
 
     W = Math.max(1, Math.round(document.documentElement.clientWidth || window.innerWidth || 1));
-    H = Math.max(1, Math.round(window.innerHeight || document.documentElement.clientHeight || 1));
+    const naturalPageH = getNaturalPageHeight();
+    pageH = Math.min(naturalPageH, CONFIG.maxCanvasHeight);
 
     const nextDpr = Math.min(window.devicePixelRatio || 1, CONFIG.dprCap);
-    const resizeKey = W + "x" + H + "@" + nextDpr.toFixed(2);
+    const resizeKey = W + "x" + pageH + "@" + nextDpr.toFixed(2);
 
     if (resizeKey === lastResizeKey && layers.length) return;
     lastResizeKey = resizeKey;
 
     dpr = nextDpr;
+
+    canvas.style.setProperty("--ivix-page-bg-height", pageH + "px");
     canvas.width = Math.round(W * dpr);
-    canvas.height = Math.round(H * dpr);
+    canvas.height = Math.round(pageH * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    margin = Math.max(W, H) * 0.24 + CONFIG.mouseAmount;
+    margin = Math.max(W, window.innerHeight || 900) * 0.24 + CONFIG.mouseAmount;
     rebuild();
   }
 
   function onMouse(e) {
-    if (!W || !H) return;
+    if (!W || !pageH) return;
     tmx = (e.clientX / W) * 2 - 1;
-    tmy = (e.clientY / H) * 2 - 1;
+    tmy = (e.clientY / Math.max(1, window.innerHeight || 1)) * 2 - 1;
   }
 
   function drawSpaceBase(isFirst) {
@@ -290,34 +321,34 @@
 
     if (!isFirst) {
       ctx.fillStyle = "rgba(5, 3, 11, " + CONFIG.trailAlpha + ")";
-      ctx.fillRect(0, 0, W, H);
+      ctx.fillRect(0, 0, W, pageH);
       return;
     }
 
-    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    const grad = ctx.createLinearGradient(0, 0, 0, pageH);
     grad.addColorStop(0, "#05030b");
     grad.addColorStop(0.44, "#100520");
     grad.addColorStop(1, "#05030b");
 
     ctx.globalAlpha = 1;
     ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, W, pageH);
   }
 
   function drawAmbientGlow() {
-    const sideA = ctx.createRadialGradient(W * 0.10, H * 0.22, 0, W * 0.10, H * 0.22, W * 0.55);
+    const sideA = ctx.createRadialGradient(W * 0.10, pageH * 0.22, 0, W * 0.10, pageH * 0.22, W * 0.55);
     sideA.addColorStop(0, "rgba(116, 50, 255, 0.034)");
     sideA.addColorStop(0.48, "rgba(82, 32, 180, 0.013)");
     sideA.addColorStop(1, "rgba(82, 32, 180, 0)");
     ctx.fillStyle = sideA;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, W, pageH);
 
-    const sideB = ctx.createRadialGradient(W * 0.92, H * 0.42, 0, W * 0.92, H * 0.42, W * 0.55);
+    const sideB = ctx.createRadialGradient(W * 0.92, pageH * 0.42, 0, W * 0.92, pageH * 0.42, W * 0.55);
     sideB.addColorStop(0, "rgba(155, 70, 255, 0.032)");
     sideB.addColorStop(0.44, "rgba(94, 36, 190, 0.012)");
     sideB.addColorStop(1, "rgba(94, 36, 190, 0)");
     ctx.fillStyle = sideB;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, W, pageH);
   }
 
   function drawOrganicNebula(n, tnow) {
@@ -326,7 +357,7 @@
     const shapeB = Math.cos(tnow * n.speed * 0.9 + n.phase * 0.8);
 
     ctx.save();
-    ctx.translate(n.x + shapeA * W * 0.008, n.y + shapeB * H * 0.006);
+    ctx.translate(n.x + shapeA * W * 0.008, n.y + shapeB * (window.innerHeight || 900) * 0.006);
     ctx.rotate(n.rot + shapeA * 0.018);
     ctx.scale(n.w / 2, n.h / 2);
 
@@ -393,24 +424,26 @@
   function spawnShoot() {
     if (!CONFIG.shootingStars || shoots.length >= CONFIG.maxShootingStars) return;
 
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const viewportH = window.innerHeight || 900;
     const edge = Math.floor(Math.random() * 4);
     let x, y, angle;
 
     if (edge === 0) {
       x = -60;
-      y = rand(-0.12, 1.12) * H;
+      y = scrollY + rand(-0.12, 1.12) * viewportH;
       angle = rand(-0.75, 0.75);
     } else if (edge === 1) {
       x = W + 60;
-      y = rand(-0.12, 1.12) * H;
+      y = scrollY + rand(-0.12, 1.12) * viewportH;
       angle = Math.PI + rand(-0.75, 0.75);
     } else if (edge === 2) {
       x = rand(-0.10, 1.10) * W;
-      y = -80;
+      y = scrollY - 80;
       angle = Math.PI / 2 + rand(-0.85, 0.85);
     } else {
       x = rand(-0.10, 1.10) * W;
-      y = H + 80;
+      y = scrollY + viewportH + 80;
       angle = -Math.PI / 2 + rand(-0.85, 0.85);
     }
 
@@ -483,7 +516,7 @@
 
     const colorShift = 0.34;
     const cx = W / 2;
-    const cy = H / 2;
+    const cy = pageH / 2;
 
     for (const layer of layers) {
       const cfg = layer.cfg;
@@ -499,13 +532,13 @@
         const a = s.a * tw;
         if (a <= 0.010) continue;
 
-        const baseX = Math.cos(s.angle) * s.orbitRadius;
-        const baseY = Math.sin(s.angle) * s.orbitRadius;
+        const dx = s.x - cx;
+        const dy = s.y - cy;
 
-        const px = cx + baseX * cos - baseY * sin + mouseX + Math.sin(tnow * s.driftSpeedX + s.driftPhaseX) * s.driftAmpX;
-        const py = cy + baseX * sin + baseY * cos + mouseY + Math.cos(tnow * s.driftSpeedY + s.driftPhaseY) * s.driftAmpY;
+        const px = cx + dx * cos - dy * sin + mouseX + Math.sin(tnow * s.driftSpeedX + s.driftPhaseX) * s.driftAmpX;
+        const py = cy + dx * sin + dy * cos + mouseY + Math.cos(tnow * s.driftSpeedY + s.driftPhaseY) * s.driftAmpY;
 
-        if (px < -90 || px > W + 90 || py < -90 || py > H + 90) continue;
+        if (px < -90 || px > W + 90 || py < -90 || py > pageH + 90) continue;
 
         const color = mixRgb(s.colorTop, s.colorBottom, colorShift);
 
@@ -595,6 +628,43 @@
     };
   }
 
+  function applyScrollbarGuard() {
+    const html = document.documentElement;
+    const body = document.body;
+
+    if (!html || !body) return;
+
+    html.style.overflowX = "hidden";
+    html.style.overflowY = "auto";
+    html.style.scrollbarGutter = "stable";
+
+    body.style.position = "relative";
+    body.style.overflowX = "hidden";
+    body.style.overflowY = "visible";
+    body.style.maxWidth = "100vw";
+
+    canvas.style.position = "absolute";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.right = "auto";
+    canvas.style.bottom = "auto";
+    canvas.style.width = "100%";
+    canvas.style.height = pageH + "px";
+    canvas.style.maxWidth = "100%";
+    canvas.style.maxHeight = "none";
+    canvas.style.overflow = "hidden";
+    canvas.style.pointerEvents = "none";
+    canvas.style.contain = "layout paint size style";
+
+    const oldBgLayers = document.querySelectorAll(".bg-scene, .bg-layer, .bg-energy-layer, .noise");
+    oldBgLayers.forEach((el) => {
+      el.style.display = "none";
+      el.style.overflow = "hidden";
+      el.style.maxWidth = "100vw";
+      el.style.maxHeight = "100vh";
+    });
+  }
+
   function start() {
     if (media && media.matches) {
       stopAndRemove();
@@ -609,18 +679,54 @@
     }
 
     resize();
+    applyScrollbarGuard();
     nextShoot = performance.now() / 1000 + rand(2.2, 5.2);
 
-    const debouncedResize = debounce(resize, 250);
+    const debouncedResize = debounce(() => {
+      resize();
+      applyScrollbarGuard();
+    }, 250);
+
+    const debouncedPageResize = debounce(() => {
+      const nextPageH = Math.min(getNaturalPageHeight(), CONFIG.maxCanvasHeight);
+      if (Math.abs(nextPageH - pageH) > 180) {
+        lastResizeKey = "";
+        resize();
+        applyScrollbarGuard();
+      }
+    }, 500);
 
     window.addEventListener("resize", debouncedResize, { passive: true });
     window.addEventListener("orientationchange", debouncedResize, { passive: true });
     window.addEventListener("mousemove", onMouse, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
 
+    // Guard only, not animation projection. This does not redraw on scroll.
+    window.addEventListener("scroll", () => {
+      requestAnimationFrame(applyScrollbarGuard);
+    }, { passive: true });
+
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(debouncedPageResize);
+      ro.observe(document.body);
+      ro.observe(document.documentElement);
+    }
+
+    if (window.MutationObserver) {
+      const mo = new MutationObserver(() => requestAnimationFrame(applyScrollbarGuard));
+      mo.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["style", "class"]
+      });
+    }
+
     if (media && media.addEventListener) {
       media.addEventListener("change", debouncedResize);
     }
+
+    setInterval(applyScrollbarGuard, 1400);
 
     lastDraw = performance.now();
     firstFrame = true;
