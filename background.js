@@ -1,24 +1,108 @@
 /* =============================================================
-   IVIX_TV — desktop-only cinematic starfield (v5)
-   Fixes / changes:
-   • мобильная версия: фон НЕ запускается вообще;
-   • canvas теперь отдельный слой НАД фоном страницы, но ПОД контентом;
-   • это убирает обрыв звезд и темные границы от фоновых секций;
-   • звезды двигаются хаотичнее и заметнее;
-   • mouse-parallax усилен;
-   • дифракционные лучи сохранены и сделаны аккуратными;
-   • добавлены живые фиолетовые туманности/пятна:
-     они НЕ двигаются со скроллом, а медленно меняют форму,
-     положение и насыщенность, как органические космические облака.
+   IVIX_TV — desktop-only cinematic starfield (v6)
+   Срочный фикс:
+   • на мобильной версии фон полностью отключается И дополнительно гасит старые
+     bg-scene/body::before/body::after, которые могли перекрывать контент;
+   • на ПК canvas рисует свой собственный непрозрачный космический фон,
+     поэтому старые CSS-фоны больше не дают темных границ/обрывов;
+   • звезды заметнее хаотично двигаются;
+   • mouse-parallax сильнее;
+   • дифракционные лучи сохранены;
+   • фиолетовые туманности не едут со скроллом, а медленно меняют форму,
+     позицию и насыщенность.
 ============================================================= */
 (function () {
   "use strict";
 
   const MOBILE_QUERY = "(max-width: 760px), (pointer: coarse) and (max-width: 920px)";
+  const STYLE_ID = "ivix-bg-canvas-style-v6";
+
+  function addGlobalSafetyCss() {
+    if (document.getElementById(STYLE_ID)) return;
+
+    const style = document.createElement("style");
+    style.id = STYLE_ID;
+    style.textContent = `
+      /* Kill old experimental background layers everywhere */
+      .bg-scene,
+      .bg-layer,
+      .bg-energy-layer {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+
+      body::before,
+      body::after {
+        display: none !important;
+        content: none !important;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        overflow-x: hidden;
+      }
+
+      #ivix-bg-canvas {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 0 !important;
+        pointer-events: none !important;
+        display: block !important;
+      }
+
+      body > :not(#ivix-bg-canvas):not(style):not(script) {
+        position: relative;
+        z-index: 2;
+      }
+
+      .site-header {
+        z-index: 1200 !important;
+      }
+
+      @media (max-width: 760px), (pointer: coarse) and (max-width: 920px) {
+        #ivix-bg-canvas,
+        .bg-scene,
+        .bg-layer,
+        .bg-energy-layer {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+        }
+
+        body::before,
+        body::after {
+          display: none !important;
+          content: none !important;
+        }
+
+        body > :not(script):not(style) {
+          visibility: visible !important;
+          opacity: 1 !important;
+        }
+      }
+    `;
+
+    (document.head || document.documentElement).appendChild(style);
+  }
+
+  addGlobalSafetyCss();
+
+  const media = window.matchMedia ? window.matchMedia(MOBILE_QUERY) : null;
+
+  function isMobileLike() {
+    return media && media.matches;
+  }
+
+  // На мобильных не создаем canvas вообще.
+  // Но CSS выше уже заглушил старые экспериментальные фоновые слои.
+  if (isMobileLike()) return;
 
   const CONFIG = {
-    desktopOnly: true,
-
     colorsTop: [
       "205, 218, 255",
       "235, 240, 255",
@@ -37,37 +121,24 @@
 
     warmChance: 0.08,
 
-    mouseAmount: 128,
-    maxPan: 120,
-    mouseEase: 0.070,
+    mouseAmount: 138,
+    maxPan: 70,
+    mouseEase: 0.075,
     scrollEase: 0.075,
     dprCap: 2,
 
     shootingStars: true,
     shootingEvery: [10, 24],
-
     nebulae: true,
 
-    // density = сколько пикселей площади приходится на одну звезду.
-    // Чем меньше число, тем больше звезд.
     layers: [
-      { density: 1350,  r: [0.24, 0.70], a: [0.05, 0.18], tw: [0.12, 0.54], twDepth: 0.42, pScroll: 0.040, pMouse: 0.12, glow: 0.00, drift: [2.0, 4.8], rayChance: 0.00 },
-      { density: 2850,  r: [0.36, 1.02], a: [0.09, 0.34], tw: [0.16, 0.78], twDepth: 0.56, pScroll: 0.100, pMouse: 0.42, glow: 0.08, drift: [3.5, 8.0], rayChance: 0.012 },
-      { density: 6100,  r: [0.54, 1.48], a: [0.18, 0.60], tw: [0.20, 0.98], twDepth: 0.66, pScroll: 0.180, pMouse: 0.88, glow: 0.25, drift: [5.0, 12.0], rayChance: 0.035 },
-      { density: 16000, r: [0.85, 2.45], a: [0.30, 0.86], tw: [0.24, 1.18], twDepth: 0.74, pScroll: 0.300, pMouse: 1.42, glow: 0.54, drift: [7.0, 16.0], rayChance: 0.075 },
-      { density: 39000, r: [1.35, 3.10], a: [0.42, 0.90], tw: [0.18, 0.85], twDepth: 0.58, pScroll: 0.420, pMouse: 1.85, glow: 0.82, drift: [9.0, 22.0], rayChance: 0.38 },
+      { density: 1250,  r: [0.24, 0.70], a: [0.05, 0.18], tw: [0.12, 0.54], twDepth: 0.42, pScroll: 0.018, pMouse: 0.14, glow: 0.00, drift: [2.4, 5.2], rayChance: 0.00 },
+      { density: 2600,  r: [0.36, 1.02], a: [0.09, 0.34], tw: [0.16, 0.78], twDepth: 0.56, pScroll: 0.040, pMouse: 0.48, glow: 0.08, drift: [4.0, 9.5], rayChance: 0.012 },
+      { density: 5600,  r: [0.54, 1.48], a: [0.18, 0.60], tw: [0.20, 0.98], twDepth: 0.66, pScroll: 0.070, pMouse: 0.96, glow: 0.25, drift: [6.0, 14.0], rayChance: 0.035 },
+      { density: 14500, r: [0.85, 2.45], a: [0.30, 0.86], tw: [0.24, 1.18], twDepth: 0.74, pScroll: 0.105, pMouse: 1.55, glow: 0.54, drift: [8.0, 19.0], rayChance: 0.075 },
+      { density: 35000, r: [1.35, 3.10], a: [0.42, 0.90], tw: [0.18, 0.85], twDepth: 0.58, pScroll: 0.135, pMouse: 2.05, glow: 0.82, drift: [11.0, 26.0], rayChance: 0.38 },
     ],
   };
-
-  const media = window.matchMedia ? window.matchMedia(MOBILE_QUERY) : null;
-
-  function isMobileLike() {
-    return CONFIG.desktopOnly && media && media.matches;
-  }
-
-  if (isMobileLike()) {
-    return;
-  }
 
   const canvas = document.createElement("canvas");
   canvas.id = "ivix-bg-canvas";
@@ -115,42 +186,6 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const lerp = (a, b, t) => a + (b - a) * t;
 
-  function injectLayerCss() {
-    if (document.getElementById("ivix-bg-canvas-style")) return;
-
-    const style = document.createElement("style");
-    style.id = "ivix-bg-canvas-style";
-    style.textContent = `
-      html,
-      body {
-        background-color: #05030b;
-      }
-
-      #ivix-bg-canvas {
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        z-index: 0 !important;
-        pointer-events: none !important;
-      }
-
-      body > :not(#ivix-bg-canvas):not(style):not(script) {
-        position: relative;
-        z-index: 1;
-      }
-
-      .site-header {
-        z-index: 1200 !important;
-      }
-
-      .bg-scene {
-        display: none !important;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
   function parseRgb(rgb) {
     return rgb.split(",").map((x) => parseFloat(x.trim()));
   }
@@ -168,27 +203,20 @@
   function mount() {
     if (mounted) return;
     mounted = true;
-
-    injectLayerCss();
-
-    // append, не prepend — не ломаем :first-child и мобильную верстку.
     (document.body || document.documentElement).appendChild(canvas);
   }
 
   function pickColorPair() {
-    const topPalette = CONFIG.colorsTop;
-    const bottomPalette = CONFIG.colorsBottom;
-
     let i;
     if (Math.random() < CONFIG.warmChance) {
       i = 4;
     } else {
-      i = (Math.random() * (topPalette.length - 1)) | 0;
+      i = (Math.random() * (CONFIG.colorsTop.length - 1)) | 0;
     }
 
     return {
-      top: topPalette[i],
-      bottom: bottomPalette[i % bottomPalette.length],
+      top: CONFIG.colorsTop[i],
+      bottom: CONFIG.colorsBottom[i % CONFIG.colorsBottom.length],
     };
   }
 
@@ -239,8 +267,8 @@
         rayAlpha: rand(0.08, 0.26) * (layerIndex + 1) / CONFIG.layers.length,
         driftAmpX: rand(cfg.drift[0], cfg.drift[1]),
         driftAmpY: rand(cfg.drift[0], cfg.drift[1]) * 0.75,
-        driftSpeedX: rand(0.060, 0.180),
-        driftSpeedY: rand(0.050, 0.160),
+        driftSpeedX: rand(0.070, 0.210),
+        driftSpeedY: rand(0.060, 0.190),
         driftPhaseX: rand(0, Math.PI * 2),
         driftPhaseY: rand(0, Math.PI * 2),
       });
@@ -250,66 +278,20 @@
   }
 
   function buildNebulae() {
-    if (!CONFIG.nebulae) return [];
-
     const minSide = Math.min(W, H);
     const scale = clamp(minSide / 900, 0.72, 1.35);
 
     return [
-      {
-        x: W * 0.12,
-        y: H * 0.22,
-        w: W * 0.72 * scale,
-        h: H * 0.62 * scale,
-        rot: -0.12,
-        colorA: "132, 70, 255",
-        colorB: "80, 38, 160",
-        alpha: 0.085,
-        speed: 0.055,
-        phase: rand(0, Math.PI * 2),
-      },
-      {
-        x: W * 0.84,
-        y: H * 0.20,
-        w: W * 0.74 * scale,
-        h: H * 0.56 * scale,
-        rot: 0.18,
-        colorA: "180, 104, 255",
-        colorB: "68, 26, 140",
-        alpha: 0.070,
-        speed: 0.047,
-        phase: rand(0, Math.PI * 2),
-      },
-      {
-        x: W * 0.54,
-        y: H * 0.78,
-        w: W * 0.86 * scale,
-        h: H * 0.54 * scale,
-        rot: -0.06,
-        colorA: "116, 74, 255",
-        colorB: "44, 22, 92",
-        alpha: 0.058,
-        speed: 0.040,
-        phase: rand(0, Math.PI * 2),
-      },
-      {
-        x: W * 0.36,
-        y: H * 0.46,
-        w: W * 0.54 * scale,
-        h: H * 0.42 * scale,
-        rot: 0.26,
-        colorA: "205, 125, 255",
-        colorB: "40, 18, 84",
-        alpha: 0.040,
-        speed: 0.065,
-        phase: rand(0, Math.PI * 2),
-      },
+      { x: W * 0.12, y: H * 0.22, w: W * 0.78 * scale, h: H * 0.66 * scale, rot: -0.12, colorA: "132, 70, 255", colorB: "80, 38, 160", alpha: 0.080, speed: 0.055, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.86, y: H * 0.20, w: W * 0.80 * scale, h: H * 0.60 * scale, rot: 0.18, colorA: "180, 104, 255", colorB: "68, 26, 140", alpha: 0.066, speed: 0.047, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.54, y: H * 0.78, w: W * 0.88 * scale, h: H * 0.56 * scale, rot: -0.06, colorA: "116, 74, 255", colorB: "44, 22, 92", alpha: 0.052, speed: 0.040, phase: rand(0, Math.PI * 2) },
+      { x: W * 0.36, y: H * 0.46, w: W * 0.58 * scale, h: H * 0.44 * scale, rot: 0.26, colorA: "205, 125, 255", colorB: "40, 18, 84", alpha: 0.038, speed: 0.065, phase: rand(0, Math.PI * 2) },
     ];
   }
 
   function rebuild() {
     layers = CONFIG.layers.map(buildLayer);
-    nebulae = buildNebulae();
+    nebulae = CONFIG.nebulae ? buildNebulae() : [];
 
     glowSprites = {};
     const allColors = CONFIG.colorsTop.concat(CONFIG.colorsBottom);
@@ -339,8 +321,8 @@
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    marginX = CONFIG.mouseAmount + 92;
-    marginY = CONFIG.maxPan + CONFIG.mouseAmount + 110;
+    marginX = CONFIG.mouseAmount + 100;
+    marginY = CONFIG.maxPan + CONFIG.mouseAmount + 120;
 
     rebuild();
 
@@ -359,6 +341,32 @@
     if (!W || !H) return;
     tmx = (e.clientX / W) * 2 - 1;
     tmy = (e.clientY / H) * 2 - 1;
+  }
+
+  function drawSpaceBase(tnow) {
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, "#05030b");
+    grad.addColorStop(0.40, "#100520");
+    grad.addColorStop(1, "#05030b");
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    const sideA = ctx.createRadialGradient(W * 0.10, H * 0.22, 0, W * 0.10, H * 0.22, W * 0.55);
+    sideA.addColorStop(0, "rgba(116, 50, 255, 0.20)");
+    sideA.addColorStop(0.45, "rgba(82, 32, 180, 0.08)");
+    sideA.addColorStop(1, "rgba(82, 32, 180, 0)");
+    ctx.fillStyle = sideA;
+    ctx.fillRect(0, 0, W, H);
+
+    const sideB = ctx.createRadialGradient(W * 0.92, H * 0.18, 0, W * 0.92, H * 0.18, W * 0.55);
+    sideB.addColorStop(0, "rgba(155, 70, 255, 0.16)");
+    sideB.addColorStop(0.42, "rgba(94, 36, 190, 0.07)");
+    sideB.addColorStop(1, "rgba(94, 36, 190, 0)");
+    ctx.fillStyle = sideB;
+    ctx.fillRect(0, 0, W, H);
   }
 
   function spawnShoot() {
@@ -393,7 +401,6 @@
     ctx.globalCompositeOperation = "screen";
     ctx.globalAlpha = n.alpha * (0.72 + pulse * 0.48);
 
-    // Несколько перекрывающихся эллиптических облаков.
     for (let i = 0; i < 5; i += 1) {
       const ang = i * 1.256 + n.phase;
       const cx = Math.cos(ang + tnow * n.speed * 0.65) * (0.10 + i * 0.018);
@@ -412,7 +419,6 @@
       ctx.fill();
     }
 
-    // Темные органические прожилки/прорези.
     ctx.globalCompositeOperation = "destination-out";
     ctx.globalAlpha = n.alpha * 1.15;
     ctx.strokeStyle = "rgba(0,0,0,0.62)";
@@ -598,7 +604,7 @@
       scrollDisp += (scrollFrac - scrollDisp) * CONFIG.scrollEase;
     }
 
-    ctx.clearRect(0, 0, W, H);
+    drawSpaceBase(tnow);
 
     if (CONFIG.nebulae) {
       for (const n of nebulae) drawOrganicNebula(n, tnow);
@@ -651,7 +657,6 @@
     }
 
     mount();
-
     resize();
     onScroll();
     scrollDisp = scrollFrac;
