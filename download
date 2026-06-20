@@ -1,0 +1,43 @@
+# ---- OS junk ----
+.DS_Store
+Thumbs.db
+
+# ---- editor / IDE ----
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---- local env / секреты ----
+.env
+.env.*
+!.env.example
+
+# ---- dependencies / build output ----
+node_modules/
+dist/
+build/
+
+# ---- временные и резервные файлы ----
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*_old.*
+*.log
+
+# ---- локальные заметки ----
+CHECK_AFTER_UPLOAD.txt
+
+# ---- дубли браузерных скачиваний (file (1).ext, file (2).ext, ...) ----
+* (1).*
+* (2).*
+* (3).*
+* (4).*
+* (5).*
+download
+
+# ---- неиспользуемые конфиги хостинга (добавлять только если реально нужны) ----
+_redirects
+_headers
